@@ -7,8 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class chooseRoute extends AppCompatActivity
+public class chooseRoute /*extends AppCompatActivity*/
 {
+    /*
     private Button btnYes;
     private Button btnNo;
 
@@ -50,6 +51,7 @@ public class chooseRoute extends AppCompatActivity
     private void moveToSelectBuddii()
     {
         /*Intent intent = new Intent(chooseRoute.this, findBudsList.class);
-        startActivity(intent);*/
-    }
+        startActivity(intent);
+    }*/
+
 }

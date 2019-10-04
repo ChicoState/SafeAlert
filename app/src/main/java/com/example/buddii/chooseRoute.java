@@ -6,8 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class chooseRoute extends AppCompatActivity
+public class chooseRoute /*extends AppCompatActivity*/
 {
+    /*
     private Button btnYes;
     private Button btnNo;
 
@@ -18,7 +19,7 @@ public class chooseRoute extends AppCompatActivity
         setContentView(R.layout.activity_choose_route);
 
         btnYes = findViewById(R.id.yesBuddii);
-        btnNo = findViewById(R.id.noBuddii)
+        btnNo = findViewById(R.id.noBuddii);
 
         btnYes.setOnClickListener(new View.OnClickListener()
         {
@@ -30,6 +31,7 @@ public class chooseRoute extends AppCompatActivity
 
         });
 
-        btnNo.setOnClickListener(new View>OnClickListener())
-    }
+        //btnNo.setOnClickListener(new View>OnClickListener());
+
+    }*/
 }

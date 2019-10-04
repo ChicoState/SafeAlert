@@ -2,6 +2,7 @@ package com.example.buddii;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -31,7 +32,26 @@ public class chooseRoute /*extends AppCompatActivity*/
 
         });
 
-        //btnNo.setOnClickListener(new View>OnClickListener());
+        btnNo.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                moveToRoute();
+            }
+        });
+    }
 
+    private void moveToRoute()
+    {
+        Intent intent = new Intent(chooseRoute.this, noBuddiiJustRoute.class);
+        startActivity(intent);
+    }
+
+    private void moveToSelectBuddii()
+    {
+        /*Intent intent = new Intent(chooseRoute.this, findBudsList.class);
+        startActivity(intent);
     }*/
+
 }

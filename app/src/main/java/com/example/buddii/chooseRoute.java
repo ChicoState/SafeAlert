@@ -8,8 +8,8 @@ import android.widget.Button;
 
 public class chooseRoute extends AppCompatActivity
 {
-    //private Button btnYes;
-    //private Button btnNo;
+    private Button btnYes;
+    private Button btnNo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -17,16 +17,19 @@ public class chooseRoute extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_route);
 
-        //btnYes = findViewById(R.id.yesBuddii);
+        btnYes = findViewById(R.id.yesBuddii);
+        btnNo = findViewById(R.id.noBuddii)
 
-        /*btnYes.setOnClickListener(new View.OnClickListener())
+        btnYes.setOnClickListener(new View.OnClickListener()
         {
             @Override
                     public void onClick(View v)
             {
-                moveTo
+                moveToSelectBuddii();
             }
 
-        }*/
+        });
+
+        btnNo.setOnClickListener(new View>OnClickListener())
     }
 }

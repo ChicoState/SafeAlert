@@ -19,7 +19,7 @@ public class chooseRoute extends AppCompatActivity
         setContentView(R.layout.activity_choose_route);
 
         btnYes = findViewById(R.id.yesBuddii);
-        btnNo = findViewById(R.id.noBuddii)
+        btnNo = findViewById(R.id.noBuddii);
 
         btnYes.setOnClickListener(new View.OnClickListener()
         {
@@ -38,7 +38,7 @@ public class chooseRoute extends AppCompatActivity
             {
                 moveToRoute();
             }
-        })
+        });
     }
 
     private void moveToRoute()
@@ -49,7 +49,7 @@ public class chooseRoute extends AppCompatActivity
 
     private void moveToSelectBuddii()
     {
-        Intent intent = new Intent(chooseRoute.this, findBudsList.class);
-        startActivity(intent);
+        /*Intent intent = new Intent(chooseRoute.this, findBudsList.class);
+        startActivity(intent);*/
     }
 }

@@ -44,7 +44,7 @@ public class chooseRoute /*extends AppCompatActivity*/
 
     private void moveToRoute()
     {
-        Intent intent = new Intent(chooseRoute.this, noBuddiiJustRoute.class);
+        Intent intent = new Intent(chooseRoute.this, MapsActivity.class);
         startActivity(intent);
     }
 

@@ -9,6 +9,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
     private Button btnFSR;
+    private Button btnBab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btnFSR = findViewById(R.id.findRoute);
+        btnBab = findViewById(R.id.beABuddii);
         btnFSR.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -23,21 +25,21 @@ public class MainActivity extends AppCompatActivity {
             {
                 moveToChooseRoute();
             }
-
-            /*public void onClick(View v)
-            {
-                moveToBaB():
-            }*/
-
+        });
+        btnBab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveToBaB();
+            }
         });
 
     }
 
-    /*private void moveToBaB()
+    private void moveToBaB()
     {
-        Intent intent = new Intent (MainActivity.this, beABuddy.class);
+        Intent intent = new Intent (MainActivity.this, select_bud.class);
         startActivity(intent);
-    }*/
+    }
 
     private void moveToChooseRoute()
     {

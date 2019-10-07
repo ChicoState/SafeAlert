@@ -1,5 +1,6 @@
 package com.example.buddii;
 
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -12,14 +13,17 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PatternItem;
 
 import java.io.IOException;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private static final List<PatternItem> PATTERN_POLYLINE_DOTTED = null;
     private GoogleMap mMap;
 
     @Override
@@ -64,5 +68,46 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(chico).title("Marker in Chico"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(chico));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+
+        mMap.addCircle(new CircleOptions().center(new LatLng(39.726408, -121.847657))
+                .radius(10)
+                .strokePattern(PATTERN_POLYLINE_DOTTED)
+                .strokeColor(Color.BLUE)
+                .fillColor(Color.CYAN));
+        mMap.addCircle(new CircleOptions().center(new LatLng(39.730534, -121.848798))
+                .radius(10)
+                .strokePattern(PATTERN_POLYLINE_DOTTED)
+                .strokeColor(Color.BLUE)
+                .fillColor(Color.CYAN));
+        mMap.addCircle(new CircleOptions().center(new LatLng(39.728891, -121.848637))
+                .radius(10)
+                .strokePattern(PATTERN_POLYLINE_DOTTED)
+                .strokeColor(Color.BLUE)
+                .fillColor(Color.CYAN));
+        mMap.addCircle(new CircleOptions().center(new LatLng(39.728735, -121.845895))
+                .radius(10)
+                .strokePattern(PATTERN_POLYLINE_DOTTED)
+                .strokeColor(Color.BLUE)
+                .fillColor(Color.CYAN));
+        mMap.addCircle(new CircleOptions().center(new LatLng(39.729761, -121.843255))
+                .radius(10)
+                .strokePattern(PATTERN_POLYLINE_DOTTED)
+                .strokeColor(Color.BLUE)
+                .fillColor(Color.CYAN));
+        mMap.addCircle(new CircleOptions().center(new LatLng(39.730822, -121.845217))
+                .radius(10)
+                .strokePattern(PATTERN_POLYLINE_DOTTED)
+                .strokeColor(Color.BLUE)
+                .fillColor(Color.CYAN));
+        mMap.addCircle(new CircleOptions().center(new LatLng(39.728915, -121.846879))
+                .radius(10)
+                .strokePattern(PATTERN_POLYLINE_DOTTED)
+                .strokeColor(Color.BLUE)
+                .fillColor(Color.CYAN));
+        mMap.addCircle(new CircleOptions().center(new LatLng(39.728071, -121.844249))
+                .radius(10)
+                .strokePattern(PATTERN_POLYLINE_DOTTED)
+                .strokeColor(Color.BLUE)
+                .fillColor(Color.CYAN));
     }
 }

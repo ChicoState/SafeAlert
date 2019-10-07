@@ -3,5 +3,10 @@
     <string name="user_name">User</string>
     <string name="find_buddy_label">Find Buddii</string>
     <string name="bud_profile_pic">Contact Img Buddy</string>
-    <string name="activity_maps"></string>
+    <string name="activity_maps">Activity Maps</string>
+    <string name="app_logo"> App Logo </string>
+    <string name="sign_up_username">Username</string>
+    <string name="sign_up_password">Password</string>
+    <string name="login_button_next">Next</string>
+    <string name="login_button_cancel">Cancel</string>
 </resources>

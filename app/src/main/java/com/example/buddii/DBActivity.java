@@ -13,7 +13,7 @@ public class DBActivity extends AppCompatActivity {
     EditText input1,input2,input3,input4;
     String data1,data2,data3,data4, deleteUser;
     Button SubmitBUTTON;
-    TextView t;
+    TextView TempTexViewVariable;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +24,7 @@ public class DBActivity extends AppCompatActivity {
         input3=(EditText)findViewById(R.id.i3);
         input4=(EditText)findViewById(R.id.i4);
 
-        t=(TextView)findViewById(R.id.t1); // need this variable to display user info after click
+        TempTexViewVariable=(TextView)findViewById(R.id.t1); // need this variable to display user info after click
         SubmitBUTTON=(Button)findViewById(R.id.b1);
         SubmitBUTTON.setOnClickListener(new View.OnClickListener() { // In other words , do this after click
             @Override
@@ -50,8 +50,23 @@ public class DBActivity extends AppCompatActivity {
     // This class will delete a user by passed ID
     public  void delete(View view)
     {
-        deleteUser=input1.getText().toString();
+        // call to get Users' DB to DELETE
+        deleteUser=getUserToDelete();
         MyDBHandler handler=new MyDBHandler(this);
         // CALL LOADEMP .. THEN DELETE
-        handler.deleteUser(deleteUser);}public void loademp(View view)
-    {MyDBHandler dbHandler = new MyDBHandler(this);t.setText(dbHandler.load());}}
+        handler.deleteUser(deleteUser);}
+
+     public void loademp(View view)
+    {   //propriatary DBhandle
+        MyDBHandler dbHandler = new MyDBHandler(this);
+        TempTexViewVariable.setText(dbHandler.load());
+
+    }
+
+    public String getUserToDelete(){
+        return input1.getText().toString();
+
+    };
+
+}
+

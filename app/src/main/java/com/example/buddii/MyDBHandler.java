@@ -22,7 +22,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
     // Database Name
     private static final String DATABASE_NAME = "Buddi_DATABASE";
     // User table name
-    private static final String TABLE_NAME = "MY_TABLE";
+    private static final String NAME_OF_TABLE = "MY_TABLE";
     // User Table Columns names
     private static final String USER_ID = "user_id";
     private static final String USER_NAME = "user_name";
@@ -32,10 +32,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     //Creates  A table for every user. Passes TABLE NAME
     // Basically a concatination of SQL COMMANDS
-    private String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" + USER_ID + " PlaceHolder," +
+    private String CREATE_TABLE = "CREATE TABLE " + NAME_OF_TABLE + "(" + USER_ID + " PlaceHolder," +
             USER_NAME + " PlaceHolder," + USER_EMAIL + " PlaceHolder," + USER_PASSWORD + " PlaceHolder " + ")";
     //Will Replace table if exist ( replace USER)
-    private String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
+    private String DROP_TABLE = "DROP TABLE IF EXISTS " + NAME_OF_TABLE;
 
     // Need a DBHANDLER required
     public MyDBHandler(Context context) {
@@ -61,7 +61,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
         values.put(MyDBHandler.USER_NAME, name);
         values.put(MyDBHandler.USER_EMAIL, email);
         values.put(MyDBHandler.USER_PASSWORD, password);
-        long status = db.insert(TABLE_NAME, null, values);
+        long status = db.insert(NAME_OF_TABLE, null, values);
 
         if (status <= 0) {
             //TOAST ...ITS A CELEBRATION
@@ -77,33 +77,39 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     // DELETE A USER BY PASSING THE USERS ID
     public void deleteUser(String id) {
+        int Tlength =Toast.LENGTH_SHORT;
         SQLiteDatabase db = this.getWritableDatabase();
-// delete user record by id
-        long s = db.delete(TABLE_NAME, USER_ID + " = ?",
+    // delete user record by id
+        long TempLong = db.delete(NAME_OF_TABLE, USER_ID + " = ?",
                 new String[]{String.valueOf(id)});
-        if (s <= 0) {
-            Toast.makeText(context, "Deletion NOT successful", Toast.LENGTH_SHORT).show();
+        if (TempLong <= 0) {
+            Toast.makeText(context, "Deletion Failed ",
+            Tlength).show();
         } else {
-            Toast.makeText(context, "USER DELETED!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "USER DELETED!",
+            Tlength).show();
         }
         db.close();
     }
+
 
     //fetches all records of the Table stored in the Database.
     //Uses a cursor (learned in CINS 570)
     public String load() {
 
         String result = "";
-        String query = "Select*FROM " + TABLE_NAME;
+        String query = "Select*FROM " + NAME_OF_TABLE;
+
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         while (cursor.moveToNext()) {
             int result_0 = cursor.getInt(0);
-            String r1 = cursor.getString(1);
-            String r2 = cursor.getString(2);
-            String r3 = cursor.getString(3);
+            String results1 = cursor.getString(1);
+            String results2 = cursor.getString(2);
+            String results3 = cursor.getString(3);
+            String r0 =String.valueOf(result_0);
             // concat results
-            result += String.valueOf(result_0) + " " + r1 + " " + r2 + " " + r3 + "\n";
+            result += r0 + " " + results1 + " " + results2 + " " + results3 + "\n";
             System.getProperty("line.separator");
         }
         cursor.close();

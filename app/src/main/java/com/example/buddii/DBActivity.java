@@ -36,7 +36,7 @@ public class DBActivity extends AppCompatActivity {
                 data3=input3.getText().toString();
                 data4=input4.getText().toString();
                 //THEN PASS
-                MyDBHandler handler=new MyDBHandler(DBActivity.this);
+                DatabaseHandler handler=new DatabaseHandler(DBActivity.this);
                 handler.addemp(data1,data2,data3,data4);
                 // NEED TO CLEAR OUT THE TABLE AFTER SUBMIT WAS PRESSED
                 input1.setText("");
@@ -52,13 +52,13 @@ public class DBActivity extends AppCompatActivity {
     {
         // call to get Users' DB to DELETE
         deleteUser=getUserToDelete();
-        MyDBHandler handler=new MyDBHandler(this);
+        DatabaseHandler handler=new DatabaseHandler(this);
         // CALL LOADEMP .. THEN DELETE
         handler.deleteUser(deleteUser);}
 
-     public void loademp(View view)
+     public void loadUser(View view)
     {   //propriatary DBhandle
-        MyDBHandler dbHandler = new MyDBHandler(this);
+        DatabaseHandler dbHandler = new DatabaseHandler(this);
         TempTexViewVariable.setText(dbHandler.load());
 
     }

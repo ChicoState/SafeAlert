@@ -10,6 +10,7 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
     private Button btnFSR;
     private Button btnBab;
+    private Button btnTst;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnFSR = findViewById(R.id.findRoute);
         btnBab = findViewById(R.id.beABuddii);
+        btnTst = findViewById(R.id.testdb);
         btnFSR.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -32,6 +34,12 @@ public class MainActivity extends AppCompatActivity {
                 moveToBaB();
             }
         });
+        btnTst.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveToDb();
+            }
+        });
 
     }
 
@@ -44,6 +52,11 @@ public class MainActivity extends AppCompatActivity {
     private void moveToChooseRoute()
     {
         Intent intent = new Intent(MainActivity.this, chooseRoute.class);
+        startActivity(intent);
+    }
+
+    private void moveToDb(){
+        Intent intent = new Intent(MainActivity.this, DBActivity.class);
         startActivity(intent);
     }
 }

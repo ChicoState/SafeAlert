@@ -15,6 +15,7 @@ public class select_bud extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.find_buds_list);
+
     }
 }
 

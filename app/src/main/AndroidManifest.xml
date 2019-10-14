@@ -36,7 +36,9 @@
             android:label="@string/activity_maps" />
         <activity android:name=".chooseRoute" />
         <activity android:name=".select_bud" />
+        <activity android:name=".DBActivity" />
         <activity android:name=".MainActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

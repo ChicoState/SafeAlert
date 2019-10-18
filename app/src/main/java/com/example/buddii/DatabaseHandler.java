@@ -23,6 +23,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "Buddi_DATABASE";
     // User table name
     private static final String NAME_OF_TABLE = "MY_TABLE";
+    private static final String GPS_TABLE = "GPS_TABLE";
     // User Table Columns names
     private static final String USER_ID = "user_id";
     private static final String USER_NAME = "user_name";
@@ -130,5 +131,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return result;
 
     }
+    /* --------------- FOR GPS DATABASE -----------   */
+
+    private static final String LONGITUDE = "p_longitude";
+    private static final String LATITUDE = "p_latitude";
+
+    private String CREATE_GPS_TABLE = "CREATE TABLE " + GPS_TABLE + "(" + LONGITUDE + " PlaceHolder," +
+            LATITUDE + " PlaceHolder," + ")";
+
+    private String DROP_GPS_TABLE = "DROP TABLE IF EXISTS " + GPS_TABLE;
 
 }

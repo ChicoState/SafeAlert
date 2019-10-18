@@ -67,14 +67,10 @@ public class DBActivity extends AppCompatActivity {
     {   //propriatary DBhandle
         DatabaseHandler dbHandler = new DatabaseHandler(this);
         TempTexViewVariable.setText(dbHandler.load(0));
-
-
-    }
-
+   }
 
     public String getUserToDelete(){
         return input1.getText().toString();
-
     };
 
 }

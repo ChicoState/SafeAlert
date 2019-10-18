@@ -25,7 +25,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String NAME_OF_TABLE = "MY_TABLE";
     private static final String GPS_TABLE = "GPS_TABLE";
     // User Table Columns names
-    private static final String USER_ID = "user_id";
+    private static final String USER_PHONE = "user_phone";
     private static final String USER_NAME = "user_name";
     private static final String USER_EMAIL = "user_email";
     private static final String USER_PASSWORD = "user_pass";
@@ -33,7 +33,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //Creates  A table for every user. Passes TABLE NAME
     // Basically a concatination of SQL COMMANDS
-    private String CREATE_TABLE = "CREATE TABLE " + NAME_OF_TABLE + "(" + USER_ID + " PlaceHolder," +
+    private String CREATE_TABLE = "CREATE TABLE " + NAME_OF_TABLE + "(" + USER_PHONE + " PlaceHolder," +
             USER_NAME + " PlaceHolder," + USER_EMAIL + " PlaceHolder," + USER_PASSWORD + " PlaceHolder " + ")";
     //Will Replace table if exist ( replace USER)
     private String DROP_TABLE = "DROP TABLE IF EXISTS " + NAME_OF_TABLE;
@@ -55,10 +55,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         onCreate(My_Database);
     }
     // Values passed on from MainActivity,JAVA
-    public void addToDb(String userid, String name, String email, String password) {
+    public void addToDb(String userphone, String name, String email, String password) {
         SQLiteDatabase My_Database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(DatabaseHandler.USER_ID, userid);
+        values.put(DatabaseHandler.USER_PHONE, userphone);
         values.put(DatabaseHandler.USER_NAME, name);
         values.put(DatabaseHandler.USER_EMAIL, email);
         values.put(DatabaseHandler.USER_PASSWORD, password);
@@ -81,7 +81,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         int Tlength =Toast.LENGTH_SHORT;
         SQLiteDatabase My_Database = this.getWritableDatabase();
     // delete user record by id
-        long TempLong = My_Database.delete(NAME_OF_TABLE, USER_ID + " = ?",
+        long TempLong = My_Database.delete(NAME_OF_TABLE, USER_PHONE + " = ?",
                 new String[]{String.valueOf(id)});
         if (TempLong <= 0) {
             Toast.makeText(context, "Deletion Failed ",
@@ -105,19 +105,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase My_Database = this.getWritableDatabase();
         Cursor cursor = My_Database.rawQuery(command, null);
         while (cursor.moveToNext()) {
-            int result_0 = cursor.getInt(0);
+            String result0 = cursor.getString(0);
             String results1 = cursor.getString(1);
             String results2 = cursor.getString(2);
             String results3 = cursor.getString(3);
-            String r0 =String.valueOf(result_0);
             // concat results
             if (frombuddy == 0) {
-                result += r0 + " " + results1 + " "
+                result += result0 + " " + results1 + " "
                         + results2 + " " + results3 + "\n";
             }
             if (frombuddy == 1) {
                 result += results1 + " "
-                        + results2 + " " +  "\n";
+                        + results2 + " " +  "\n" + result0;
             }
             }
             System.getProperty("line.separator");

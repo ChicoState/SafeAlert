@@ -23,18 +23,29 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "Buddi_DATABASE";
     // User table name
     private static final String NAME_OF_TABLE = "MY_TABLE";
-    private static final String GPS_TABLE = "GPS_TABLE";
+
     // User Table Columns names
     private static final String USER_PHONE = "user_phone";
     private static final String USER_NAME = "user_name";
     private static final String USER_EMAIL = "user_email";
     private static final String USER_PASSWORD = "user_pass";
+
+    /* GPS DB */
+    private static final String  LATITUDE = "latitude";
+    private static final String LONGITUTDE = "longitude";
+    private static final String GPS_TABLE = "GPS_TABLE";
+    /* GPS DB */
+
     private final Context context;
 
     //Creates  A table for every user. Passes TABLE NAME
     // Basically a concatination of SQL COMMANDS
     private String CREATE_TABLE = "CREATE TABLE " + NAME_OF_TABLE + "(" + USER_PHONE + " PlaceHolder," +
             USER_NAME + " PlaceHolder," + USER_EMAIL + " PlaceHolder," + USER_PASSWORD + " PlaceHolder " + ")";
+
+    private String CREATE_GPS_TABLE = "CREATE TABLE " + GPS_TABLE + "(" + LATITUDE + " PlaceHolder," +
+            LONGITUTDE + " PlaceHolder"  + ")";
+
     //Will Replace table if exist ( replace USER)
     private String DROP_TABLE = "DROP TABLE IF EXISTS " + NAME_OF_TABLE;
 
@@ -47,6 +58,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase My_Database) {
         My_Database.execSQL(CREATE_TABLE);
+        My_Database.execSQL(CREATE_GPS_TABLE);
     }
 
     @Override
@@ -131,13 +143,35 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
     /* --------------- FOR GPS DATABASE -----------   */
+    /*  EXAMPLE OF FUNCTION CALL FROM ANOTHER JAVA FILE (MapsActivity in this case) :
 
-    private static final String LONGITUDE = "p_longitude";
-    private static final String LATITUDE = "p_latitude";
+        double latitude = 11.12345;
+        double longitude = 999.7900000;
 
-    private String CREATE_GPS_TABLE = "CREATE TABLE " + GPS_TABLE + "(" + LONGITUDE + " PlaceHolder," +
-            LATITUDE + " PlaceHolder," + ")";
+        DatabaseHandler handler=new DatabaseHandler(MapsActivity.this);
+        handler.addGPS(latitude,longitude);
 
-    private String DROP_GPS_TABLE = "DROP TABLE IF EXISTS " + GPS_TABLE;
+     */
+
+    public void addGPS (double latitude ,double longitude)
+    {
+        SQLiteDatabase My_Database = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHandler.LONGITUTDE, latitude);
+        values.put(DatabaseHandler.LATITUDE, longitude);
+
+        long status = My_Database.insert(NAME_OF_TABLE, null, values);
+
+        if (status <= 0) {
+            //TOAST ...ITS A CELEBRATION
+            Toast.makeText(context, "Insertion Unsuccessful", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Insertion Successful", Toast.LENGTH_SHORT).show();
+        }
+
+        My_Database.close();
+
+
+    }
 
 }

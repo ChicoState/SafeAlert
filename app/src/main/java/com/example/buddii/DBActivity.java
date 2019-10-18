@@ -20,9 +20,6 @@ public class DBActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.find_buds_list);
-
-
         // LOAD USERS INPUT BY ID INTO USER VARIABLE
         setContentView(R.layout.database_activity);
         input1=(EditText)findViewById(R.id.i1);

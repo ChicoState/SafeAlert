@@ -10,7 +10,7 @@
         android:id="@+id/findRoute"
         android:layout_width="229dp"
         android:layout_height="230dp"
-        android:text="Find Route "
+        android:text="@string/find_route"
         app:layout_constraintBottom_toTopOf="@+id/beABuddii"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,7 +21,7 @@
         android:layout_width="226dp"
         android:layout_height="217dp"
         android:layout_marginBottom="152dp"
-        android:text="Be A Buddii"
+        android:text="@string/be_a_buddii"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
 

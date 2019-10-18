@@ -54,7 +54,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         onCreate(My_Database);
     }
     // Values passed on from MainActivity,JAVA
-    public void addemp(String userid, String name, String email, String password) {
+    public void addToDb(String userid, String name, String email, String password) {
         SQLiteDatabase My_Database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseHandler.USER_ID, userid);
@@ -95,13 +95,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //fetches all records of the Table stored in the Database.
     //Uses a cursor (learned in CINS 570)
-    public String load() {
+    public String load(int frombuddy) {
 
         String result = "";
-        String query = "Select*FROM " + NAME_OF_TABLE;
+        String SelectAll = "SELECT*FROM ";
+        String command = SelectAll + NAME_OF_TABLE;
 
         SQLiteDatabase My_Database = this.getWritableDatabase();
-        Cursor cursor = My_Database.rawQuery(query, null);
+        Cursor cursor = My_Database.rawQuery(command, null);
         while (cursor.moveToNext()) {
             int result_0 = cursor.getInt(0);
             String results1 = cursor.getString(1);
@@ -109,9 +110,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             String results3 = cursor.getString(3);
             String r0 =String.valueOf(result_0);
             // concat results
-            result += r0 + " " + results1 + " " + results2 + " " + results3 + "\n";
+            if (frombuddy == 0) {
+                result += r0 + " " + results1 + " "
+                        + results2 + " " + results3 + "\n";
+            }
+            if (frombuddy == 1) {
+                result += results1 + " "
+                        + results2 + " " +  "\n";
+            }
+            }
             System.getProperty("line.separator");
-        }
+
         cursor.close();
         My_Database.close();
         // if nothing was appended then TOAST this
@@ -121,6 +130,5 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return result;
 
     }
-
 
 }

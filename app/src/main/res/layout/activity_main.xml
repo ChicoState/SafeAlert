@@ -24,10 +24,12 @@
         android:text="Be A Buddii"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/testdb"
+
         android:layout_width="214dp"
         android:layout_height="52dp"
         android:text="Test Database"

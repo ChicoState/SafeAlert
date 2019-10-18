@@ -6,17 +6,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
     private Button btnFSR;
     private Button btnBab;
     private Button btnTst;
+    TextView UserTexViewVariable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         btnFSR = findViewById(R.id.findRoute);
         btnBab = findViewById(R.id.beABuddii);
         btnTst = findViewById(R.id.testdb);
@@ -41,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+       // UserTexViewVariable=(TextView)findViewById(R.id.bud2);
+
     }
 
     private void moveToBaB()
@@ -58,5 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private void moveToDb(){
         Intent intent = new Intent(MainActivity.this, DBActivity.class);
         startActivity(intent);
-    }
+        }
+
+
 }

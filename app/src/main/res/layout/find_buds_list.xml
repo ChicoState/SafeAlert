@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+    tools:context=".MainActivity">
+
 
     <TextView
         android:id="@+id/find_buds_header"
@@ -141,8 +143,7 @@
 <!--                    tools:srcCompat="@tools:sample/avatars[2]" />-->
 <!--                <TextView-->
 <!--                    android:id="@+id/find_bud_text_6"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_width="wrap_content"--><!--                    android:layout_height="wrap_content"-->
 <!--                    android:text="@string/user_name"-->
 <!--                    android:layout_marginLeft="150dp"-->
 <!--                    android:layout_marginTop="50dp"-->
@@ -155,6 +156,16 @@
 <!--                    android:layout_width="match_parent"-->
 <!--                    android:layout_height="match_parent"/>-->
 <!--            </androidx.cardview.widget.CardView>-->
+
+            <Button
+                android:id="@+id/bud1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:onClick="loadUser2"
+                android:text="LOAD USERS" />
+
+
 
         </LinearLayout>
     </ScrollView>

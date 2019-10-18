@@ -13,7 +13,7 @@ public class DBActivity extends AppCompatActivity {
     EditText input1,input2,input3,input4;
     String data1,data2,data3,data4, deleteUser;
     Button SubmitBUTTON;
-    TextView TempTexViewVariable;
+    TextView TempTexViewVariable, TempTexViewVariable2;
 
 
     @Override
@@ -28,6 +28,7 @@ public class DBActivity extends AppCompatActivity {
         input4=(EditText)findViewById(R.id.i4);
 
         TempTexViewVariable=(TextView)findViewById(R.id.t1); // need this variable to display user info after click
+        TempTexViewVariable2=(TextView)findViewById(R.id.gpsbutton);
 
         SubmitBUTTON=(Button)findViewById(R.id.b1);
         SubmitBUTTON.setOnClickListener(new View.OnClickListener() { // In other words , do this after click
@@ -64,6 +65,7 @@ public class DBActivity extends AppCompatActivity {
     {   //propriatary DBhandle
         DatabaseHandler dbHandler = new DatabaseHandler(this);
         TempTexViewVariable.setText(dbHandler.load(0));
+        TempTexViewVariable2.setText(dbHandler.loadGPS());
    }
 
     public String getUserToDelete(){

@@ -31,9 +31,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String USER_PASSWORD = "user_pass";
 
     /* GPS DB */
-    private static final String  LATITUDE = "latitude";
-    private static final String LONGITUTDE = "longitude";
-    private static final String GPS_TABLE = "GPS_TABLE";
+     private static final String  LATITUDE = "latitude";
+     private static final String LONGITUTDE = "longitude";
+     private static final String GPS_TABLE = "GPS_TABLE";
     /* GPS DB */
 
     private final Context context;
@@ -153,14 +153,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
      */
 
-    public void addGPS (double latitude ,double longitude)
+    public void addGPS (Double Alatitude ,Double Alongitude)
     {
         SQLiteDatabase My_Database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(DatabaseHandler.LONGITUTDE, latitude);
-        values.put(DatabaseHandler.LATITUDE, longitude);
+        values.put(DatabaseHandler.LONGITUTDE, Alatitude);
+        values.put(DatabaseHandler.LATITUDE, Alongitude);
 
-        long status = My_Database.insert(NAME_OF_TABLE, null, values);
+        long status = My_Database.insert(GPS_TABLE, null, values);
 
         if (status <= 0) {
             //TOAST ...ITS A CELEBRATION
@@ -171,6 +171,33 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         My_Database.close();
 
+
+    }
+
+    public String loadGPS() {
+
+        String result = "";
+        String SelectAll = "SELECT*FROM ";
+        String command = SelectAll + GPS_TABLE;
+
+        SQLiteDatabase My_Database = this.getWritableDatabase();
+        Cursor cursor = My_Database.rawQuery(command, null);
+        while (cursor.moveToNext()) {
+            String result0 = cursor.getString(0);
+            String results1 = cursor.getString(1);
+            // concat results
+             result += result0 + " " + results1 + " " + "\n";
+
+        }
+        System.getProperty("line.separator");
+
+        cursor.close();
+        My_Database.close();
+        // if nothing was appended then TOAST this
+        if (result == "" ) {
+            Toast.makeText(context, "NO DATA IN DB", Toast.LENGTH_SHORT).show();
+        }
+        return result;
 
     }
 

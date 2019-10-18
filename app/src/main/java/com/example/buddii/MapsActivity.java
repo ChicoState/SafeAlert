@@ -42,6 +42,8 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
     private GoogleMap mMap;
     ArrayList markerPoints = new ArrayList();
 
+
+
     private int mLocationPermissionGranted = 0;
     private int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
@@ -134,6 +136,10 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
         //double latitude = Double.parseDouble(inputArray[1]);
         //double longitude = Double.parseDouble(inputArray[0]);
 
+
+
+        /*DB STUFF */
+
         //THIS IS WHERE THE REPORTED LOCATION WILL BE ADDED TO THE DATABASE HOPEFULLY
         /*
         Vector<LonLat> temp = new Vector<>();
@@ -150,6 +156,13 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        /*DB STUFF */
+        Double latitude = 11.12345;
+        Double longitude = 999.7900000;
+
+        DatabaseHandler handler=new DatabaseHandler(MapsActivity.this);
+        handler.addGPS(latitude,longitude);
+        /*DB STUFF */
 
         //getLocationPermission();
 

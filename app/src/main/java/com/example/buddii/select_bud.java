@@ -18,16 +18,15 @@ public class select_bud extends AppCompatActivity {
         setContentView(R.layout.find_buds_list);
 
 
-        T2=(TextView)findViewById(R.id.textView7);
+        T2=(TextView)findViewById(R.id.find_bud_text_1);
 
     }
     // Loads info from DB activity
     public void loadUser2(View view)
     {   //proprietary DBhandle
         DatabaseHandler dbHandler = new DatabaseHandler(this);
-        int fromBuddyList =1;
         // passes a 1 to confirm that we just need user name and email
-        T2.setText(dbHandler.load(fromBuddyList));
+        T2.setText(dbHandler.loadUsers(1));
 
     }
 }

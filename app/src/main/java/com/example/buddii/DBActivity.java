@@ -64,7 +64,7 @@ public class DBActivity extends AppCompatActivity {
      public void loadUser(View view)
     {   //propriatary DBhandle
         DatabaseHandler dbHandler = new DatabaseHandler(this);
-        TempTexViewVariable.setText(dbHandler.load(0));
+        TempTexViewVariable.setText(dbHandler.loadUsers(0));
         TempTexViewVariable2.setText(dbHandler.loadGPS());
    }
 

@@ -9,6 +9,7 @@ including and version management and is able to use many SQL methods
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
@@ -43,6 +44,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private String CREATE_TABLE = "CREATE TABLE " + NAME_OF_TABLE + "(" + USER_PHONE + " PlaceHolder," +
             USER_NAME + " PlaceHolder," + USER_EMAIL + " PlaceHolder," + USER_PASSWORD + " PlaceHolder " + ")";
 
+
+
     private String CREATE_GPS_TABLE = "CREATE TABLE " + GPS_TABLE + "(" + LATITUDE + " PlaceHolder," +
             LONGITUTDE + " PlaceHolder"  + ")";
 
@@ -57,6 +60,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase My_Database) {
+
+       // DatabaseUtils.createDbFromSqlStatements(context,DATABASE_NAME,DATABASE_VERSION,CREATE_TABLE);
         My_Database.execSQL(CREATE_TABLE);
         My_Database.execSQL(CREATE_GPS_TABLE);
     }
@@ -92,7 +97,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void deleteUser(String id) {
         int Tlength =Toast.LENGTH_SHORT;
         SQLiteDatabase My_Database = this.getWritableDatabase();
-    // delete user record by id
+    // delete user record by phone
         long TempLong = My_Database.delete(NAME_OF_TABLE, USER_PHONE + " = ?",
                 new String[]{String.valueOf(id)});
         if (TempLong <= 0) {
@@ -108,13 +113,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //fetches all records of the Table stored in the Database.
     //Uses a cursor (learned in CINS 570)
-    public String load(int frombuddy) {
+    public String loadUsers(int fromSelect_bud) {
+
+        SQLiteDatabase My_Database = this.getWritableDatabase();
+
+        /* get number of rows */
+        //awsome Static utility methods for dealing with databases
+        long totalrows = DatabaseUtils.queryNumEntries(My_Database,NAME_OF_TABLE,null);
 
         String result = "";
         String SelectAll = "SELECT*FROM ";
         String command = SelectAll + NAME_OF_TABLE;
 
-        SQLiteDatabase My_Database = this.getWritableDatabase();
         Cursor cursor = My_Database.rawQuery(command, null);
         while (cursor.moveToNext()) {
             String result0 = cursor.getString(0);
@@ -122,11 +132,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             String results2 = cursor.getString(2);
             String results3 = cursor.getString(3);
             // concat results
-            if (frombuddy == 0) {
+            if (fromSelect_bud == 0) { // if called with 0, return all
                 result += result0 + " " + results1 + " "
-                        + results2 + " " + results3 + "\n";
+                        + results2 + " " + results3  + "\n" ;
             }
-            if (frombuddy == 1) {
+            if (fromSelect_bud == 1) { //if called with a 1 , return only name and email
                 result += results1 + " "
                         + results2 + " " +  "\n" + result0;
             }
@@ -139,7 +149,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (result == "" ) {
             Toast.makeText(context, "USER NOT CREATED YET", Toast.LENGTH_SHORT).show();
         }
-        return result;
+        if (fromSelect_bud == 0) {
+            return result + " Number Of Users In Database " + totalrows;
+        }
+        else
+            return result;
 
     }
     /* --------------- FOR GPS DATABASE -----------   */
@@ -157,8 +171,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     {
         SQLiteDatabase My_Database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(DatabaseHandler.LONGITUTDE, Alatitude);
-        values.put(DatabaseHandler.LATITUDE, Alongitude);
+        values.put(DatabaseHandler.LONGITUTDE,Alongitude );
+        values.put(DatabaseHandler.LATITUDE, Alatitude);
 
         long status = My_Database.insert(GPS_TABLE, null, values);
 
@@ -186,7 +200,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             String result0 = cursor.getString(0);
             String results1 = cursor.getString(1);
             // concat results
-             result += result0 + " " + results1 + " " + "\n";
+             result += "Latitude: " + result0 + "Longitude: " + results1 + " " + "\n";
 
         }
         System.getProperty("line.separator");

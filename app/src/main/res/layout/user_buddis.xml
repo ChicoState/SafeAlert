@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/buddiiImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/bud_profile_pic"
+                tools:srcCompat="@tools:sample/avatars[2]" />
+
+            <TextView
+                android:id="@+id/userBuddii"
+                android:layout_width="260dp"
+                android:layout_height="130dp"
+                android:layout_marginStart="135dp"
+                android:layout_marginLeft="150dp"
+                android:layout_marginTop="0dp"
+                android:text="@string/user_name" />
+
+        </androidx.cardview.widget.CardView>
+
+</LinearLayout>

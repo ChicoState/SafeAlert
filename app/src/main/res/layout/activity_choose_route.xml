@@ -13,28 +13,16 @@
         android:text="NO"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.857"
+        app:layout_constraintHorizontal_bias="0.893"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.688" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="137dp"
-        android:layout_height="55dp"
-        android:text="Destination"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.098"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="28dp"
-        android:layout_marginLeft="2dp"/>
+        app:layout_constraintVertical_bias="0.552" />
 
     <TextView
         android:id="@+id/nabTxt"
         android:layout_width="275dp"
         android:layout_height="92dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="204dp"
         android:text="          Need A Buddy?"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintBottom_toTopOf="@+id/yesBuddii"
@@ -51,19 +39,6 @@
         app:layout_constraintHorizontal_bias="0.13"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.688" />
+        app:layout_constraintVertical_bias="0.552" />
 
-    <EditText
-        android:id="@+id/enterDestination"
-        android:layout_width="341dp"
-        android:layout_height="44dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Enter Your Destination Here"
-        app:layout_constraintBottom_toTopOf="@+id/nabTxt"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.414"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.224" />
 </androidx.constraintlayout.widget.ConstraintLayout>

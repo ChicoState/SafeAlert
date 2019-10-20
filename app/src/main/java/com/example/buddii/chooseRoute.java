@@ -40,10 +40,10 @@ public class chooseRoute extends AppCompatActivity {
     }
     private void moveToSelectBuddii()
     {
-        /*Intent intent = new Intent(chooseRoute.this, findBudsList.class);
+        Intent intent = new Intent(chooseRoute.this, select_bud.class);
         startActivity(intent);
-    }*/
+    }
 
 
     }
-}
+

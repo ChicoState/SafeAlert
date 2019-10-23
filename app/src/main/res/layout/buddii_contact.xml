@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/blue_gradient_background"
+    android:hapticFeedbackEnabled="false"
     android:orientation="horizontal"
     android:paddingLeft="25dp"
     android:paddingTop="25dp"
@@ -12,8 +14,10 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
-        android:layout_height="649dp"
-        android:layout_weight="1">
+        android:layout_height="300dp"
+        android:layout_marginTop="50dp"
+        android:layout_weight="1"
+        app:contentPaddingTop="20dp">
 
         <ImageView
             android:id="@+id/imageView3"
@@ -23,6 +27,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
             android:layout_weight="1"
+            android:contentDescription="@string/todo"
             tools:srcCompat="@tools:sample/avatars[14]" />
 
         <TextView
@@ -35,32 +40,47 @@
             android:layout_weight="1"
             android:text="@string/user_name" />
 
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="200dp"
-            android:layout_marginLeft="200dp"
-            android:layout_marginTop="100dp"
-            android:layout_weight="1"
-            android:text="@string/message" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="75dp"
+        <LinearLayout
+            android:layout_width="247dp"
+            android:layout_height="60dp"
             android:layout_marginTop="220dp"
-            android:layout_marginRight="75dp"
-            android:ems="10"
-            android:gravity="start|top"
-            android:inputType="textMultiLine"
-            android:text="@string/message" />
+            android:layout_marginBottom="550dp"
+            android:orientation="vertical">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/sms_message"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="25dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="0dp"
+                android:autofillHints=""
+                android:ems="10"
+                android:gravity="start|top"
+                android:hint="@string/todo"
+                android:inputType="textMultiLine"
+                android:text="@string/message" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="109dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="250dp"
+            android:layout_marginLeft="250dp"
+            android:layout_marginTop="220dp"
+            android:layout_marginBottom="550dp"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/message_button"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:hapticFeedbackEnabled="true"
+                android:text="@string/message" />
+
+        </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 

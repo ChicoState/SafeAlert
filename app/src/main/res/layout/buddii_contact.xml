@@ -15,7 +15,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="0dp"
         android:layout_height="300dp"
-        android:layout_marginTop="50"
+        android:layout_marginTop="50dp"
         android:layout_weight="1"
         app:contentPaddingTop="20dp">
 
@@ -66,11 +66,11 @@
         <LinearLayout
             android:layout_width="109dp"
             android:layout_height="60dp"
+            android:layout_marginStart="250dp"
             android:layout_marginLeft="250dp"
             android:layout_marginTop="220dp"
             android:layout_marginBottom="550dp"
-            android:orientation="vertical"
-            android:layout_marginStart="250dp">
+            android:orientation="vertical">
 
             <Button
                 android:id="@+id/message_button"

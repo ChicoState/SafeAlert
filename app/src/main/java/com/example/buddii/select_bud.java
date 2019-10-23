@@ -9,8 +9,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.widget.TextView;
 
 public class select_bud extends AppCompatActivity {
-    TextView T2;
-    //LinearLayout benArcher;
+    TextView Tx1;
+    TextView Tx2;
+    TextView Tx3;
+    TextView Tx4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,15 +20,38 @@ public class select_bud extends AppCompatActivity {
         setContentView(R.layout.find_buds_list);
 
 
-        T2=(TextView)findViewById(R.id.find_bud_text_1);
+        Tx1=(TextView)findViewById(R.id.find_bud_text_1);
+        Tx2=(TextView)findViewById(R.id.find_bud_text_2);
+        Tx3=(TextView)findViewById(R.id.find_bud_text_3);
+        Tx4=(TextView)findViewById(R.id.find_bud_text_4);
 
     }
     // Loads info from DB activity
     public void loadUser2(View view)
-    {   //proprietary DBhandle
+    {
+
+        //proprietary DBhandle
         DatabaseHandler dbHandler = new DatabaseHandler(this);
-        // passes a 1 to confirm that we just need user name and email
-        T2.setText(dbHandler.loadUsers(1));
+        String ArrayOfBuddies[];
+        // get number of buddies from DB
+        int numOfBuddies = dbHandler.getNumOfUsers();
+        // retrieve array of buddies from database
+        // each index holds a buddi
+        ArrayOfBuddies=(dbHandler.loadBuddi());
+        for (int i = 0; i < numOfBuddies; i++) {
+            if(i == 0) {
+                Tx1.setText(ArrayOfBuddies[i]);
+            }
+            if(i == 1) {
+                Tx2.setText(ArrayOfBuddies[i]);
+            }
+            if(i == 2) {
+                Tx3.setText(ArrayOfBuddies[i]);
+            }
+            if(i == 3) {
+                Tx4.setText(ArrayOfBuddies[i]);
+            }
+        }
 
     }
 }

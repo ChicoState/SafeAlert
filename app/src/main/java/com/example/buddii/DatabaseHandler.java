@@ -118,8 +118,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase My_Database = this.getWritableDatabase();
 
         /* get number of rows */
-        //awsome Static utility methods for dealing with databases
-        long totalrows = DatabaseUtils.queryNumEntries(My_Database,NAME_OF_TABLE,null);
+       int totalrows = getNumOfUsers();
 
         String result = "";
         String SelectAll = "SELECT*FROM ";
@@ -127,6 +126,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         Cursor cursor = My_Database.rawQuery(command, null);
         while (cursor.moveToNext()) {
+
             String result0 = cursor.getString(0);
             String results1 = cursor.getString(1);
             String results2 = cursor.getString(2);
@@ -135,12 +135,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             if (fromSelect_bud == 0) { // if called with 0, return all
                 result += result0 + " " + results1 + " "
                         + results2 + " " + results3  + "\n" ;
-            }
-            if (fromSelect_bud == 1) { //if called with a 1 , return only name and email
-                result += results1 + " "
-                        + results2 + " " +  "\n" + result0;
-            }
-            }
+             }
+
+           }
             System.getProperty("line.separator");
 
         cursor.close();
@@ -155,6 +152,48 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         else
             return result;
 
+    }
+
+
+    public String[] loadBuddi() {
+
+        SQLiteDatabase My_Database = this.getWritableDatabase();
+        int count = 0;
+        int numOfUsers = getNumOfUsers();
+
+        String ArrayOfresult[] = new String[numOfUsers];
+        String result = "";
+        String SelectAll = "SELECT*FROM ";
+        String command = SelectAll + NAME_OF_TABLE;
+
+        Cursor cursor = My_Database.rawQuery(command, null);
+        while (cursor.moveToNext()) {
+
+            String result0 = cursor.getString(0); // phone num
+            String results1 = cursor.getString(1); // name
+            String results2 = cursor.getString(2);// email
+            // concat results
+            result += "* " + results1 +  "  \n"+ results2 +  "\n" + result0 +  "\n";
+            ArrayOfresult[count]=result;
+            result="";
+            count++;
+        }
+
+        System.getProperty("line.separator");
+
+        cursor.close();
+        My_Database.close();
+        return ArrayOfresult;
+
+    }
+
+    // this function returns the number of users in the database
+    public int getNumOfUsers(){
+        SQLiteDatabase My_Database = this.getWritableDatabase();
+        //awsome Static utility methods for dealing with databases, only returns a double
+        long tempTotalrows = DatabaseUtils.queryNumEntries(My_Database,NAME_OF_TABLE,null);
+        int totalrows= (int) tempTotalrows;
+        return totalrows;
     }
     /* --------------- FOR GPS DATABASE -----------   */
     /*  EXAMPLE OF FUNCTION CALL FROM ANOTHER JAVA FILE (MapsActivity in this case) :
@@ -200,7 +239,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             String result0 = cursor.getString(0);
             String results1 = cursor.getString(1);
             // concat results
-             result += "Latitude: " + result0 + "Longitude: " + results1 + " " + "\n";
+             result += "Latitude: " + result0 + " Longitude: " + results1 + " " + "\n";
 
         }
         System.getProperty("line.separator");
@@ -209,7 +248,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         My_Database.close();
         // if nothing was appended then TOAST this
         if (result == "" ) {
-            Toast.makeText(context, "NO DATA IN DB", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "NO LONG OR LAT IN DB", Toast.LENGTH_SHORT).show();
         }
         return result;
 

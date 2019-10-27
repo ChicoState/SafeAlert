@@ -2,31 +2,37 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/parent"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardElevation="5dp"
+        card_view:cardUseCompatPadding="true">
 
-            <ImageView
-                android:id="@+id/buddiiImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/bud_profile_pic"
-                tools:srcCompat="@tools:sample/avatars[2]" />
 
-            <TextView
-                android:id="@+id/userBuddii"
-                android:layout_width="260dp"
-                android:layout_height="130dp"
-                android:layout_marginStart="135dp"
-                android:layout_marginLeft="150dp"
-                android:layout_marginTop="0dp"
-                android:text="@string/user_name" />
+        <ImageView
+        android:id="@+id/buddiiImage"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:contentDescription="@string/bud_profile_pic"
+        tools:srcCompat="@tools:sample/avatars[2]"/>
 
-        </androidx.cardview.widget.CardView>
+    <TextView
+        android:id="@+id/userBuddii"
+        android:layout_width="225dp"
+        android:layout_height="97dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="30dp"
+        android:layout_toRightOf="@+id/buddiiImage"
+        android:text="@string/user_name"
+        android:textSize="17sp"/>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
 
 </LinearLayout>

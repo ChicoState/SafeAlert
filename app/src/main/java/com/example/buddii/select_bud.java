@@ -9,7 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class select_bud extends Activity {
+public class select_bud extends Activity
+{
     private ArrayList<String> mbuddiiNames = new ArrayList<>();
     private ArrayList<String> mbuddiiImages = new ArrayList<>();
 
@@ -25,22 +26,22 @@ public class select_bud extends Activity {
     //the buddii and the name of the buddii then store it within the card view
     private void addDummyUsers(){
 
-        mbuddiiImages.add("image");
+        mbuddiiImages.add("Mick image");
         mbuddiiNames.add("Mick");
 
-        mbuddiiImages.add("image");
+        mbuddiiImages.add("Jesus image");
         mbuddiiNames.add("Jesus");
 
-        mbuddiiImages.add("image");
+        mbuddiiImages.add("Robert image");
         mbuddiiNames.add("Robert");
 
-        mbuddiiImages.add("image");
+        mbuddiiImages.add("Ben image");
         mbuddiiNames.add("Ben");
 
-        mbuddiiImages.add("image");
+        mbuddiiImages.add("Isaac image");
         mbuddiiNames.add("Isaac");
 
-        mbuddiiImages.add("image");
+        mbuddiiImages.add("Nick image");
         mbuddiiNames.add("Nick");
 
 
@@ -49,7 +50,7 @@ public class select_bud extends Activity {
     }
     private void initRecyclerView(){
         RecyclerView recyclerView = findViewById(R.id.findBudsList);
-        buddiisAdapter adapter = new buddiisAdapter(this, mbuddiiNames, mbuddiiImages);
+        buddiisAdapter adapter = new buddiisAdapter(this, mbuddiiImages, mbuddiiNames);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }

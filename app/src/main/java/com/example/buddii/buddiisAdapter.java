@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,7 +43,13 @@ public class buddiisAdapter extends RecyclerView.Adapter<buddiisAdapter.ViewHold
         Log.d(TAG, "onBindViewHolder: called.");
 
         holder.userBuddii.setText(mbuddiiNames.get(position));
-
+        try {
+            Uri imageUri = Uri.parse(mbuddiiImages.get(position));
+            holder.buddiiImage.setImageURI(imageUri);
+        }catch(Exception e)
+        {
+            //TODO: fix diaper pattern (anti-pattern)
+        }
     }
 
     @Override

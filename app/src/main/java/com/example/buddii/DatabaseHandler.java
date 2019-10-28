@@ -127,14 +127,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor cursor = My_Database.rawQuery(command, null);
         while (cursor.moveToNext()) {
 
-            String result0 = cursor.getString(0);
-            String results1 = cursor.getString(1);
-            String results2 = cursor.getString(2);
-            String results3 = cursor.getString(3);
+            String phoneNumber = cursor.getString(0);
+            String name = cursor.getString(1);
+            String email = cursor.getString(2);
+            //String password = cursor.getString(3);
             // concat results
             if (fromSelect_bud == 0) { // if called with 0, return all
-                result += result0 + " " + results1 + " "
-                        + results2 + " " + results3  + "\n" ;
+                result += phoneNumber + " " + name + " "
+                        + email + " " + "\n" ;
              }
 
            }

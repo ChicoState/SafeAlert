@@ -4,6 +4,7 @@ package com.example.buddii;
 import android.os.Bundle;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
+import java.util.ArrayList;
 
 
 import android.widget.TextView;
@@ -32,12 +33,17 @@ public class select_bud extends AppCompatActivity {
 
         //proprietary DBhandle
         DatabaseHandler dbHandler = new DatabaseHandler(this);
+
+
         String ArrayOfBuddies[];
         // get number of buddies from DB
         int numOfBuddies = dbHandler.getNumOfUsers();
         // retrieve array of buddies from database
         // each index holds a buddi
-        ArrayOfBuddies=(dbHandler.loadBuddi());
+        ArrayOfBuddies=(dbHandler.loadUsers("name,phoneNumber,email"));
+
+
+
         for (int i = 0; i < numOfBuddies; i++) {
             if(i == 0) {
                 Tx1.setText(ArrayOfBuddies[i]);

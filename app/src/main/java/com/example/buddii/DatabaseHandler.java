@@ -15,6 +15,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
 
+
 // SQLITE set up to handle DATABASE
 public class DatabaseHandler extends SQLiteOpenHelper {
     //DATABASE SET UP
@@ -113,16 +114,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //fetches all records of the Table stored in the Database.
     //Uses a cursor (learned in CINS 570)
-    public String loadUsers(int fromSelect_bud) {
+    public String[] loadUsers(String requestCall) {
 
         SQLiteDatabase My_Database = this.getWritableDatabase();
 
         /* get number of rows */
-       int totalrows = getNumOfUsers();
 
-        String result = "";
-        String SelectAll = "SELECT*FROM ";
-        String command = SelectAll + NAME_OF_TABLE;
+       String[] requestHolderArray = requestCall.split(",");
+       int numOfRequest = requestHolderArray.length;
+        int count =0;
+       // array of Indeces to hold format of strings
+        String[] arrayOftIndecesHolder =new String[4];
+
+        int numOfUsers = getNumOfUsers();
+        String ArrayOfresult[] = new String[numOfUsers];
+
+
+       String result = "";
+       String SelectAll = "SELECT*FROM ";
+       String command = SelectAll + NAME_OF_TABLE;
 
         Cursor cursor = My_Database.rawQuery(command, null);
         while (cursor.moveToNext()) {
@@ -131,11 +141,34 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             String name = cursor.getString(1);
             String email = cursor.getString(2);
             //String password = cursor.getString(3);
-            // concat results
-            if (fromSelect_bud == 0) { // if called with 0, return all
-                result += phoneNumber + " " + name + " "
-                        + email + " " + "\n" ;
-             }
+
+            // for loop will place the order of string according to the order
+            // the user request
+
+            for (int i = 0 ; i < numOfRequest; i++) {
+                if (requestHolderArray[i].equals("name")) {
+                    arrayOftIndecesHolder[i] = name;
+                }
+                if (requestHolderArray[i].equals("phoneNumber")) {
+                    arrayOftIndecesHolder[i] = phoneNumber;
+                }
+                if (requestHolderArray[i].equals("email")) {
+                    arrayOftIndecesHolder[i] = email;
+                }
+            }
+
+            for (int i = 0 ; i < numOfRequest; i++) {
+
+                result += arrayOftIndecesHolder[i] + " ";
+                if (i == (numOfRequest- 1))
+                {
+                    ArrayOfresult[count] = result;
+
+                }
+            }
+
+            result="";
+            count++;
 
            }
             System.getProperty("line.separator");
@@ -143,49 +176,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         cursor.close();
         My_Database.close();
         // if nothing was appended then TOAST this
-        if (result == "" ) {
+        if (ArrayOfresult[0] == null ) {
             Toast.makeText(context, "USER NOT CREATED YET", Toast.LENGTH_SHORT).show();
         }
-        if (fromSelect_bud == 0) {
-            return result + " Number Of Users In Database " + totalrows;
-        }
-        else
-            return result;
-
-    }
 
 
-    public String[] loadBuddi() {
-
-        SQLiteDatabase My_Database = this.getWritableDatabase();
-        int count = 0;
-        int numOfUsers = getNumOfUsers();
-
-        String ArrayOfresult[] = new String[numOfUsers];
-        String result = "";
-        String SelectAll = "SELECT*FROM ";
-        String command = SelectAll + NAME_OF_TABLE;
-
-        Cursor cursor = My_Database.rawQuery(command, null);
-        while (cursor.moveToNext()) {
-
-            String result0 = cursor.getString(0); // phone num
-            String results1 = cursor.getString(1); // name
-            String results2 = cursor.getString(2);// email
-            // concat results
-            result += "* " + results1 +  "  \n"+ results2 +  "\n" + result0 +  "\n";
-            ArrayOfresult[count]=result;
-            result="";
-            count++;
-        }
-
-        System.getProperty("line.separator");
-
-        cursor.close();
-        My_Database.close();
         return ArrayOfresult;
 
+
+
     }
+
+
 
     // this function returns the number of users in the database
     public int getNumOfUsers(){

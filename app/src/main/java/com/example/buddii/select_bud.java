@@ -1,61 +1,67 @@
 package com.example.buddii;
 
 
+import android.app.Activity;
+
 import android.os.Bundle;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
+import java.util.ArrayList;
 
 
 import android.widget.TextView;
 
-public class select_bud extends AppCompatActivity {
-    TextView Tx1;
-    TextView Tx2;
-    TextView Tx3;
-    TextView Tx4;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+
+public class select_bud extends Activity
+{
+    private ArrayList<String> mbuddiiNames = new ArrayList<>();
+    private ArrayList<String> mbuddiiImages = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.find_buds_list);
+        addDummyUsers();
+    }
+
+//where the database info needs to be implemented; when this function calls initRecyclerView it is going to take the picture of
+    //the buddii and the name of the buddii then store it within the card view
+    private void addDummyUsers(){
+
+        mbuddiiImages.add("Mick image");
+        mbuddiiNames.add("Mick");
+
+        mbuddiiImages.add("Jesus image");
+        mbuddiiNames.add("Jesus");
+
+        mbuddiiImages.add("Robert image");
+        mbuddiiNames.add("Robert");
+
+        mbuddiiImages.add("Ben image");
+        mbuddiiNames.add("Ben");
+
+        mbuddiiImages.add("Isaac image");
+        mbuddiiNames.add("Isaac");
+
+        mbuddiiImages.add("Nick image");
+        mbuddiiNames.add("Nick");
 
 
-        Tx1=(TextView)findViewById(R.id.find_bud_text_1);
-        Tx2=(TextView)findViewById(R.id.find_bud_text_2);
-        Tx3=(TextView)findViewById(R.id.find_bud_text_3);
-        Tx4=(TextView)findViewById(R.id.find_bud_text_4);
+        initRecyclerView();
 
     }
-    // Loads info from DB activity
-    public void loadUser2(View view)
-    {
-
-        //proprietary DBhandle
-        DatabaseHandler dbHandler = new DatabaseHandler(this);
-        String ArrayOfBuddies[];
-        // get number of buddies from DB
-        int numOfBuddies = dbHandler.getNumOfUsers();
-        // retrieve array of buddies from database
-        // each index holds a buddi
-        ArrayOfBuddies=(dbHandler.loadBuddi());
-        for (int i = 0; i < numOfBuddies; i++) {
-            if(i == 0) {
-                Tx1.setText(ArrayOfBuddies[i]);
-            }
-            if(i == 1) {
-                Tx2.setText(ArrayOfBuddies[i]);
-            }
-            if(i == 2) {
-                Tx3.setText(ArrayOfBuddies[i]);
-            }
-            if(i == 3) {
-                Tx4.setText(ArrayOfBuddies[i]);
-            }
-        }
-
+    private void initRecyclerView(){
+        RecyclerView recyclerView = findViewById(R.id.findBudsList);
+        buddiisAdapter adapter = new buddiisAdapter(this, mbuddiiImages, mbuddiiNames);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 }
-
 
 
 

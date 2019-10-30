@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 
 import com.google.android.gms.location.Geofence;
@@ -189,6 +191,8 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         mMarkerPoints = new ArrayList<>();
+
+        getIncomingIntent();
 
     }
 
@@ -447,6 +451,29 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
             }else
                 Toast.makeText(getApplicationContext(),"No route is found", Toast.LENGTH_LONG).show();
         }
+    }
+
+
+    private void getIncomingIntent()
+    {
+        if(getIntent().hasExtra("buddiiImage") && getIntent().hasExtra("userBuddii"))
+        {
+            String buddiiImage = getIntent().getStringExtra("buddiiImage");
+            String userBuddii = getIntent().getStringExtra("userBuddii");
+
+            //setImage(buddiiImage, userBuddii);
+        }
+    }
+
+    private void setImage(String buddiiImage, String userBuddii)
+    {
+        TextView name = findViewById(R.id.userBuddii);
+        name.setText(userBuddii);
+
+        /*ImageView image = findViewById(R.id.buddiiImage);
+        image.setImageIcon(R.id.buddiiImage);
+        */
+
     }
 
 }

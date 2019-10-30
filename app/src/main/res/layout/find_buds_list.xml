@@ -2,9 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
     tools:context=".MainActivity">
+
 
 
     <TextView
@@ -21,153 +23,10 @@
         android:typeface="sans"
         app:fontFamily="sans-serif-black" />
 
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/findBudsList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/find_bud_image_1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/bud_profile_pic"
-                    tools:srcCompat="@tools:sample/avatars[2]" />
-
-                <TextView
-                    android:id="@+id/find_bud_text_1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="150dp"
-                    android:layout_marginTop="50dp"
-                    android:text="@string/user_name"
-                    android:layout_marginStart="150dp"/>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/find_bud_image_2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/bud_profile_pic"
-                    tools:srcCompat="@tools:sample/avatars[2]" />
-                <TextView
-                    android:id="@+id/find_bud_text_2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/user_name"
-                    android:layout_marginLeft="150dp"
-                    android:layout_marginTop="50dp"
-                    android:layout_marginStart="150dp" />
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/find_bud_image_3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/bud_profile_pic"
-                    tools:srcCompat="@tools:sample/avatars[2]" />
-                <TextView
-                    android:id="@+id/find_bud_text_3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/user_name"
-                    android:layout_marginLeft="150dp"
-                    android:layout_marginTop="50dp"
-                    android:layout_marginStart="150dp"/>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/find_bud_image_4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/bud_profile_pic"
-                    tools:srcCompat="@tools:sample/avatars[2]" />
-                <TextView
-                    android:id="@+id/find_bud_text_4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/user_name"
-                    android:layout_marginLeft="150dp"
-                    android:layout_marginTop="50dp"
-                    android:layout_marginStart="150dp"/>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/find_bud_image_5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/bud_profile_pic"
-                    tools:srcCompat="@tools:sample/avatars[2]" />
-                <TextView
-                    android:id="@+id/find_bud_text_5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/user_name"
-                    android:layout_marginLeft="150dp"
-                    android:layout_marginTop="50dp"
-                    android:layout_marginStart="150dp"/>
-            </androidx.cardview.widget.CardView>
-
-<!--            <androidx.cardview.widget.CardView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content" >-->
-
-<!--                <ImageView-->
-<!--                    android:id="@+id/find_bud_image_6"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:contentDescription="@string/bud_profile_pic"-->
-<!--                    tools:srcCompat="@tools:sample/avatars[2]" />-->
-<!--                <TextView-->
-<!--                    android:id="@+id/find_bud_text_6"-->
-<!--                    android:layout_width="wrap_content"--><!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="@string/user_name"-->
-<!--                    android:layout_marginLeft="150dp"-->
-<!--                    android:layout_marginTop="50dp"-->
-<!--                    android:layout_marginStart="150dp"/>-->
-<!--                <?xml version="1.0" encoding="utf-8"?>-->
-<!--                &lt;!&ndash; A RecyclerView with some commonly used attributes &ndash;&gt;-->
-<!--                <android.support.v7.widget.RecyclerView-->
-<!--                    android:id="@+id/my_recycler_view"-->
-<!--                    android:scrollbars="vertical"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"/>-->
-<!--            </androidx.cardview.widget.CardView>-->
-
-            <Button
-                android:id="@+id/bud1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:onClick="loadUser2"
-                android:text="LOAD USERS" />
-
-
-
-        </LinearLayout>
-    </ScrollView>
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
 
 </LinearLayout>

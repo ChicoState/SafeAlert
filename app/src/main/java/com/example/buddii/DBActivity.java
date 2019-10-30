@@ -8,12 +8,14 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 
 public class DBActivity extends AppCompatActivity {
     EditText input1,input2,input3,input4;
     String data1,data2,data3,data4, deleteUser;
     Button SubmitBUTTON;
-    TextView TempTexViewVariable, TempTexViewVariable2;
+    TextView Tx1,Tx2,Tx3,Tx4, TempTexViewVariable2;
 
 
     @Override
@@ -27,7 +29,7 @@ public class DBActivity extends AppCompatActivity {
         input3=(EditText)findViewById(R.id.i3);
         input4=(EditText)findViewById(R.id.i4);
 
-        TempTexViewVariable=(TextView)findViewById(R.id.t1); // need this variable to display user info after click
+        Tx1=(TextView)findViewById(R.id.t1); // need this variable to display user info after click
         TempTexViewVariable2=(TextView)findViewById(R.id.gpsbutton);
 
         SubmitBUTTON=(Button)findViewById(R.id.b1);
@@ -64,7 +66,22 @@ public class DBActivity extends AppCompatActivity {
      public void loadUser(View view)
     {   //propriatary DBhandle
         DatabaseHandler dbHandler = new DatabaseHandler(this);
-        TempTexViewVariable.setText(dbHandler.loadUsers(0));
+
+        String ArrayOfBuddies[];
+        String results = "";
+        int numOfBuddies = dbHandler.getNumOfUsers();
+        ArrayOfBuddies=(dbHandler.loadUsers("email,name,phoneNumber"));
+
+        for (int i = 0 ; i < numOfBuddies; i++) {
+
+            results += ArrayOfBuddies[i] + " \n";
+            if (i == (numOfBuddies- 1))
+            {
+                Tx1.setText(results);
+
+            }
+        }
+
         TempTexViewVariable2.setText(dbHandler.loadGPS());
    }
 

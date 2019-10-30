@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Arrays;
 
 
 import android.widget.TextView;
@@ -18,39 +20,30 @@ import java.util.ArrayList;
 
 public class select_bud extends Activity
 {
-    private ArrayList<String> mbuddiiNames = new ArrayList<>();
-    private ArrayList<String> mbuddiiImages = new ArrayList<>();
 
+    private ArrayList<String> mbuddiiImages = new ArrayList<>();
+    ArrayList<String> mbuddiiNames = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.find_buds_list);
-        addDummyUsers();
+        addUsers();
     }
 
 //where the database info needs to be implemented; when this function calls initRecyclerView it is going to take the picture of
     //the buddii and the name of the buddii then store it within the card view
-    private void addDummyUsers(){
+    private void addUsers(){
 
-        mbuddiiImages.add("Mick image");
-        mbuddiiNames.add("Mick");
+        DatabaseHandler dbHandler = new DatabaseHandler(this);
+        int numOfBuddies = dbHandler.getNumOfUsers();
+        String ArrayOfBuddies[];
+        ArrayOfBuddies=(dbHandler.loadUsers("name"));
 
-        mbuddiiImages.add("Jesus image");
-        mbuddiiNames.add("Jesus");
+        for (int i = 0 ; i < numOfBuddies; i++) {
 
-        mbuddiiImages.add("Robert image");
-        mbuddiiNames.add("Robert");
-
-        mbuddiiImages.add("Ben image");
-        mbuddiiNames.add("Ben");
-
-        mbuddiiImages.add("Isaac image");
-        mbuddiiNames.add("Isaac");
-
-        mbuddiiImages.add("Nick image");
-        mbuddiiNames.add("Nick");
-
+            mbuddiiNames.add(ArrayOfBuddies[i]);
+        }
 
         initRecyclerView();
 

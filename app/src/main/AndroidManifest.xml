@@ -16,6 +16,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".findingSafestRouteActivity"></activity>
+        <activity android:name=".beingABuddyActivity" />
+        <activity android:name=".AboutUsActivity" />
+        <activity android:name=".TutorialActivity" />
+        <activity android:name=".beABuddy" />
         <activity
             android:name=".PreferencesActivity"
             android:label="@string/title_activity_preferences"></activity>

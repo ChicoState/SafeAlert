@@ -15,6 +15,8 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
     private Button btnFSR;
     private Button btnBab;
+    private Button btnTut;
+
     private Button btnTst;
     TextView UserTexViewVariable;
 
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnFSR = findViewById(R.id.findRoute);
         btnBab = findViewById(R.id.beABuddii);
+        btnTut = findViewById(R.id.Tutorial);
         btnTst = findViewById(R.id.testdb);
         btnFSR.setOnClickListener(new View.OnClickListener()
         {
@@ -52,6 +55,13 @@ public class MainActivity extends AppCompatActivity {
 
        // UserTexViewVariable=(TextView)findViewById(R.id.bud2);
 
+        btnTut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveToTut();
+            }
+        });
+
     }
 
     private void moveToBaB()
@@ -63,6 +73,11 @@ public class MainActivity extends AppCompatActivity {
     private void moveToChooseRoute()
     {
         Intent intent = new Intent(MainActivity.this, chooseRoute.class);
+        startActivity(intent);
+    }
+
+    private void moveToTut(){
+        Intent intent = new Intent(MainActivity.this, TutorialActivity.class);
         startActivity(intent);
     }
 

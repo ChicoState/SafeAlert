@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -61,6 +62,7 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
     private int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
     private Button reportButton;
+    private Button searchButton;
 
     public class LonLat {
         private double longitude;
@@ -191,13 +193,39 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         mMarkerPoints = new ArrayList<>();
+        reportButton = findViewById(R.id.report);
+        searchButton = findViewById(R.id.search);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeBack();
+            }
+        });
+        reportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                changeView();
+
+            }
+        });
+
+    }
+
+    private void changeView(){
+        findViewById(R.id.searchField).setVisibility(View.GONE);
+        findViewById(R.id.reportField).setVisibility(View.VISIBLE);
+    }
+
+    private void changeBack(){
+        findViewById(R.id.searchField).setVisibility(View.VISIBLE);
+        findViewById(R.id.reportField).setVisibility(View.GONE);
         getIncomingIntent();
 
     }
 
     public void onMapSearch(View view) {
-        EditText locationSearch = findViewById(R.id.editText);
+        EditText locationSearch = findViewById(R.id.searchText);
         String location = locationSearch.getText().toString();
         List<Address>addressList = null;
         reportLonLat(view);

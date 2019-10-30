@@ -14,18 +14,32 @@
         app:layout_constraintBottom_toTopOf="@+id/beABuddii"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.727" />
+
 
     <Button
         android:id="@+id/beABuddii"
         android:layout_width="226dp"
         android:layout_height="217dp"
-        android:layout_marginBottom="152dp"
+        android:layout_marginBottom="56dp"
         android:text="@string/be_a_buddii"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.508"
 
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/Tutorial"
+        android:layout_width="233dp"
+        android:layout_height="67dp"
+        android:text="Tutorial"
+        app:layout_constraintBottom_toTopOf="@+id/findRoute"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.483"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/testdb"

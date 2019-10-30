@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.net.Uri;
+import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,6 +51,17 @@ public class buddiisAdapter extends RecyclerView.Adapter<buddiisAdapter.ViewHold
         {
             //TODO: fix diaper pattern (anti-pattern)
         }
+
+
+        holder.parent.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext,MapsActivity.class);
+              //  intent.putExtra("buddiiImage",mbuddiiImages.get(position));
+                intent.putExtra("userBuddii",mbuddiiNames.get(position));
+                mContext.startActivity(intent);
+            }
+            });
     }
 
     @Override

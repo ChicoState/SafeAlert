@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -155,9 +157,10 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        getIncomingIntent();
         /*DB STUFF */
         Double latitude = 11.12345;
         Double longitude = 999.7900000;
@@ -173,7 +176,8 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        getIncomingIntent();
+
+
 
     }
 

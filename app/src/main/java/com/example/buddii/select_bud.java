@@ -22,7 +22,7 @@ public class select_bud extends Activity
 {
 
     private ArrayList<String> mbuddiiImages = new ArrayList<>();
-    ArrayList<String> mbuddiiNames = new ArrayList<>();
+    private ArrayList<String> mbuddiiNames = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -35,11 +35,14 @@ public class select_bud extends Activity
     //the buddii and the name of the buddii then store it within the card view
     private void addUsers(){
 
-        DatabaseHandler dbHandler = new DatabaseHandler(this);
+       DatabaseHandler dbHandler = new DatabaseHandler(this);
         int numOfBuddies = dbHandler.getNumOfUsers();
         String ArrayOfBuddies[];
         ArrayOfBuddies=(dbHandler.loadUsers("name"));
+       // mbuddiiNames.add("TESTING");
 
+        // for loop will irretiate the index of ArrayOfBuddies and will
+        // populate them into mBuddiNames ArrayList
         for (int i = 0 ; i < numOfBuddies; i++) {
 
             mbuddiiNames.add(ArrayOfBuddies[i]);

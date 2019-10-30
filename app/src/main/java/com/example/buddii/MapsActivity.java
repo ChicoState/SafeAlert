@@ -5,6 +5,8 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.fragment.app.FragmentActivity;
 
@@ -30,6 +32,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        getIncomingIntent();
 
     }
 
@@ -65,4 +69,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(chico));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
     }
+
+    private void getIncomingIntent()
+    {
+        if(getIntent().hasExtra("buddiiImage") && getIntent().hasExtra("userBuddii"))
+        {
+            String buddiiImage = getIntent().getStringExtra("buddiiImage");
+            String userBuddii = getIntent().getStringExtra("userBuddii");
+
+            //setImage(buddiiImage, userBuddii);
+        }
+    }
+
+    private void setImage(String buddiiImage, String userBuddii)
+    {
+        TextView name = findViewById(R.id.userBuddii);
+        name.setText(userBuddii);
+
+        /*ImageView image = findViewById(R.id.buddiiImage);
+        image.setImageIcon(R.id.buddiiImage);
+        */
+
+    }
+
 }

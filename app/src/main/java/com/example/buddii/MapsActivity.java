@@ -1,7 +1,5 @@
 package com.example.buddii;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -9,9 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,6 +29,7 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
     private int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
     private Button reportButton;
+    private Button searchButton;
 
     public class LonLat {
         private double longitude;
@@ -145,11 +141,37 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        reportButton = findViewById(R.id.report);
+        searchButton = findViewById(R.id.search);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeBack();
+            }
+        });
+        reportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                changeView();
+
+            }
+        });
 
     }
 
+    private void changeView(){
+        findViewById(R.id.searchField).setVisibility(View.GONE);
+        findViewById(R.id.reportField).setVisibility(View.VISIBLE);
+    }
+
+    private void changeBack(){
+        findViewById(R.id.searchField).setVisibility(View.VISIBLE);
+        findViewById(R.id.reportField).setVisibility(View.GONE);
+    }
+
     public void onMapSearch(View view) {
-        EditText locationSearch = findViewById(R.id.editText);
+        EditText locationSearch = findViewById(R.id.searchText);
         String location = locationSearch.getText().toString();
         List<Address>addressList = null;
 

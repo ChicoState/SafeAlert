@@ -3,28 +3,50 @@ package com.example.buddii;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PatternItem;
+import com.google.android.gms.maps.model.PolylineOptions;
 
+import org.json.JSONObject;
+
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
+
 
 public class MapsActivity extends MainActivity implements OnMapReadyCallback{
 
     private static final List<PatternItem> PATTERN_POLYLINE_DOTTED = null;
     private GoogleMap mMap;
+    ArrayList markerPoints = new ArrayList();
+
+
+
     private int mLocationPermissionGranted = 0;
     private int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
@@ -67,7 +89,7 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
         }
     }
 
-    private void setBlueThings(){
+    private void setBlueThings(){ //THIS IS TEMPORARY YOU SONS OF BITCHES
 
         mMap.addCircle(new CircleOptions().center(new LatLng(39.726408, -121.847657))
                 .radius(10)
@@ -118,6 +140,10 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
         //double latitude = Double.parseDouble(inputArray[1]);
         //double longitude = Double.parseDouble(inputArray[0]);
 
+
+
+        /*DB STUFF */
+
         //THIS IS WHERE THE REPORTED LOCATION WILL BE ADDED TO THE DATABASE HOPEFULLY
         /*
         Vector<LonLat> temp = new Vector<>();
@@ -134,6 +160,13 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        /*DB STUFF */
+        Double latitude = 11.12345;
+        Double longitude = 999.7900000;
+
+        DatabaseHandler handler=new DatabaseHandler(MapsActivity.this);
+        handler.addGPS(latitude,longitude);
+        /*DB STUFF */
 
         //getLocationPermission();
 
@@ -168,6 +201,8 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
     private void changeBack(){
         findViewById(R.id.searchField).setVisibility(View.VISIBLE);
         findViewById(R.id.reportField).setVisibility(View.GONE);
+        getIncomingIntent();
+
     }
 
     public void onMapSearch(View view) {
@@ -202,11 +237,66 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
         mMap.moveCamera(CameraUpdateFactory.newLatLng(chico));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) { // Im aware this shit makes no sense right now just bare with me
+
+                if (markerPoints.size() > 1) {
+                    markerPoints.clear();
+                    mMap.clear();
+                }
+
+                markerPoints.add(latLng);
+
+                MarkerOptions options = new MarkerOptions();
+
+                options.position(latLng);
+
+                if (markerPoints.size() == 1) {
+                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                } else if (markerPoints.size() == 2) {
+                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                }
+
+                mMap.addMarker(options);
+
+                if (markerPoints.size() >= 2) {
+                    LatLng origin = (LatLng) markerPoints.get(0);
+                    LatLng dest = (LatLng) markerPoints.get(1);
+                }
+
+            }
+        });
+
+
         setWaypoints(RetrieveLocations());
-        setBlueThings();                                                                //Temporary place to put the addition of the blue things before we get a database for them
+        setBlueThings(); //Temporary place to put the addition of the blue things before we get a database for them
 
         mMap.setTrafficEnabled(true);
         mMap.setMapType(2);
 
     }
+
+    private void getIncomingIntent()
+    {
+        if(getIntent().hasExtra("buddiiImage") && getIntent().hasExtra("userBuddii"))
+        {
+            String buddiiImage = getIntent().getStringExtra("buddiiImage");
+            String userBuddii = getIntent().getStringExtra("userBuddii");
+
+            //setImage(buddiiImage, userBuddii);
+        }
+    }
+
+    private void setImage(String buddiiImage, String userBuddii)
+    {
+        TextView name = findViewById(R.id.userBuddii);
+        name.setText(userBuddii);
+
+        /*ImageView image = findViewById(R.id.buddiiImage);
+        image.setImageIcon(R.id.buddiiImage);
+        */
+
+    }
+
 }

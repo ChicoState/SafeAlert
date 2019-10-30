@@ -10,12 +10,15 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
     private Button btnFSR;
     private Button btnBab;
     private Button btnTut;
 
+    private Button btnTst;
+    TextView UserTexViewVariable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         btnFSR = findViewById(R.id.findRoute);
         btnBab = findViewById(R.id.beABuddii);
         btnTut = findViewById(R.id.Tutorial);
+        btnTst = findViewById(R.id.testdb);
         btnFSR.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -41,6 +45,15 @@ public class MainActivity extends AppCompatActivity {
                 moveToBaB();
             }
         });
+        btnTst.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveToDb();
+            }
+        });
+
+
+       // UserTexViewVariable=(TextView)findViewById(R.id.bud2);
 
         btnTut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,4 +80,11 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, TutorialActivity.class);
         startActivity(intent);
     }
+
+    private void moveToDb(){
+        Intent intent = new Intent(MainActivity.this, DBActivity.class);
+        startActivity(intent);
+        }
+
+
 }

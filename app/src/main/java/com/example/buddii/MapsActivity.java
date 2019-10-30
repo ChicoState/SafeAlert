@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -22,6 +25,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.location.GeofencingClient;
 
 import org.json.JSONObject;
 
@@ -33,6 +37,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
@@ -40,14 +45,14 @@ import java.util.Vector;
 
 public class MapsActivity extends MainActivity implements OnMapReadyCallback{
 
+    private GeofencingClient geofencingClient;
     private static final List<PatternItem> PATTERN_POLYLINE_DOTTED = null;
     private GoogleMap mMap;
     private LatLng mOrigin;
     private LatLng mDestination;
     private Polyline mPolyline;
     ArrayList<LatLng> mMarkerPoints;
-
-
+    LinkedList<Geofence> geofenceList = null;
 
 
     private int mLocationPermissionGranted = 0;
@@ -135,18 +140,13 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
                 .fillColor(Color.CYAN));
     }
 
-
     public void reportLonLat(View view) {
-        /*
-        EditText report = findViewById(R.id.reportLocation);
+
+        EditText report = findViewById(R.id.editText);
         String input = report.getText().toString();
         String[] inputArray = input.split(",");
-        double latitude = Double.parseDouble(inputArray[1]);
-        double longitude = Double.parseDouble(inputArray[0]);
-
-
-
-
+        double latitude = Double.parseDouble(inputArray[0]);
+        double longitude = Double.parseDouble(inputArray[1]);
 
         //THIS IS WHERE THE REPORTED LOCATION WILL BE ADDED TO THE DATABASE HOPEFULLY
 
@@ -156,20 +156,30 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
         templonlat.setLongitude(longitude);
         temp.add(templonlat);
 
-        setWaypoints(temp);
-        */
+        DatabaseHandler handler=new DatabaseHandler(MapsActivity.this);
+        handler.addGPS(latitude,longitude);
+
+        geofenceList.add(new Geofence.Builder()
+                // Set the request ID of the geofence. This is a string to identify this
+                // geofence.
+                .setRequestId(input)
+
+                .setCircularRegion(
+                        latitude,
+                        longitude,
+                        20
+                )
+                .setExpirationDuration(1000000000)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                        Geofence.GEOFENCE_TRANSITION_EXIT)
+                .build());
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        /*DB STUFF */
-        Double latitude = 11.12345;
-        Double longitude = 999.7900000;
-
-        DatabaseHandler handler=new DatabaseHandler(MapsActivity.this);
-        handler.addGPS(latitude,longitude);
         /*DB STUFF */
 
         //getLocationPermission();
@@ -186,6 +196,7 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
         EditText locationSearch = findViewById(R.id.editText);
         String location = locationSearch.getText().toString();
         List<Address>addressList = null;
+        reportLonLat(view);
 
         if (location != null || !location.equals("")) {
             Geocoder geocoder = new Geocoder(this);
@@ -207,8 +218,10 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        geofencingClient = LocationServices.getGeofencingClient(this);
 
-        // Add a marker in Sydney and move the camera
+
+    // Add a marker in Sydney and move the camera
         LatLng chico = new LatLng(39.7285, -121.8375);
         mMap.addMarker(new MarkerOptions().position(chico).title("Marker in Chico"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(chico));

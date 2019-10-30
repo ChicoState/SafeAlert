@@ -33,13 +33,11 @@ public class chooseRoute extends AppCompatActivity {
             }
         });
     }
-    private void moveToRoute()
-    {
+    private void moveToRoute() {
         Intent intent = new Intent(chooseRoute.this, MapsActivity.class);
         startActivity(intent);
     }
-    private void moveToSelectBuddii()
-    {
+    private void moveToSelectBuddii() {
         Intent intent = new Intent(chooseRoute.this, select_bud.class);
         startActivity(intent);
     }

@@ -1,23 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:fadingEdge="horizontal|vertical"
     android:orientation="vertical">
+
+    <com.google.android.material.tabs.TabLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".5">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="3.50"
+            android:text="@string/search" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.50"
+            android:text="@string/report" />
+    </com.google.android.material.tabs.TabLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
 
+        android:layout_weight=".5"
+        android:background="@android:drawable/btn_default"
         android:orientation="horizontal">
 
         <EditText
             android:id="@+id/editText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:hint="Search Location Here" />
+            android:layout_weight="3.75"
+            android:background="@color/common_google_signin_btn_text_dark_default"
+            android:hint="@string/editText"
+            android:visibility="visible"
+            tools:visibility="visible" />
 
 
         <Button
@@ -25,16 +51,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:background="@android:color/transparent"
             android:onClick="onMapSearch"
-            android:text="Search" />
+            android:text="@string/enter" />
 
     </LinearLayout>
 
-    <fragment xmlns:tools="http://schemas.android.com/tools"
+    <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="3.5"
         tools:context="com.viralandroid.googlemapsandroidapi.MapsActivity" />
 
+    <Button
+        android:id="@+id/directions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight=".2"
+        android:fadingEdge="horizontal|vertical"
+        android:text="Get Directions" />
+
 </LinearLayout>
+

@@ -2,7 +2,14 @@ package com.example.buddii;
 
 
 import android.app.Activity;
+
 import android.os.Bundle;
+import android.view.View;
+import androidx.appcompat.app.AppCompatActivity;
+import java.util.ArrayList;
+
+
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;

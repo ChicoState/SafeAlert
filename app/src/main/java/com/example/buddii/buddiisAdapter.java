@@ -50,6 +50,7 @@ public class buddiisAdapter extends RecyclerView.Adapter<buddiisAdapter.ViewHold
         {
             //TODO: fix diaper pattern (anti-pattern)
         }
+
     }
 
     @Override

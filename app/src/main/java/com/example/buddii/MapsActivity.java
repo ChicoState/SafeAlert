@@ -47,6 +47,7 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
 
 
 
+
     private int mLocationPermissionGranted = 0;
     private int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
 
@@ -160,6 +161,7 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        getIncomingIntent();
         /*DB STUFF */
         Double latitude = 11.12345;
         Double longitude = 999.7900000;
@@ -174,6 +176,7 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
         reportButton = findViewById(R.id.report);
         searchButton = findViewById(R.id.search);
         searchButton.setOnClickListener(new View.OnClickListener() {

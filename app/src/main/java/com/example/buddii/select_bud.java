@@ -26,31 +26,26 @@ public class select_bud extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.find_buds_list);
-        addDummyUsers();
+        addUsers();
     }
 
 //where the database info needs to be implemented; when this function calls initRecyclerView it is going to take the picture of
     //the buddii and the name of the buddii then store it within the card view
-    private void addDummyUsers(){
+    private void addUsers(){
 
-        mbuddiiImages.add("Mick image");
-        mbuddiiNames.add("Mick");
 
-        mbuddiiImages.add("Jesus image");
-        mbuddiiNames.add("Jesus");
+        DatabaseHandler dbHandler = new DatabaseHandler(this);
+        int numOfBuddies = dbHandler.getNumOfUsers();
+        String ArrayOfBuddies[];
+        ArrayOfBuddies=(dbHandler.loadUsers("name"));
+        // mbuddiiNames.add("TESTING");
 
-        mbuddiiImages.add("Robert image");
-        mbuddiiNames.add("Robert");
+        // for loop will irretiate the index of ArrayOfBuddies and will
+        // populate them into mBuddiNames ArrayList
+        for (int i = 0 ; i < numOfBuddies; i++) {
 
-        mbuddiiImages.add("Ben image");
-        mbuddiiNames.add("Ben");
-
-        mbuddiiImages.add("Isaac image");
-        mbuddiiNames.add("Isaac");
-
-        mbuddiiImages.add("Nick image");
-        mbuddiiNames.add("Nick");
-
+            mbuddiiNames.add(ArrayOfBuddies[i]);
+        }
 
         initRecyclerView();
 

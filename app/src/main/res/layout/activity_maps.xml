@@ -58,14 +58,14 @@
             android:hint="@string/editText"
             android:visibility="visible"
             tools:visibility="visible" />
-            android:hint="@string/editText" />
+        android:hint="@string/editText" />
 
 
         <Button
             android:id="@+id/search_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_weight="0.75"
             android:background="@android:color/transparent"
             android:onClick="onMapSearch"
             android:text="@string/enter" />
@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="3.75"
             android:background="@color/common_google_signin_btn_text_dark_default"
-            android:hint="report location" />
+            android:hint="Report Location" />
 
 
         <Button

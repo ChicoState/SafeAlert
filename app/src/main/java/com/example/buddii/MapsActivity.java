@@ -146,8 +146,8 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
     }
 
     public void reportLonLat(View view) {
-
-        EditText report = findViewById(R.id.editText);
+/*
+        EditText report = findViewById(R.id.reportText);
         String input = report.getText().toString();
         String[] inputArray = input.split(",");
         double latitude = Double.parseDouble(inputArray[0]);
@@ -178,6 +178,8 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
                         Geofence.GEOFENCE_TRANSITION_EXIT)
                 .build());
+
+ */
 
     }
 
@@ -231,7 +233,6 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
         EditText locationSearch = findViewById(R.id.searchText);
         String location = locationSearch.getText().toString();
         List<Address>addressList = null;
-        reportLonLat(view);
 
         if (location != null || !location.equals("")) {
             Geocoder geocoder = new Geocoder(this);

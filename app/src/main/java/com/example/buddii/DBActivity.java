@@ -63,6 +63,7 @@ public class DBActivity extends AppCompatActivity {
         // CALL LOADEMP .. THEN DELETE
         handler.deleteUser(deleteUser);}
 
+        // This function is fpr testing the DB
      public void loadUser(View view)
     {   //propriatary DBhandle
         DatabaseHandler dbHandler = new DatabaseHandler(this);
@@ -70,7 +71,7 @@ public class DBActivity extends AppCompatActivity {
         String ArrayOfBuddies[];
         String results = "";
         int numOfBuddies = dbHandler.getNumOfUsers();
-        ArrayOfBuddies=(dbHandler.loadUsers("email,name,phoneNumber"));
+        ArrayOfBuddies=(dbHandler.loadUsers("Uid,email,name,phoneNumber"));
 
         for (int i = 0 ; i < numOfBuddies; i++) {
 

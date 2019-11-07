@@ -32,6 +32,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String USER_NAME = "user_name";
     private static final String USER_EMAIL = "user_email";
     private static final String USER_PASSWORD = "user_pass";
+    private static final String USER_ID = "Uid";
+
 
     /* GPS DB */
      private static final String  LATITUDE = "latitude";
@@ -43,7 +45,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //Creates  A table for every user. Passes TABLE NAME
     // Basically a concatination of SQL COMMANDS
-    private String CREATE_TABLE = "CREATE TABLE " + NAME_OF_TABLE + "(" + USER_PHONE + " PlaceHolder," +
+
+    private String CREATE_TABLE = "CREATE TABLE " + NAME_OF_TABLE + "( Uid INTEGER primary key autoincrement," + USER_PHONE + " PlaceHolder," +
             USER_NAME + " PlaceHolder," + USER_EMAIL + " PlaceHolder," + USER_PASSWORD + " PlaceHolder " + ")";
 
 
@@ -125,7 +128,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
        int numOfRequest = requestHolderArray.length;
         int count =0;
        // array of Indeces to hold format of strings
-        String[] arrayOftIndecesHolder =new String[4];
+        String[] arrayOfIndecesHolder =new String[4];
 
         int numOfUsers = getNumOfUsers();
         String ArrayOfresult[] = new String[numOfUsers];
@@ -137,10 +140,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         Cursor cursor = My_Database.rawQuery(command, null);
         while (cursor.moveToNext()) {
-
-            String phoneNumber = cursor.getString(0);
-            String name = cursor.getString(1);
-            String email = cursor.getString(2);
+            String Uid = cursor.getString(0);
+            String phoneNumber = cursor.getString(1);
+            String name = cursor.getString(2);
+            String email = cursor.getString(3);
             //String password = cursor.getString(3);
 
             // for loop will place the order of string according to the order
@@ -148,19 +151,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
             for (int i = 0 ; i < numOfRequest; i++) {
                 if (requestHolderArray[i].equals("name")) {
-                    arrayOftIndecesHolder[i] = name;
+                    arrayOfIndecesHolder[i] = name;
                 }
                 if (requestHolderArray[i].equals("phoneNumber")) {
-                    arrayOftIndecesHolder[i] = phoneNumber;
+                    arrayOfIndecesHolder[i] = phoneNumber;
                 }
                 if (requestHolderArray[i].equals("email")) {
-                    arrayOftIndecesHolder[i] = email;
+                    arrayOfIndecesHolder[i] = email;
+                }
+                if (requestHolderArray[i].equals("Uid")) {
+                    arrayOfIndecesHolder[i] = Uid;
                 }
             }
 
             for (int i = 0 ; i < numOfRequest; i++) {
 
-                result += arrayOftIndecesHolder[i] + " ";
+                result += arrayOfIndecesHolder[i] + " ";
                 if (i == (numOfRequest- 1))
                 {
                     ArrayOfresult[count] = result;

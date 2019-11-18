@@ -18,6 +18,7 @@ public class DBActivity extends AppCompatActivity {
     TextView Tx1,Tx2,Tx3,Tx4, TempTexViewVariable2;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,8 +51,10 @@ public class DBActivity extends AppCompatActivity {
                 input2.setText("");
                 input3.setText("");
                 input4.setText("");
+
             }
         });
+
     }
 
     // This class will delete a user by passed ID
@@ -67,10 +70,14 @@ public class DBActivity extends AppCompatActivity {
      public void loadUser(View view)
     {   //propriatary DBhandle
         DatabaseHandler dbHandler = new DatabaseHandler(this);
+        int numOfBuddies = dbHandler.getNumOfUsers();
+        //If database is empty return , othewise will crash app
+        if (numOfBuddies == 0){
+            return;
+        }
 
         String ArrayOfBuddies[];
         String results = "";
-        int numOfBuddies = dbHandler.getNumOfUsers();
         ArrayOfBuddies=(dbHandler.loadUsers("Uid,email,name,phoneNumber"));
 
         for (int i = 0 ; i < numOfBuddies; i++) {
@@ -79,16 +86,17 @@ public class DBActivity extends AppCompatActivity {
             if (i == (numOfBuddies- 1))
             {
                 Tx1.setText(results);
-
             }
         }
-
         TempTexViewVariable2.setText(dbHandler.loadGPS());
-   }
+       // TempTexViewVariable2.setText(dbHandler.mytempJSONreturnFunc());
 
+   }
     public String getUserToDelete(){
         return input1.getText().toString();
     };
+
+
 
 }
 

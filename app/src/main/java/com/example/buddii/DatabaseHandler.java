@@ -12,10 +12,12 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
-
-
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 // SQLITE set up to handle DATABASE
 public class DatabaseHandler extends SQLiteOpenHelper {
     //DATABASE SET UP
@@ -41,7 +43,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      private static final String GPS_TABLE = "GPS_TABLE";
     /* GPS DB */
 
+    // temp plz delete
+    String jsonString ="";
+    String jsonString2 ="OldString";
+
     private final Context context;
+
+
 
     //Creates  A table for every user. Passes TABLE NAME
     // Basically a concatination of SQL COMMANDS
@@ -69,7 +77,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
        // DatabaseUtils.createDbFromSqlStatements(context,DATABASE_NAME,DATABASE_VERSION,CREATE_TABLE);
         My_Database.execSQL(CREATE_TABLE);
         My_Database.execSQL(CREATE_GPS_TABLE);
-    }
+
+           }
 
     @Override
     public void onUpgrade(SQLiteDatabase My_Database, int oldVersion, int newVersion) {
@@ -119,7 +128,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //fetches all records of the Table stored in the Database.
     //Uses a cursor (learned in CINS 570)
     public String[] loadUsers(String requestCall) {
-
+        sendtoOnlineDB();
         SQLiteDatabase My_Database = this.getWritableDatabase();
 
         /* get number of rows */
@@ -128,7 +137,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
        int numOfRequest = requestHolderArray.length;
         int count =0;
        // array of Indeces to hold format of strings
-        String[] arrayOfIndecesHolder =new String[4];
+        String[] arrayOfIndecesHolder =new String[5];
 
         int numOfUsers = getNumOfUsers();
         String ArrayOfresult[] = new String[numOfUsers];
@@ -163,7 +172,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     arrayOfIndecesHolder[i] = Uid;
                 }
             }
-
             for (int i = 0 ; i < numOfRequest; i++) {
 
                 result += arrayOfIndecesHolder[i] + " ";
@@ -262,5 +270,73 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return result;
 
     }
+
+    //
+    public Cursor getAllData() {
+        String selectQuery = "Select * from "+NAME_OF_TABLE;
+        SQLiteDatabase My_Database = this.getReadableDatabase();
+        Cursor cursor = My_Database.rawQuery(selectQuery, null);
+        return cursor;
+    }
+  public void sendtoOnlineDB()  {
+
+
+      Cursor cursor = getAllData();  //cursor hold all your data
+      JSONObject jobj ;
+      JSONArray arr = new JSONArray();
+      cursor.moveToFirst();
+      while(cursor.moveToNext()) {
+
+            jobj  = new JSONObject();
+          try {
+              jobj.put("uID",cursor.getString(0));
+          } catch (JSONException e) {
+              e.printStackTrace();
+          }
+          try {
+              jobj.put("user_phone",cursor.getString(1));
+          } catch (JSONException e) {
+              e.printStackTrace();
+          }
+          try {
+              jobj.put("user_name",cursor.getString(2));
+          } catch (JSONException e) {
+              e.printStackTrace();
+          }
+          try {
+              jobj.put("user_email",cursor.getString(3));
+          } catch (JSONException e) {
+              e.printStackTrace();
+          }
+          try {
+              jobj.put("user_pass",cursor.getString(4));
+          } catch (JSONException e) {
+              e.printStackTrace();
+          }
+          arr.put(jobj);
+      }
+
+      jobj = new JSONObject();
+      try {
+          jobj.put("data", arr);
+      } catch (JSONException e) {
+          e.printStackTrace();
+      }
+
+       jsonString2 = jobj.toString();
+
+      /*
+      List<NameValuePair> params = new ArrayList<NameValuePair>();
+      params.add(new BasicNameValuePair("allData", st));
+      String resultServer  = getHttpPost(url,params);
+    */
+  };
+
+    public String mytempJSONreturnFunc(){
+      String newst = jsonString2 ;
+        return newst;
+    };
+
+
 
 }

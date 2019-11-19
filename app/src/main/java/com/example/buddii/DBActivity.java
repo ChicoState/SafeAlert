@@ -22,6 +22,14 @@ public class DBActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DatabaseHandler dbHandler = new DatabaseHandler(this);
+
+        int numOfBuddies = dbHandler.getNumOfUsers();
+        //If database is empty return , othewise will crash app
+        if (numOfBuddies == 0){
+           // dbHandler.insertDefaultUser();
+        }
+
 
         // LOAD USERS INPUT BY ID INTO USER VARIABLE
         setContentView(R.layout.database_activity);
@@ -66,7 +74,7 @@ public class DBActivity extends AppCompatActivity {
         // CALL LOADEMP .. THEN DELETE
         handler.deleteUser(deleteUser);}
 
-        // This function is fpr testing the DB
+        // This function is for testing the DB
      public void loadUser(View view)
     {   //propriatary DBhandle
         DatabaseHandler dbHandler = new DatabaseHandler(this);
@@ -78,6 +86,7 @@ public class DBActivity extends AppCompatActivity {
 
         String ArrayOfBuddies[];
         String results = "";
+        // by default load these attributes
         ArrayOfBuddies=(dbHandler.loadUsers("Uid,email,name,phoneNumber"));
 
         for (int i = 0 ; i < numOfBuddies; i++) {
@@ -88,11 +97,13 @@ public class DBActivity extends AppCompatActivity {
                 Tx1.setText(results);
             }
         }
-        TempTexViewVariable2.setText(dbHandler.loadGPS());
-       // TempTexViewVariable2.setText(dbHandler.mytempJSONreturnFunc());
+       // TempTexViewVariable2.setText(dbHandler.loadGPS());
+        dbHandler.sendtoOnlineDB();
+       TempTexViewVariable2.setText(dbHandler.mytempJSONreturnFunc());
 
    }
     public String getUserToDelete(){
+        // will get user to delete
         return input1.getText().toString();
     };
 

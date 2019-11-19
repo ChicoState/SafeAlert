@@ -12,7 +12,6 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -77,16 +76,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
        // DatabaseUtils.createDbFromSqlStatements(context,DATABASE_NAME,DATABASE_VERSION,CREATE_TABLE);
         My_Database.execSQL(CREATE_TABLE);
         My_Database.execSQL(CREATE_GPS_TABLE);
-
-           }
+       //     insertDefaultUser();
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase My_Database, int oldVersion, int newVersion) {
         My_Database.execSQL(DROP_TABLE);
         onCreate(My_Database);
     }
+
+    public void insertDefaultUser(){
+        String examplePhoneNum ="example phone num";
+        String defaultUser ="DefaultUser";
+        String  exampleEmail="example email";
+        String examplepass = "example pass";
+        addToDb(examplePhoneNum,defaultUser,exampleEmail,examplepass);
+    }
     // Values passed on from MainActivity,JAVA
     public void addToDb(String userphone, String name, String email, String password) {
+
         SQLiteDatabase My_Database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseHandler.USER_PHONE, userphone);
@@ -128,9 +136,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //fetches all records of the Table stored in the Database.
     //Uses a cursor (learned in CINS 570)
     public String[] loadUsers(String requestCall) {
-        sendtoOnlineDB();
         SQLiteDatabase My_Database = this.getWritableDatabase();
-
         /* get number of rows */
 
        String[] requestHolderArray = requestCall.split(",");
@@ -195,10 +201,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             Toast.makeText(context, "USER NOT CREATED YET", Toast.LENGTH_SHORT).show();
         }
 
-
         return ArrayOfresult;
-
-
 
     }
 
@@ -284,8 +287,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
       Cursor cursor = getAllData();  //cursor hold all your data
       JSONObject jobj ;
       JSONArray arr = new JSONArray();
-      cursor.moveToFirst();
-      while(cursor.moveToNext()) {
+         while(cursor.moveToNext()) {
 
             jobj  = new JSONObject();
           try {

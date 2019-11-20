@@ -15,6 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -421,6 +424,13 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
         }
     }
 
+    private void initRecyclerView(Vector points){
+        RecyclerView recyclerView = findViewById(R.id.directionsView);
+        buddiisAdapter adapter = new buddiisAdapter(this, mbuddiiImages, mbuddiiNames);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
     private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>> >{
 
         // Parsing the data in non-ui thread
@@ -436,6 +446,7 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
 
                 // Starts parsing data
                 routes = parser.parse(jObject);
+                initRecyclerView(parser.getPoints());
             }catch(Exception e){
                 e.printStackTrace();
             }

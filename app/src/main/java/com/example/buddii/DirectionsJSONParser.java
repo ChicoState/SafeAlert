@@ -9,15 +9,18 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 
 public class DirectionsJSONParser {
     /** Receives a JSONObject and returns a list of lists containing latitude and longitude */
+    Vector pointsA = new Vector();
     public List<List<HashMap<String,String>>> parse(JSONObject jObject){
 
         List<List<HashMap<String, String>>> routes = new ArrayList<>() ;
         JSONArray jRoutes = null;
         JSONArray jLegs = null;
         JSONArray jSteps = null;
+        Vector directions = new Vector();
 
         try {
 
@@ -30,7 +33,7 @@ public class DirectionsJSONParser {
 
                 /** Traversing all legs */
                 for(int j=0;j<jLegs.length();j++){
-                    jSteps = ( (JSONObject)jLegs.get(j)).getJSONArray("steps");
+                    jSteps = ((JSONObject)jLegs.get(j)).getJSONArray("steps");
 
                     /** Traversing all steps */
                     for(int k=0;k<jSteps.length();k++){
@@ -40,6 +43,10 @@ public class DirectionsJSONParser {
 
                         /** Traversing all points */
                         for(int l=0;l<list.size();l++){
+                            if(l == 0){
+                                pointsA.add(list.get(l).latitude);
+                                pointsA.add(list.get(l).longitude);
+                            }
                             HashMap<String, String> hm = new HashMap<String, String>();
                             hm.put("lat", Double.toString(((LatLng)list.get(l)).latitude) );
                             hm.put("lng", Double.toString(((LatLng)list.get(l)).longitude) );
@@ -57,6 +64,10 @@ public class DirectionsJSONParser {
         }catch (Exception e){
         }
         return routes;
+    }
+
+    public Vector getPoints(){
+        return pointsA;
     }
 
     private List<LatLng> decodePoly(String encoded) {

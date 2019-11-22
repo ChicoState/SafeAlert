@@ -15,6 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -56,6 +59,7 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
     private Polyline mPolyline;
     ArrayList<LatLng> mMarkerPoints;
     LinkedList<Geofence> geofenceList = null;
+
 
 
     private int mLocationPermissionGranted = 0;
@@ -186,6 +190,7 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        getIncomingIntent();
         /*DB STUFF */
 
         //getLocationPermission();
@@ -195,6 +200,7 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         mMarkerPoints = new ArrayList<>();
+
         reportButton = findViewById(R.id.report);
         searchButton = findViewById(R.id.search);
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -418,6 +424,15 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
         }
     }
 
+/*
+    private void initRecyclerView(Vector points){
+        RecyclerView recyclerView = findViewById(R.id.directionsView);
+        buddiisAdapter adapter = new buddiisAdapter(this, mbuddiiImages, mbuddiiNames);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+ */
+
     private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>> >{
 
         // Parsing the data in non-ui thread
@@ -433,6 +448,7 @@ public class MapsActivity extends MainActivity implements OnMapReadyCallback{
 
                 // Starts parsing data
                 routes = parser.parse(jObject);
+                //initRecyclerView(parser.getPoints());
             }catch(Exception e){
                 e.printStackTrace();
             }

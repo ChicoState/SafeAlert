@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="true"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ScrollMap"
+    tools:showIn="@layout/activity_scroll_map">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Note that a ScrollView can only contain a single child element so if you need multiple things to be scrollable, you need to wrap that content into a layout as shown above.  In certain situations, you want to position content beneath the end of the scrollable content area. For example for a &quot;terms of service&quot; where you can only accept once you've scrolled through all the content. In this case, you might need to apply the android:fillViewport property to &quot;true&quot;. Read this post by Romain Guy for a detailed look at this use case. Note that a ScrollView can only contain a single child element so if you need multiple things to be scrollable, you need to wrap that content into a layout as shown above.  In certain situations, you want to position content beneath the end of the scrollable content area. For example for a &quot;terms of service&quot; where you can only accept once you've scrolled through all the content. In this case, you might need to apply the android:fillViewport property to &quot;true&quot;. Read this post by Romain Guy for a detailed look at this use case. Note that a ScrollView can only contain a single child element so if you need multiple things to be scrollable, you need to wrap that content into a layout as shown above.  In certain situations, you want to position content beneath the end of the scrollable content area. For example for a &quot;terms of service&quot; where you can only accept once you've scrolled through all the content. In this case, you might need to apply the android:fillViewport property to &quot;true&quot;. Read this post by Romain Guy for a detailed look at this use case. Note that a ScrollView can only contain a single child element so if you need multiple things to be scrollable, you need to wrap that content into a layout as shown above.  In certain situations, you want to position content beneath the end of the scrollable content area. For example for a &quot;terms of service&quot; where you can only accept once you've scrolled through all the content. In this case, you might need to apply the android:fillViewport property to &quot;true&quot;. Read this post by Romain Guy for a detailed look at this use case." />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

@@ -59,6 +59,8 @@ dependencies {
     //noinspection GradleCompatible
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation 'androidx.navigation:navigation-fragment:2.1.0'
+    implementation 'androidx.navigation:navigation-ui:2.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

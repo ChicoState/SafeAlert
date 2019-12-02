@@ -19,6 +19,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity
+            android:name=".ScrollMap"
+            android:label="@string/title_activity_scroll_map"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".findingSafestRouteActivity" />
         <activity android:name=".beingABuddyActivity" />
         <activity android:name=".AboutUsActivity" />

@@ -34,7 +34,7 @@ public class chooseRoute extends AppCompatActivity {
         });
     }
     private void moveToRoute() {
-        Intent intent = new Intent(chooseRoute.this, MapsActivity.class);
+        Intent intent = new Intent(chooseRoute.this, ScrollMap.class);
         startActivity(intent);
     }
     private void moveToSelectBuddii() {

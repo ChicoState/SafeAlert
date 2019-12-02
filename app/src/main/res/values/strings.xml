@@ -36,18 +36,96 @@
     <string name="message">message</string>
     <string name="todo">todo</string>
     <string name="MainActivity">MainActivity</string>
-    <string name="title_activity_acivity_maps_drawer">acivity_maps_drawer</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+    <string name="title_activity_scroll_map">ScrollMap</string>
+    <string name="large_text">
+        "Material is the metaphor.\n\n"
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
-    <string name="menu_tools">Tools</string>
-    <string name="menu_share">Share</string>
-    <string name="menu_send">Send</string>
+        "A material metaphor is the unifying theory of a rationalized space and a system of motion."
+        "The material is grounded in tactile reality, inspired by the study of paper and ink, yet "
+        "technologically advanced and open to imagination and magic.\n"
+        "Surfaces and edges of the material provide visual cues that are grounded in reality. The "
+        "use of familiar tactile attributes helps users quickly understand affordances. Yet the "
+        "flexibility of the material creates new affordances that supercede those in the physical "
+        "world, without breaking the rules of physics.\n"
+        "The fundamentals of light, surface, and movement are key to conveying how objects move, "
+        "interact, and exist in space and in relation to each other. Realistic lighting shows "
+        "seams, divides space, and indicates moving parts.\n\n"
+
+        "Bold, graphic, intentional.\n\n"
+
+        "The foundational elements of print based design typography, grids, space, scale, color, "
+        "and use of imagery guide visual treatments. These elements do far more than please the "
+        "eye. They create hierarchy, meaning, and focus. Deliberate color choices, edge to edge "
+        "imagery, large scale typography, and intentional white space create a bold and graphic "
+        "interface that immerse the user in the experience.\n"
+        "An emphasis on user actions makes core functionality immediately apparent and provides "
+        "waypoints for the user.\n\n"
+
+        "Motion provides meaning.\n\n"
+
+        "Motion respects and reinforces the user as the prime mover. Primary user actions are "
+        "inflection points that initiate motion, transforming the whole design.\n"
+        "All action takes place in a single environment. Objects are presented to the user without "
+        "breaking the continuity of experience even as they transform and reorganize.\n"
+        "Motion is meaningful and appropriate, serving to focus attention and maintain continuity. "
+        "Feedback is subtle yet clear. Transitions are efﬁcient yet coherent.\n\n"
+
+        "3D world.\n\n"
+
+        "The material environment is a 3D space, which means all objects have x, y, and z "
+        "dimensions. The z-axis is perpendicularly aligned to the plane of the display, with the "
+        "positive z-axis extending towards the viewer. Every sheet of material occupies a single "
+        "position along the z-axis and has a standard 1dp thickness.\n"
+        "On the web, the z-axis is used for layering and not for perspective. The 3D world is "
+        "emulated by manipulating the y-axis.\n\n"
+
+        "Light and shadow.\n\n"
+
+        "Within the material environment, virtual lights illuminate the scene. Key lights create "
+        "directional shadows, while ambient light creates soft shadows from all angles.\n"
+        "Shadows in the material environment are cast by these two light sources. In Android "
+        "development, shadows occur when light sources are blocked by sheets of material at "
+        "various positions along the z-axis. On the web, shadows are depicted by manipulating the "
+        "y-axis only. The following example shows the card with a height of 6dp.\n\n"
+
+        "Resting elevation.\n\n"
+
+        "All material objects, regardless of size, have a resting elevation, or default elevation "
+        "that does not change. If an object changes elevation, it should return to its resting "
+        "elevation as soon as possible.\n\n"
+
+        "Component elevations.\n\n"
+
+        "The resting elevation for a component type is consistent across apps (e.g., FAB elevation "
+        "does not vary from 6dp in one app to 16dp in another app).\n"
+        "Components may have different resting elevations across platforms, depending on the depth "
+        "of the environment (e.g., TV has a greater depth than mobile or desktop).\n\n"
+
+        "Responsive elevation and dynamic elevation offsets.\n\n"
+
+        "Some component types have responsive elevation, meaning they change elevation in response "
+        "to user input (e.g., normal, focused, and pressed) or system events. These elevation "
+        "changes are consistently implemented using dynamic elevation offsets.\n"
+        "Dynamic elevation offsets are the goal elevation that a component moves towards, relative "
+        "to the component’s resting state. They ensure that elevation changes are consistent "
+        "across actions and component types. For example, all components that lift on press have "
+        "the same elevation change relative to their resting elevation.\n"
+        "Once the input event is completed or cancelled, the component will return to its resting "
+        "elevation.\n\n"
+
+        "Avoiding elevation interference.\n\n"
+
+        "Components with responsive elevations may encounter other components as they move between "
+        "their resting elevations and dynamic elevation offsets. Because material cannot pass "
+        "through other material, components avoid interfering with one another any number of ways, "
+        "whether on a per component basis or using the entire app layout.\n"
+        "On a component level, components can move or be removed before they cause interference. "
+        "For example, a floating action button (FAB) can disappear or move off screen before a "
+        "user picks up a card, or it can move if a snackbar appears.\n"
+        "On the layout level, design your app layout to minimize opportunities for interference. "
+        "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
+        "when a user tries to pick up one of cards.\n\n"
+    </string>
+    <string name="action_settings">Settings</string>
+    <string name="lorem_ipsum_dolor_sit_amet_consectetur_adipiscing_elit_vivamus_risus_turpis_faucibus_eu_lectus_sit_amet_finibus_pulvinar_magna_suspendisse_nisl_ligula_dignissim_ut_sagittis_ut_malesuada_vitae_neque_proin_ut_elementum_urna_vivamus_venenatis_consectetur_nibh_pellentesque_auctor_feugiat_orci_sit_amet_ultrices_vestibulum_ante_ipsum_primis_in_faucibus_orci_luctus_et_ultrices_posuere_cubilia_curae_integer_in_neque_aliquet_interdum_nibh_non_interdum_tortor_duis_id_enim_fermentum_tristique_felis_a_aliquam_tortor_vestibulum_ultricies_interdum_mi_quis_semper_leo_scelerisque_ac_praesent_cursus_leo_at_molestie_ultrices_felis_turpis_lobortis_nunc_in_ultricies_mi_erat_vitae_erat_maecenas_et_faucibus_tortor_non_pharetra_tortor_etiam_dolor_lectus_porta_id_porta_id_convallis_pulvinar_mauris_integer_feugiat_ex_arcu_in_facilisis_neque_vestibulum_ut_aliquam_dapibus_quam_in_aliquam_suscipit_enim_nibh_hendrerit_turpis_ac_interdum_diam_eros_non_tellus_sed_vehicula_augue_eu_leo_feugiat_eget_cursus_risus_maximus_curabitur_venenatis_enim_vitae_dapibus_venenatis_suspendisse_nibh_tortor_ultrices_vitae_egestas_sed_mattis_ac_lorem_integer_suscipit_dolor_sed_dolor_accumsan_ac_sollicitudin_urna_euismod_sed_sed_sapien_id_ligula_venenatis_auctor_donec_et_risus_ac_nisl_posuere_ultricies_quis_eu_mi_morbi_gravida_commodo_lectus_pellentesque_ut_est_ut_nulla_viverra_blandit_eget_non_diam_pellentesque_habitant_morbi_tristique_senectus_et_netus_et_malesuada_fames_ac_turpis_egestas_proin_finibus_rutrum_nisl_lobortis_tristique_mi_tempus_ut_mauris_elementum_dolor_a_sagittis_congue_ipsum_ex_semper_felis_nec_ullamcorper_ex_sapien_vitae_urna_ut_felis_quam_molestie_sit_amet_dictum_et_placerat_ac_mi_nam_libero_augue_molestie_at_pretium_gravida_convallis_id_ipsum_duis_gravida_hendrerit_nisl_vel_semper_aliquam_erat_volutpat_aenean_in_egestas_augue_eget_pellentesque_ante_fusce_in_aliquet_felis_sed_aliquam_eleifend_erat_non_pellentesque_sapien_aenean_laoreet_justo_vitae_molestie_faucibus_duis_sollicitudin_dolor_quis_massa_laoreet_eget_rutrum_augue_hendrerit_curabitur_eget_consectetur_mauris_ac_ullamcorper_odio_in_viverra_tortor_at_arcu_laoreet_fermentum_nunc_venenatis_lorem_semper_nulla_laoreet_fermentum_vivamus_pharetra_sapien_et_consequat_semper_nunc_odio_consequat_elit_at_maximus_diam_justo_tincidunt_dolor_in_sed_convallis_ipsum_duis_dapibus_placerat_est_eu_ultricies_morbi_convallis_lectus_tincidunt_ullamcorper_finibus_dolor_tellus_semper_nulla_sed_malesuada_felis_nunc_at_enim_cras_tincidunt_maximus_dolor_eu_maximus_donec_ut_tellus_euismod_laoreet_nisl_sit_amet_semper_neque_maecenas_ut_magna_quis_nulla_blandit_convallis_praesent_vel_ex_mauris_aenean_dapibus_metus_vitae_velit_scelerisque_viverra_etiam_magna_nunc_suscipit_maximus_viverra_sit_amet_dignissim_sit_amet_felis_mauris_auctor_maximus_vestibulum_sed_nisi_lacus_aliquet_ut_sollicitudin_viverra_tincidunt_non_lacus">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus risus turpis, faucibus eu lectus sit amet, finibus pulvinar magna. Suspendisse nisl ligula, dignissim ut sagittis ut, malesuada vitae neque. Proin ut elementum urna. Vivamus venenatis consectetur nibh. Pellentesque auctor feugiat orci sit amet ultrices. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Integer in neque aliquet, interdum nibh non, interdum tortor. Duis id enim fermentum, tristique felis a, aliquam tortor. Vestibulum ultricies interdum mi, quis semper leo scelerisque ac. Praesent cursus, leo at molestie ultrices, felis turpis lobortis nunc, in ultricies mi erat vitae erat. Maecenas et faucibus tortor, non pharetra tortor. Etiam dolor lectus, porta id porta id, convallis pulvinar mauris. Integer feugiat ex arcu, in facilisis neque vestibulum ut. Aliquam dapibus, quam in aliquam suscipit, enim nibh hendrerit turpis, ac interdum diam eros non tellus. Sed vehicula augue eu leo feugiat, eget cursus risus maximus. Curabitur venenatis enim vitae dapibus venenatis. Suspendisse nibh tortor, ultrices vitae egestas sed, mattis ac lorem. Integer suscipit dolor sed dolor accumsan, ac sollicitudin urna euismod. Sed sed sapien id ligula venenatis auctor. Donec et risus ac nisl posuere ultricies quis eu mi. Morbi gravida commodo lectus. Pellentesque ut est ut nulla viverra blandit eget non diam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin finibus rutrum nisl, lobortis tristique mi tempus ut. Mauris elementum, dolor a sagittis congue, ipsum ex semper felis, nec ullamcorper ex sapien vitae urna. Ut felis quam, molestie sit amet dictum et, placerat ac mi. Nam libero augue, molestie at pretium gravida, convallis id ipsum. Duis gravida hendrerit nisl vel semper. Aliquam erat volutpat. Aenean in egestas augue, eget pellentesque ante. Fusce in aliquet felis. Sed aliquam eleifend erat, non pellentesque sapien. Aenean laoreet justo vitae molestie faucibus. Duis sollicitudin dolor quis massa laoreet, eget rutrum augue hendrerit. Curabitur eget consectetur mauris, ac ullamcorper odio. In viverra tortor at arcu laoreet fermentum. Nunc venenatis lorem semper nulla laoreet fermentum. Vivamus pharetra, sapien et consequat semper, nunc odio consequat elit, at maximus diam justo tincidunt dolor. In sed convallis ipsum. Duis dapibus placerat est eu ultricies. Morbi convallis, lectus tincidunt ullamcorper finibus, dolor tellus semper nulla, sed malesuada felis nunc at enim. Cras tincidunt maximus dolor eu maximus. Donec ut tellus euismod, laoreet nisl sit amet, semper neque. Maecenas ut magna quis nulla blandit convallis. Praesent vel ex mauris. Aenean dapibus metus vitae velit scelerisque viverra. Etiam magna nunc, suscipit maximus viverra sit amet, dignissim sit amet felis. Mauris auctor maximus vestibulum. Sed nisi lacus, aliquet ut sollicitudin viverra, tincidunt non lacus.</string>
 </resources>

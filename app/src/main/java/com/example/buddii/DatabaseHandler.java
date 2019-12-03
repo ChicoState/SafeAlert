@@ -17,6 +17,9 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.security.NoSuchAlgorithmException;
+
+
 // SQLITE set up to handle DATABASE
 public class DatabaseHandler extends SQLiteOpenHelper {
     //DATABASE SET UP
@@ -25,37 +28,36 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Database Name
     private static final String DATABASE_NAME = "Buddi_DATABASE";
     // User table name
-    private static final String NAME_OF_TABLE = "MY_TABLE";
+    private static final String NAME_OF_TABLE = "USERS_TABLE";
+    private static final  String NAME_OF_FRIENDS_TABLE= "FRIENDS_TABLE";
 
-    // User Table Columns names
-
+    // Preping Users Tables Column names
     private static final String USER_PHONE = "user_phone";
     private static final String USER_NAME = "user_name";
     private static final String USER_EMAIL = "user_email";
     private static final String USER_PASSWORD = "user_pass";
-    private static final String USER_ID = "Uid";
 
 
-    /* GPS DB */
+
+    /* Preping for GPS DB */
      private static final String  LATITUDE = "latitude";
      private static final String LONGITUTDE = "longitude";
      private static final String GPS_TABLE = "GPS_TABLE";
     /* GPS DB */
 
     // temp plz delete
-    String jsonString ="";
-    String jsonString2 ="OldString";
-
+    String jsonString2 ="";
     private final Context context;
 
 
 
-    //Creates  A table for every user. Passes TABLE NAME
+    //Preping Strings for Creation/deletion/altering of Databases
     // Basically a concatination of SQL COMMANDS
 
     private String CREATE_TABLE = "CREATE TABLE " + NAME_OF_TABLE + "( Uid INTEGER primary key autoincrement," + USER_PHONE + " PlaceHolder," +
             USER_NAME + " PlaceHolder," + USER_EMAIL + " PlaceHolder," + USER_PASSWORD + " PlaceHolder " + ")";
 
+    private String CREATE_FRIENDS_TABLE = "CREATE TABLE " + NAME_OF_FRIENDS_TABLE + "( Uid INTEGER)";
 
 
     private String CREATE_GPS_TABLE = "CREATE TABLE " + GPS_TABLE + "(" + LATITUDE + " PlaceHolder," +
@@ -63,6 +65,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //Will Replace table if exist ( replace USER)
     private String DROP_TABLE = "DROP TABLE IF EXISTS " + NAME_OF_TABLE;
+
+    //testing of insert to dynamic colum
+    String friend_col = "friend1";
+    String friend_col2 = "friend2";
+    private String INSERT_DYNAMIC_TABLE = "ALTER TABLE " + NAME_OF_FRIENDS_TABLE + " ADD COLUMN "+ friend_col +" INT";
+    private String INSERT_DYNAMIC_TABLE2 = "ALTER TABLE " + NAME_OF_FRIENDS_TABLE + " ADD COLUMN "+ friend_col2 +" INT";
+
 
     // Need a Databse HANDLER required
     public DatabaseHandler(Context context) {
@@ -72,11 +81,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase My_Database) {
-
-       // DatabaseUtils.createDbFromSqlStatements(context,DATABASE_NAME,DATABASE_VERSION,CREATE_TABLE);
+        //execute prepared commands
         My_Database.execSQL(CREATE_TABLE);
         My_Database.execSQL(CREATE_GPS_TABLE);
-       //     insertDefaultUser();
+        My_Database.execSQL(CREATE_FRIENDS_TABLE);
+
+        // testing of dynamic colums
+        My_Database.execSQL(INSERT_DYNAMIC_TABLE);
+        My_Database.execSQL(INSERT_DYNAMIC_TABLE2);
     }
 
     @Override
@@ -85,22 +97,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         onCreate(My_Database);
     }
 
-    public void insertDefaultUser(){
-        String examplePhoneNum ="example phone num";
-        String defaultUser ="DefaultUser";
-        String  exampleEmail="example email";
-        String examplepass = "example pass";
-        addToDb(examplePhoneNum,defaultUser,exampleEmail,examplepass);
-    }
+
+
     // Values passed on from MainActivity,JAVA
-    public void addToDb(String userphone, String name, String email, String password) {
+    //values here will be placed into the USERS TABLE
+    public void addToDb(String userphone, String name, String email, String password) throws NoSuchAlgorithmException {
 
         SQLiteDatabase My_Database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseHandler.USER_PHONE, userphone);
         values.put(DatabaseHandler.USER_NAME, name);
         values.put(DatabaseHandler.USER_EMAIL, email);
-        values.put(DatabaseHandler.USER_PASSWORD, password);
+
+        //password will be sent to function and hashed
+        String shaPword = hashSha512.hashPaswordSHA512(password);
+        values.put(DatabaseHandler.USER_PASSWORD, shaPword);
+
         long status = My_Database.insert(NAME_OF_TABLE, null, values);
 
         if (status <= 0) {
@@ -135,6 +147,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //fetches all records of the Table stored in the Database.
     //Uses a cursor (learned in CINS 570)
+    // values will be returned in the format/order they are requested via array
+    //can be One or Many attributes requested
     public String[] loadUsers(String requestCall) {
         SQLiteDatabase My_Database = this.getWritableDatabase();
         /* get number of rows */
@@ -216,7 +230,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return totalrows;
     }
     /* --------------- FOR GPS DATABASE -----------   */
-    /*  EXAMPLE OF FUNCTION CALL FROM ANOTHER JAVA FILE (MapsActivity in this case) :
+    /*  EXAMPLE OF FUNCTION CALL TO ADD TO GPS DATABASE FROM ANOTHER JAVA FILE (MapsActivity in this case) :
 
         double latitude = 11.12345;
         double longitude = 999.7900000;
@@ -281,6 +295,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Cursor cursor = My_Database.rawQuery(selectQuery, null);
         return cursor;
     }
+
+    // this function will create a JSON file and prepare it to send to an online DB
   public void sendtoOnlineDB()  {
 
 
@@ -327,17 +343,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
        jsonString2 = jobj.toString();
 
-      /*
-      List<NameValuePair> params = new ArrayList<NameValuePair>();
-      params.add(new BasicNameValuePair("allData", st));
-      String resultServer  = getHttpPost(url,params);
-    */
   };
-
+    // for JSON testing , this will get called from DBActivity and display on app
     public String mytempJSONreturnFunc(){
       String newst = jsonString2 ;
         return newst;
     };
+
 
 
 

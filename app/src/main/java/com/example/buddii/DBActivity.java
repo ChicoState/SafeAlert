@@ -5,10 +5,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+
+
 
 
 public class DBActivity extends AppCompatActivity {
@@ -16,7 +18,6 @@ public class DBActivity extends AppCompatActivity {
     String data1,data2,data3,data4, deleteUser;
     Button SubmitBUTTON;
     TextView Tx1,Tx2,Tx3,Tx4, TempTexViewVariable2;
-
 
 
     @Override
@@ -53,7 +54,11 @@ public class DBActivity extends AppCompatActivity {
                 data4=input4.getText().toString();
                 //THEN PASS
                 DatabaseHandler handler=new DatabaseHandler(DBActivity.this);
-                handler.addToDb(data1,data2,data3,data4);
+                try {
+                    handler.addToDb(data1,data2,data3,data4);
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
                 // NEED TO CLEAR OUT THE TABLE AFTER SUBMIT WAS PRESSED
                 input1.setText("");
                 input2.setText("");

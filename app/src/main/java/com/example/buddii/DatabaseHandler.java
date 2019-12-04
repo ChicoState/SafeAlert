@@ -34,6 +34,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // User table name
     private static final String NAME_OF_TABLE = "USERS_TABLE";
     private static final  String NAME_OF_FRIENDS_TABLE= "FRIENDS_TABLE";
+    private static final String NAME_OF_ACTIVE_BUDDI_TABLE = "ACTIVE_BUDDI_TABLE";
 
     // Preping Users Tables Column names
     private static final String USER_PHONE = "user_phone";
@@ -64,6 +65,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             USER_NAME + " PlaceHolder," + USER_EMAIL + " PlaceHolder," + USER_PASSWORD + " PlaceHolder ," + USER_SALT +  ")";
 
     private String CREATE_FRIENDS_TABLE = "CREATE TABLE " + NAME_OF_FRIENDS_TABLE + "( Uid INTEGER)";
+    private String CREATE_ACTIVE_BUDDII_TABLE = "CREATE TABLE " + NAME_OF_ACTIVE_BUDDI_TABLE + "( Uid INTEGER)";
 
 
     private String CREATE_GPS_TABLE = "CREATE TABLE " + GPS_TABLE + "(" + LATITUDE + " PlaceHolder," +
@@ -91,6 +93,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         My_Database.execSQL(CREATE_TABLE);
         My_Database.execSQL(CREATE_GPS_TABLE);
         My_Database.execSQL(CREATE_FRIENDS_TABLE);
+        My_Database.execSQL(CREATE_ACTIVE_BUDDII_TABLE);
 
         // testing of dynamic colums
         My_Database.execSQL(INSERT_DYNAMIC_TABLE);
@@ -221,28 +224,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 if (i == (numOfRequest- 1))
                 {
                     ArrayOfresult[count] = result;
-
                 }
             }
-
             result="";
             count++;
 
         }
         System.getProperty("line.separator");
-
         cursor.close();
         My_Database.close();
         // if nothing was appended then TOAST this
         if (ArrayOfresult[0] == null ) {
             Toast.makeText(context, "USER NOT CREATED YET", Toast.LENGTH_SHORT).show();
         }
-
         return ArrayOfresult;
-
     }
-
-
 
     // this function returns the number of users in the database
     public int getNumOfUsers(){
@@ -278,9 +274,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         } else {
             Toast.makeText(context, "Insertion Successful", Toast.LENGTH_SHORT).show();
         }
-
         My_Database.close();
-
 
     }
 
@@ -308,7 +302,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             Toast.makeText(context, "NO LONG OR LAT IN DB", Toast.LENGTH_SHORT).show();
         }
         return result;
-
     }
 
     //
@@ -379,11 +372,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String[] salt0 = loadUsers("salt");
         String salt1 = salt0[0];
         byte[] salt2 = salt1.getBytes();
-        String Opassword = "cat";
+        String Opassword = "CAT";
         String shaPword = hashSha512.hashPaswordSHA512(Opassword, salt2);
-
-
-        String res = pass +"    "+ shaPword;
+        String res = pass +"\n "+ shaPword;
         return  res;
 
     }

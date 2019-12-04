@@ -112,7 +112,7 @@ public class DBActivity extends AppCompatActivity {
         //TempTexViewVariable2.setText(dbHandler.mytempJSONreturnFunc());
 
         //calling this function will compare hash from user DB to new hash
-      //  TempTexViewVariable2.setText(dbHandler.doPasswordsMatch());
+      TempTexViewVariable2.setText(dbHandler.doPasswordsMatch());
 
     }
     public String getUserToDelete(){

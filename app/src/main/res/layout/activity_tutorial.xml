@@ -12,31 +12,20 @@
         android:layout_height="78dp"
         android:layout_marginTop="48dp"
         android:text="About Us"
-        app:layout_constraintBottom_toTopOf="@+id/beinB"
+        app:layout_constraintBottom_toTopOf="@+id/tutorial"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.595" />
 
     <Button
-        android:id="@+id/beinB"
+        android:id="@+id/tutorial"
         android:layout_width="250dp"
         android:layout_height="78dp"
-        android:layout_marginBottom="80dp"
-        android:text="Being A Buddy"
-        app:layout_constraintBottom_toTopOf="@+id/fndnR"
+        android:text="How to Use the Buddii App"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/fndnR"
-        android:layout_width="250dp"
-        android:layout_height="78dp"
-        android:layout_marginBottom="192dp"
-        android:text="Finding The Safe Route"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="174dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

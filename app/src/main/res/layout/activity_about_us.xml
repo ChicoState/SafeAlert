@@ -15,4 +15,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="About Us"
+        tools:layout_editor_absoluteX="160dp"
+        tools:layout_editor_absoluteY="4dp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="336dp"
+        android:layout_height="93dp"
+        android:text="Our Mission: We want to inspire the world to keep others safe. Our mission drives us to be the most innovative when it comes to keeping people safe from harm. We want to help create world where everyone has each others backs. "
+        tools:layout_editor_absoluteX="40dp"
+        tools:layout_editor_absoluteY="44dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

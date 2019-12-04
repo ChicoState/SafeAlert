@@ -14,6 +14,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.security.NoSuchAlgorithmException;
 
 
 // SQLITE set up to handle DATABASE
@@ -24,31 +28,36 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Database Name
     private static final String DATABASE_NAME = "Buddi_DATABASE";
     // User table name
-    private static final String NAME_OF_TABLE = "MY_TABLE";
+    private static final String NAME_OF_TABLE = "USERS_TABLE";
+    private static final  String NAME_OF_FRIENDS_TABLE= "FRIENDS_TABLE";
 
-    // User Table Columns names
-
+    // Preping Users Tables Column names
     private static final String USER_PHONE = "user_phone";
     private static final String USER_NAME = "user_name";
     private static final String USER_EMAIL = "user_email";
     private static final String USER_PASSWORD = "user_pass";
-    private static final String USER_ID = "Uid";
 
 
-    /* GPS DB */
+
+    /* Preping for GPS DB */
      private static final String  LATITUDE = "latitude";
      private static final String LONGITUTDE = "longitude";
      private static final String GPS_TABLE = "GPS_TABLE";
     /* GPS DB */
 
+    // temp plz delete
+    String jsonString2 ="";
     private final Context context;
 
-    //Creates  A table for every user. Passes TABLE NAME
+
+
+    //Preping Strings for Creation/deletion/altering of Databases
     // Basically a concatination of SQL COMMANDS
 
     private String CREATE_TABLE = "CREATE TABLE " + NAME_OF_TABLE + "( Uid INTEGER primary key autoincrement," + USER_PHONE + " PlaceHolder," +
             USER_NAME + " PlaceHolder," + USER_EMAIL + " PlaceHolder," + USER_PASSWORD + " PlaceHolder " + ")";
 
+    private String CREATE_FRIENDS_TABLE = "CREATE TABLE " + NAME_OF_FRIENDS_TABLE + "( Uid INTEGER)";
 
 
     private String CREATE_GPS_TABLE = "CREATE TABLE " + GPS_TABLE + "(" + LATITUDE + " PlaceHolder," +
@@ -56,6 +65,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //Will Replace table if exist ( replace USER)
     private String DROP_TABLE = "DROP TABLE IF EXISTS " + NAME_OF_TABLE;
+
+    //testing of insert to dynamic colum
+    String friend_col = "friend1";
+    String friend_col2 = "friend2";
+    private String INSERT_DYNAMIC_TABLE = "ALTER TABLE " + NAME_OF_FRIENDS_TABLE + " ADD COLUMN "+ friend_col +" INT";
+    private String INSERT_DYNAMIC_TABLE2 = "ALTER TABLE " + NAME_OF_FRIENDS_TABLE + " ADD COLUMN "+ friend_col2 +" INT";
+
 
     // Need a Databse HANDLER required
     public DatabaseHandler(Context context) {
@@ -65,10 +81,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase My_Database) {
-
-       // DatabaseUtils.createDbFromSqlStatements(context,DATABASE_NAME,DATABASE_VERSION,CREATE_TABLE);
+        //execute prepared commands
         My_Database.execSQL(CREATE_TABLE);
         My_Database.execSQL(CREATE_GPS_TABLE);
+        My_Database.execSQL(CREATE_FRIENDS_TABLE);
+
+        // testing of dynamic colums
+        My_Database.execSQL(INSERT_DYNAMIC_TABLE);
+        My_Database.execSQL(INSERT_DYNAMIC_TABLE2);
     }
 
     @Override
@@ -76,14 +96,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         My_Database.execSQL(DROP_TABLE);
         onCreate(My_Database);
     }
+
+
+
     // Values passed on from MainActivity,JAVA
-    public void addToDb(String userphone, String name, String email, String password) {
+    //values here will be placed into the USERS TABLE
+    public void addToDb(String userphone, String name, String email, String password) throws NoSuchAlgorithmException {
+
         SQLiteDatabase My_Database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseHandler.USER_PHONE, userphone);
         values.put(DatabaseHandler.USER_NAME, name);
         values.put(DatabaseHandler.USER_EMAIL, email);
-        values.put(DatabaseHandler.USER_PASSWORD, password);
+
+        //password will be sent to function and hashed
+        String shaPword = hashSha512.hashPaswordSHA512(password);
+        values.put(DatabaseHandler.USER_PASSWORD, shaPword);
+
         long status = My_Database.insert(NAME_OF_TABLE, null, values);
 
         if (status <= 0) {
@@ -118,17 +147,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //fetches all records of the Table stored in the Database.
     //Uses a cursor (learned in CINS 570)
+    // values will be returned in the format/order they are requested via array
+    //can be One or Many attributes requested
     public String[] loadUsers(String requestCall) {
-
         SQLiteDatabase My_Database = this.getWritableDatabase();
-
         /* get number of rows */
 
        String[] requestHolderArray = requestCall.split(",");
        int numOfRequest = requestHolderArray.length;
         int count =0;
        // array of Indeces to hold format of strings
-        String[] arrayOfIndecesHolder =new String[4];
+        String[] arrayOfIndecesHolder =new String[5];
 
         int numOfUsers = getNumOfUsers();
         String ArrayOfresult[] = new String[numOfUsers];
@@ -163,7 +192,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     arrayOfIndecesHolder[i] = Uid;
                 }
             }
-
             for (int i = 0 ; i < numOfRequest; i++) {
 
                 result += arrayOfIndecesHolder[i] + " ";
@@ -187,10 +215,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             Toast.makeText(context, "USER NOT CREATED YET", Toast.LENGTH_SHORT).show();
         }
 
-
         return ArrayOfresult;
-
-
 
     }
 
@@ -205,7 +230,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return totalrows;
     }
     /* --------------- FOR GPS DATABASE -----------   */
-    /*  EXAMPLE OF FUNCTION CALL FROM ANOTHER JAVA FILE (MapsActivity in this case) :
+    /*  EXAMPLE OF FUNCTION CALL TO ADD TO GPS DATABASE FROM ANOTHER JAVA FILE (MapsActivity in this case) :
 
         double latitude = 11.12345;
         double longitude = 999.7900000;
@@ -262,5 +287,70 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return result;
 
     }
+
+    //
+    public Cursor getAllData() {
+        String selectQuery = "Select * from "+NAME_OF_TABLE;
+        SQLiteDatabase My_Database = this.getReadableDatabase();
+        Cursor cursor = My_Database.rawQuery(selectQuery, null);
+        return cursor;
+    }
+
+    // this function will create a JSON file and prepare it to send to an online DB
+  public void sendtoOnlineDB()  {
+
+
+      Cursor cursor = getAllData();  //cursor hold all your data
+      JSONObject jobj ;
+      JSONArray arr = new JSONArray();
+         while(cursor.moveToNext()) {
+
+            jobj  = new JSONObject();
+          try {
+              jobj.put("uID",cursor.getString(0));
+          } catch (JSONException e) {
+              e.printStackTrace();
+          }
+          try {
+              jobj.put("user_phone",cursor.getString(1));
+          } catch (JSONException e) {
+              e.printStackTrace();
+          }
+          try {
+              jobj.put("user_name",cursor.getString(2));
+          } catch (JSONException e) {
+              e.printStackTrace();
+          }
+          try {
+              jobj.put("user_email",cursor.getString(3));
+          } catch (JSONException e) {
+              e.printStackTrace();
+          }
+          try {
+              jobj.put("user_pass",cursor.getString(4));
+          } catch (JSONException e) {
+              e.printStackTrace();
+          }
+          arr.put(jobj);
+      }
+
+      jobj = new JSONObject();
+      try {
+          jobj.put("data", arr);
+      } catch (JSONException e) {
+          e.printStackTrace();
+      }
+
+       jsonString2 = jobj.toString();
+
+  };
+    // for JSON testing , this will get called from DBActivity and display on app
+    public String mytempJSONreturnFunc(){
+      String newst = jsonString2 ;
+        return newst;
+    };
+
+
+
 
 }

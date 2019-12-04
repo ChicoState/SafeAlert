@@ -5,10 +5,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+
+
 
 
 public class DBActivity extends AppCompatActivity {
@@ -21,6 +23,14 @@ public class DBActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DatabaseHandler dbHandler = new DatabaseHandler(this);
+
+        int numOfBuddies = dbHandler.getNumOfUsers();
+        //If database is empty return , othewise will crash app
+        if (numOfBuddies == 0){
+           // dbHandler.insertDefaultUser();
+        }
+
 
         // LOAD USERS INPUT BY ID INTO USER VARIABLE
         setContentView(R.layout.database_activity);
@@ -44,14 +54,20 @@ public class DBActivity extends AppCompatActivity {
                 data4=input4.getText().toString();
                 //THEN PASS
                 DatabaseHandler handler=new DatabaseHandler(DBActivity.this);
-                handler.addToDb(data1,data2,data3,data4);
+                try {
+                    handler.addToDb(data1,data2,data3,data4);
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
                 // NEED TO CLEAR OUT THE TABLE AFTER SUBMIT WAS PRESSED
                 input1.setText("");
                 input2.setText("");
                 input3.setText("");
                 input4.setText("");
+
             }
         });
+
     }
 
     // This class will delete a user by passed ID
@@ -63,14 +79,19 @@ public class DBActivity extends AppCompatActivity {
         // CALL LOADEMP .. THEN DELETE
         handler.deleteUser(deleteUser);}
 
-        // This function is fpr testing the DB
+        // This function is for testing the DB
      public void loadUser(View view)
     {   //propriatary DBhandle
         DatabaseHandler dbHandler = new DatabaseHandler(this);
+        int numOfBuddies = dbHandler.getNumOfUsers();
+        //If database is empty return , othewise will crash app
+        if (numOfBuddies == 0){
+            return;
+        }
 
         String ArrayOfBuddies[];
         String results = "";
-        int numOfBuddies = dbHandler.getNumOfUsers();
+        // by default load these attributes
         ArrayOfBuddies=(dbHandler.loadUsers("Uid,email,name,phoneNumber"));
 
         for (int i = 0 ; i < numOfBuddies; i++) {
@@ -79,16 +100,19 @@ public class DBActivity extends AppCompatActivity {
             if (i == (numOfBuddies- 1))
             {
                 Tx1.setText(results);
-
             }
         }
+       // TempTexViewVariable2.setText(dbHandler.loadGPS());
+        dbHandler.sendtoOnlineDB();
+       TempTexViewVariable2.setText(dbHandler.mytempJSONreturnFunc());
 
-        TempTexViewVariable2.setText(dbHandler.loadGPS());
    }
-
     public String getUserToDelete(){
+        // will get user to delete
         return input1.getText().toString();
     };
+
+
 
 }
 

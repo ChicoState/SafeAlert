@@ -36,16 +36,13 @@ public class select_bud extends Activity
 
         DatabaseHandler dbHandler = new DatabaseHandler(this);
         int numOfBuddies = dbHandler.getNumOfUsers();
-
-        if(numOfBuddies == 0)
-        {
+        //If database is empty return , othewise will crash app
+        if (numOfBuddies == 0){
             return;
         }
         String ArrayOfBuddies[];
         ArrayOfBuddies=(dbHandler.loadUsers("name"));
         // mbuddiiNames.add("TESTING");
-
-
 
         // for loop will irretiate the index of ArrayOfBuddies and will
         // populate them into mBuddiNames ArrayList

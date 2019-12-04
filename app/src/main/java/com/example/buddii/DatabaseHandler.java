@@ -35,6 +35,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String NAME_OF_USERS_TABLE = "USERS_TABLE";
     private static final  String NAME_OF_FRIENDS_TABLE= "FRIENDS_TABLE";
     private static final String NAME_OF_ACTIVE_BUDDI_TABLE = "ACTIVE_BUDDI_TABLE";
+    private static final String NAME_OF_FLAG_TABLE = "FLAG_TABLE";
 
     // Prepping Users Tables Column names
     private static final String USER_PHONE = "user_phone";
@@ -44,8 +45,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String USER_SALT = "user_salt";
     private static final String USER_UID = "Uid";
     private static final String USER_RATINGS = "user_ratings";
-
-
+    private static final String USER_FLAG = "user_flag";
 
     /* Prepping for GPS DB */
     private static final String  LATITUDE = "latitude";
@@ -68,6 +68,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     private String CREATE_FRIENDS_TABLE = "CREATE TABLE " + NAME_OF_FRIENDS_TABLE + "( Uid INTEGER)";
     private String CREATE_ACTIVE_BUDDII_TABLE = "CREATE TABLE " + NAME_OF_ACTIVE_BUDDI_TABLE + "( Uid INTEGER)";
+    private String CREATE_FLAG_TABLE = "CREATE TABLE " + NAME_OF_FLAG_TABLE + "( Uid INTEGER)";
 
 
     private String CREATE_GPS_TABLE = "CREATE TABLE " + GPS_TABLE + "(" + LATITUDE + " PlaceHolder," +
@@ -96,6 +97,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         My_Database.execSQL(CREATE_GPS_TABLE);
         My_Database.execSQL(CREATE_FRIENDS_TABLE);
         My_Database.execSQL(CREATE_ACTIVE_BUDDII_TABLE);
+        My_Database.execSQL(CREATE_FLAG_TABLE);
 
         // testing of dynamic colums
         My_Database.execSQL(INSERT_DYNAMIC_TABLE);
@@ -138,9 +140,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         if (status <= 0) {
             //TOAST ...ITS A CELEBRATION
-            Toast.makeText(context, "Insertion Unsuccessful", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Insertion Unsuccessful", Toast.LENGTH_LONG).show();
         } else {
-            Toast.makeText(context, "Insertion Successful", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Insertion Successful", Toast.LENGTH_LONG).show();
         }
 
         My_Database.close();
@@ -349,6 +351,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            try {
+                jobj.put("user_ratings",cursor.getString(5));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            try {
+                jobj.put("user_salt",cursor.getString(6));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             arr.put(jobj);
         }
 
@@ -367,7 +379,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String newst = jsonString2 ;
         return newst;
     };
-    public String doPasswordsMatch() throws NoSuchAlgorithmException {
+    public String checkCredentials() throws NoSuchAlgorithmException {
         String[] password = loadUsers("user_pass");
         String pass = password[0];
         // will retrieve salt from DB as a string
@@ -381,6 +393,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     // function to populate ACTIVE BUDDI TABLE by adding the Logged in users UID
+    //will be called when be a buddii button is pressed
     public  String addToActiveBuddiTable(){
         SQLiteDatabase My_Database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -402,6 +415,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public  String addRating(){
         SQLiteDatabase My_Database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        // do all the average calculations here
         String  rating= "5.9";
        Integer Uid = 1;
         values.put("user_ratings",rating);

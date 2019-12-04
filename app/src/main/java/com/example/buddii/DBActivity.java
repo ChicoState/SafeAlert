@@ -22,7 +22,6 @@ public class DBActivity extends AppCompatActivity {
     Button SubmitBUTTON;
     TextView Tx1,Tx2,Tx3,Tx4, TempTexViewVariable2;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,16 +62,13 @@ public class DBActivity extends AppCompatActivity {
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
                 }
-
                 // NEED TO CLEAR OUT THE TABLE AFTER SUBMIT WAS PRESSED
                 input1.setText("");
                 input2.setText("");
                 input3.setText("");
                 input4.setText("");
-
             }
         });
-
     }
 
     // This class will delete a user by passed ID
@@ -95,6 +91,7 @@ public class DBActivity extends AppCompatActivity {
 
         String ArrayOfBuddies[];
         String results = "";
+
         // by default load these attributes
         ArrayOfBuddies=(dbHandler.loadUsers("Uid,email,name,phoneNumber"));
 
@@ -108,17 +105,16 @@ public class DBActivity extends AppCompatActivity {
         }
 
         // TempTexViewVariable2.setText(dbHandler.loadGPS());
-        //  dbHandler.sendtoOnlineDB();
+        // send to online and myTempson go together
+        //dbHandler.sendtoOnlineDB();
         //TempTexViewVariable2.setText(dbHandler.mytempJSONreturnFunc());
-
 
         // temporary call to populate / remove ACTIVE_BUDDII_TABLE
         //dbHandler.addToActiveBuddiTable();
        //dbHandler.removeFromActiveBuddiTable();
-        dbHandler.addRating();
+       // dbHandler.addRating();
         //calling this function will compare hash from user DB to new hash
-      TempTexViewVariable2.setText(dbHandler.doPasswordsMatch());
-
+      //TempTexViewVariable2.setText(dbHandler.checkCredentials());
     }
     public String getUserToDelete(){
         // will get user to delete

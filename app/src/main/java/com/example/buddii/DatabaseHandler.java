@@ -32,7 +32,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Database Name
     private static final String DATABASE_NAME = "Buddi_DATABASE";
     // User table name
-    private static final String NAME_OF_TABLE = "USERS_TABLE";
+    private static final String NAME_OF_USERS_TABLE = "USERS_TABLE";
     private static final  String NAME_OF_FRIENDS_TABLE= "FRIENDS_TABLE";
     private static final String NAME_OF_ACTIVE_BUDDI_TABLE = "ACTIVE_BUDDI_TABLE";
 
@@ -62,7 +62,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //Preping Strings for Creation/deletion/altering of Databases
     // Basically a concatination of SQL COMMANDS
 
-    private String CREATE_TABLE = "CREATE TABLE " + NAME_OF_TABLE + "( Uid INTEGER primary key autoincrement," + USER_PHONE + " PlaceHolder," +
+    private String CREATE_TABLE = "CREATE TABLE " + NAME_OF_USERS_TABLE + "( Uid INTEGER primary key autoincrement," + USER_PHONE + " PlaceHolder," +
             USER_NAME + " PlaceHolder," + USER_EMAIL + " PlaceHolder," + USER_PASSWORD + " PlaceHolder ," + USER_SALT +  ")";
 
     private String CREATE_FRIENDS_TABLE = "CREATE TABLE " + NAME_OF_FRIENDS_TABLE + "( Uid INTEGER)";
@@ -73,7 +73,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             LONGITUTDE + " PlaceHolder"  + ")";
 
     //Will Replace table if exist ( replace USER)
-    private String DROP_TABLE = "DROP TABLE IF EXISTS " + NAME_OF_TABLE;
+    private String DROP_TABLE = "DROP TABLE IF EXISTS " + NAME_OF_USERS_TABLE;
 
     //testing of insert to dynamic colum
     String friend_col = "friend1";
@@ -133,7 +133,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(DatabaseHandler.USER_SALT, byteSaltToString);
 
 
-        long status = My_Database.insert(NAME_OF_TABLE, null, values);
+        long status = My_Database.insert(NAME_OF_USERS_TABLE, null, values);
 
         if (status <= 0) {
             //TOAST ...ITS A CELEBRATION
@@ -152,7 +152,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         int Tlength =Toast.LENGTH_SHORT;
         SQLiteDatabase My_Database = this.getWritableDatabase();
         // delete user record by phone
-        long TempLong = My_Database.delete(NAME_OF_TABLE, USER_PHONE + " = ?",
+        long TempLong = My_Database.delete(NAME_OF_USERS_TABLE, USER_PHONE + " = ?",
                 new String[]{String.valueOf(id)});
         if (TempLong <= 0) {
             Toast.makeText(context, "Deletion Failed ",
@@ -185,7 +185,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String result = "";
         String SelectAll = "SELECT*FROM ";
-        String command = SelectAll + NAME_OF_TABLE;
+        String command = SelectAll + NAME_OF_USERS_TABLE;
 
         Cursor cursor = My_Database.rawQuery(command, null);
         while (cursor.moveToNext()) {
@@ -245,7 +245,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public int getNumOfUsers(){
         SQLiteDatabase My_Database = this.getWritableDatabase();
         //awsome Static utility methods for dealing with databases, only returns a double
-        long tempTotalrows = DatabaseUtils.queryNumEntries(My_Database,NAME_OF_TABLE,null);
+        long tempTotalrows = DatabaseUtils.queryNumEntries(My_Database,NAME_OF_USERS_TABLE,null);
         int totalrows= (int) tempTotalrows;
         return totalrows;
     }
@@ -307,7 +307,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //
     public Cursor getAllData() {
-        String selectQuery = "Select * from "+NAME_OF_TABLE;
+        String selectQuery = "Select * from "+NAME_OF_USERS_TABLE;
         SQLiteDatabase My_Database = this.getReadableDatabase();
         Cursor cursor = My_Database.rawQuery(selectQuery, null);
         return cursor;
@@ -388,6 +388,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         My_Database.insert(NAME_OF_ACTIVE_BUDDI_TABLE, null, values);
        return "stuff";
     };
+
+    public void removeFromActiveBuddiTable() {
+        String id = "10";
+
+        SQLiteDatabase My_Database = this.getWritableDatabase();
+        // delete user record by phone
+        long TempLong = My_Database.delete(NAME_OF_ACTIVE_BUDDI_TABLE, USER_UID + " = ?",
+                new String[]{String.valueOf(id)});
+          My_Database.close();
+    }
 
 
 

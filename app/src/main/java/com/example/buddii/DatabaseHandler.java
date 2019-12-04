@@ -42,6 +42,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String USER_EMAIL = "user_email";
     private static final String USER_PASSWORD = "user_pass";
     private static final String USER_SALT = "user_salt";
+    private static final String USER_UID = "Uid";
 
 
 
@@ -376,8 +377,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String shaPword = hashSha512.hashPaswordSHA512(Opassword, salt2);
         String res = pass +"\n "+ shaPword;
         return  res;
-
     }
+
+    // function to populate ACTIVE BUDDI TABLE by adding the Logged in users UID
+    public  String addToActiveBuddiTable(){
+        SQLiteDatabase My_Database = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        String curActiveBuddiLoggedIn = "10";
+        values.put(DatabaseHandler.USER_UID, curActiveBuddiLoggedIn);
+        My_Database.insert(NAME_OF_ACTIVE_BUDDI_TABLE, null, values);
+       return "stuff";
+    };
+
+
 
 
 

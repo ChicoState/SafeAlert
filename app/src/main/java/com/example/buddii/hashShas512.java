@@ -2,12 +2,12 @@ package com.example.buddii;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
+
 import java.security.SecureRandom;
 
 class hashSha512 {
 
-    static String hashPaswordSHA512(String hashthisWord, byte[] salt) throws NoSuchAlgorithmException {
+    static String hashPaswordSHA512(String hashthisWord, byte[] salt) {
         String hashedPword = null;
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-512");

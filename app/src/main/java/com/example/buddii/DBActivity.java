@@ -111,6 +111,10 @@ public class DBActivity extends AppCompatActivity {
         //  dbHandler.sendtoOnlineDB();
         //TempTexViewVariable2.setText(dbHandler.mytempJSONreturnFunc());
 
+
+        // temporary call to populate ACTIVE_BUDDII_TABLE
+        dbHandler.addToActiveBuddiTable();
+
         //calling this function will compare hash from user DB to new hash
       TempTexViewVariable2.setText(dbHandler.doPasswordsMatch());
 

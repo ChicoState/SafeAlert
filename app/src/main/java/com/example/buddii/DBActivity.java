@@ -114,8 +114,8 @@ public class DBActivity extends AppCompatActivity {
 
         // temporary call to populate / remove ACTIVE_BUDDII_TABLE
         //dbHandler.addToActiveBuddiTable();
-       dbHandler.removeFromActiveBuddiTable();
-
+       //dbHandler.removeFromActiveBuddiTable();
+        dbHandler.addRating();
         //calling this function will compare hash from user DB to new hash
       TempTexViewVariable2.setText(dbHandler.doPasswordsMatch());
 

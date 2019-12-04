@@ -36,17 +36,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final  String NAME_OF_FRIENDS_TABLE= "FRIENDS_TABLE";
     private static final String NAME_OF_ACTIVE_BUDDI_TABLE = "ACTIVE_BUDDI_TABLE";
 
-    // Preping Users Tables Column names
+    // Prepping Users Tables Column names
     private static final String USER_PHONE = "user_phone";
     private static final String USER_NAME = "user_name";
     private static final String USER_EMAIL = "user_email";
     private static final String USER_PASSWORD = "user_pass";
     private static final String USER_SALT = "user_salt";
     private static final String USER_UID = "Uid";
+    private static final String USER_RATINGS = "user_ratings";
 
 
 
-    /* Preping for GPS DB */
+    /* Prepping for GPS DB */
     private static final String  LATITUDE = "latitude";
     private static final String LONGITUTDE = "longitude";
     private static final String GPS_TABLE = "GPS_TABLE";
@@ -63,7 +64,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Basically a concatination of SQL COMMANDS
 
     private String CREATE_TABLE = "CREATE TABLE " + NAME_OF_USERS_TABLE + "( Uid INTEGER primary key autoincrement," + USER_PHONE + " PlaceHolder," +
-            USER_NAME + " PlaceHolder," + USER_EMAIL + " PlaceHolder," + USER_PASSWORD + " PlaceHolder ," + USER_SALT +  ")";
+            USER_NAME + " PlaceHolder," + USER_EMAIL + " PlaceHolder," + USER_PASSWORD + " PlaceHolder ," + USER_RATINGS+ "," + USER_SALT +  ")";
 
     private String CREATE_FRIENDS_TABLE = "CREATE TABLE " + NAME_OF_FRIENDS_TABLE + "( Uid INTEGER)";
     private String CREATE_ACTIVE_BUDDII_TABLE = "CREATE TABLE " + NAME_OF_ACTIVE_BUDDI_TABLE + "( Uid INTEGER)";
@@ -394,10 +395,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase My_Database = this.getWritableDatabase();
         // delete user record by phone
-        long TempLong = My_Database.delete(NAME_OF_ACTIVE_BUDDI_TABLE, USER_UID + " = ?",
+         My_Database.delete(NAME_OF_ACTIVE_BUDDI_TABLE, USER_UID + " = ?",
                 new String[]{String.valueOf(id)});
           My_Database.close();
     }
+    public  String addRating(){
+        SQLiteDatabase My_Database = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        String  rating= "5.9";
+       Integer Uid = 1;
+        values.put("user_ratings",rating);
+        My_Database.update(NAME_OF_USERS_TABLE,values,"Uid ="+Uid, null);
+        return "stuff";
+    };
 
 
 

@@ -20,14 +20,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".findingSafestRouteActivity"></activity>
+        <activity android:name=".findingSafestRouteActivity"/>
         <activity android:name=".beingABuddyActivity" />
         <activity android:name=".AboutUsActivity" />
         <activity android:name=".TutorialActivity" />
         <activity android:name=".beABuddy" />
         <activity
             android:name=".PreferencesActivity"
-            android:label="@string/title_activity_preferences"></activity>
+            android:label="@string/title_activity_preferences"/>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -46,11 +46,11 @@
         <activity android:name=".chooseRoute" />
         <activity android:name=".select_bud" />
         <activity android:name=".DBActivity" />
-        <activity android:name=".MainActivity">
-
+        <activity android:name=".MainActivity" />
+        <activity android:name=".ui.login.LoginActivity"
+                  android:label="@string/title_activity_login_buddii">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

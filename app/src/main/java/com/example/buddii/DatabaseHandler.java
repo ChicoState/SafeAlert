@@ -12,13 +12,17 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.security.NoSuchAlgorithmException;
-
+import java.util.Arrays;
+import java.util.Base64;
 
 // SQLITE set up to handle DATABASE
 public class DatabaseHandler extends SQLiteOpenHelper {
@@ -36,26 +40,28 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String USER_NAME = "user_name";
     private static final String USER_EMAIL = "user_email";
     private static final String USER_PASSWORD = "user_pass";
+    private static final String USER_SALT = "user_salt";
 
 
 
     /* Preping for GPS DB */
-     private static final String  LATITUDE = "latitude";
-     private static final String LONGITUTDE = "longitude";
-     private static final String GPS_TABLE = "GPS_TABLE";
+    private static final String  LATITUDE = "latitude";
+    private static final String LONGITUTDE = "longitude";
+    private static final String GPS_TABLE = "GPS_TABLE";
     /* GPS DB */
 
     // temp plz delete
     String jsonString2 ="";
     private final Context context;
-
+    // for hashing
+    byte[] salt =null;
 
 
     //Preping Strings for Creation/deletion/altering of Databases
     // Basically a concatination of SQL COMMANDS
 
     private String CREATE_TABLE = "CREATE TABLE " + NAME_OF_TABLE + "( Uid INTEGER primary key autoincrement," + USER_PHONE + " PlaceHolder," +
-            USER_NAME + " PlaceHolder," + USER_EMAIL + " PlaceHolder," + USER_PASSWORD + " PlaceHolder " + ")";
+            USER_NAME + " PlaceHolder," + USER_EMAIL + " PlaceHolder," + USER_PASSWORD + " PlaceHolder ," + USER_SALT +  ")";
 
     private String CREATE_FRIENDS_TABLE = "CREATE TABLE " + NAME_OF_FRIENDS_TABLE + "( Uid INTEGER)";
 
@@ -101,6 +107,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // Values passed on from MainActivity,JAVA
     //values here will be placed into the USERS TABLE
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void addToDb(String userphone, String name, String email, String password) throws NoSuchAlgorithmException {
 
         SQLiteDatabase My_Database = this.getWritableDatabase();
@@ -110,8 +118,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(DatabaseHandler.USER_EMAIL, email);
 
         //password will be sent to function and hashed
-        String shaPword = hashSha512.hashPaswordSHA512(password);
+        salt = hashSha512.getSalt();
+        String shaPword = hashSha512.hashPaswordSHA512(password,salt);
         values.put(DatabaseHandler.USER_PASSWORD, shaPword);
+
+        // in order to compare users password, we need to store the original SALT which was used to
+        //hash the password. Otherwise a new SALT would be generated and would result in a differnt hash.
+
+        String byteSaltToString = Base64.getEncoder().encodeToString(salt);
+        values.put(DatabaseHandler.USER_SALT, byteSaltToString);
+
 
         long status = My_Database.insert(NAME_OF_TABLE, null, values);
 
@@ -131,15 +147,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void deleteUser(String id) {
         int Tlength =Toast.LENGTH_SHORT;
         SQLiteDatabase My_Database = this.getWritableDatabase();
-    // delete user record by phone
+        // delete user record by phone
         long TempLong = My_Database.delete(NAME_OF_TABLE, USER_PHONE + " = ?",
                 new String[]{String.valueOf(id)});
         if (TempLong <= 0) {
             Toast.makeText(context, "Deletion Failed ",
-            Tlength).show();
+                    Tlength).show();
         } else {
             Toast.makeText(context, "USER DELETED!",
-            Tlength).show();
+                    Tlength).show();
         }
         My_Database.close();
     }
@@ -153,19 +169,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase My_Database = this.getWritableDatabase();
         /* get number of rows */
 
-       String[] requestHolderArray = requestCall.split(",");
-       int numOfRequest = requestHolderArray.length;
+        String[] requestHolderArray = requestCall.split(",");
+        int numOfRequest = requestHolderArray.length;
         int count =0;
-       // array of Indeces to hold format of strings
+        // array of Indeces to hold format of strings
         String[] arrayOfIndecesHolder =new String[5];
 
         int numOfUsers = getNumOfUsers();
         String ArrayOfresult[] = new String[numOfUsers];
 
 
-       String result = "";
-       String SelectAll = "SELECT*FROM ";
-       String command = SelectAll + NAME_OF_TABLE;
+        String result = "";
+        String SelectAll = "SELECT*FROM ";
+        String command = SelectAll + NAME_OF_TABLE;
 
         Cursor cursor = My_Database.rawQuery(command, null);
         while (cursor.moveToNext()) {
@@ -173,7 +189,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             String phoneNumber = cursor.getString(1);
             String name = cursor.getString(2);
             String email = cursor.getString(3);
-            //String password = cursor.getString(3);
+            String password = cursor.getString(4);
+            String salt = cursor.getString(5);
 
             // for loop will place the order of string according to the order
             // the user request
@@ -191,6 +208,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 if (requestHolderArray[i].equals("Uid")) {
                     arrayOfIndecesHolder[i] = Uid;
                 }
+                if (requestHolderArray[i].equals("user_pass")) {
+                    arrayOfIndecesHolder[i] = password;
+                }
+                if (requestHolderArray[i].equals("salt")) {
+                    arrayOfIndecesHolder[i] = salt;
+                }
             }
             for (int i = 0 ; i < numOfRequest; i++) {
 
@@ -205,8 +228,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             result="";
             count++;
 
-           }
-            System.getProperty("line.separator");
+        }
+        System.getProperty("line.separator");
 
         cursor.close();
         My_Database.close();
@@ -273,7 +296,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             String result0 = cursor.getString(0);
             String results1 = cursor.getString(1);
             // concat results
-             result += "Latitude: " + result0 + " Longitude: " + results1 + " " + "\n";
+            result += "Latitude: " + result0 + " Longitude: " + results1 + " " + "\n";
 
         }
         System.getProperty("line.separator");
@@ -297,58 +320,73 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     // this function will create a JSON file and prepare it to send to an online DB
-  public void sendtoOnlineDB()  {
+    public void sendtoOnlineDB()  {
 
 
-      Cursor cursor = getAllData();  //cursor hold all your data
-      JSONObject jobj ;
-      JSONArray arr = new JSONArray();
-         while(cursor.moveToNext()) {
+        Cursor cursor = getAllData();  //cursor hold all your data
+        JSONObject jobj ;
+        JSONArray arr = new JSONArray();
+        while(cursor.moveToNext()) {
 
             jobj  = new JSONObject();
-          try {
-              jobj.put("uID",cursor.getString(0));
-          } catch (JSONException e) {
-              e.printStackTrace();
-          }
-          try {
-              jobj.put("user_phone",cursor.getString(1));
-          } catch (JSONException e) {
-              e.printStackTrace();
-          }
-          try {
-              jobj.put("user_name",cursor.getString(2));
-          } catch (JSONException e) {
-              e.printStackTrace();
-          }
-          try {
-              jobj.put("user_email",cursor.getString(3));
-          } catch (JSONException e) {
-              e.printStackTrace();
-          }
-          try {
-              jobj.put("user_pass",cursor.getString(4));
-          } catch (JSONException e) {
-              e.printStackTrace();
-          }
-          arr.put(jobj);
-      }
+            try {
+                jobj.put("uID",cursor.getString(0));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            try {
+                jobj.put("user_phone",cursor.getString(1));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            try {
+                jobj.put("user_name",cursor.getString(2));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            try {
+                jobj.put("user_email",cursor.getString(3));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            try {
+                jobj.put("user_pass",cursor.getString(4));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            arr.put(jobj);
+        }
 
-      jobj = new JSONObject();
-      try {
-          jobj.put("data", arr);
-      } catch (JSONException e) {
-          e.printStackTrace();
-      }
+        jobj = new JSONObject();
+        try {
+            jobj.put("data", arr);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-       jsonString2 = jobj.toString();
+        jsonString2 = jobj.toString();
 
-  };
+    };
     // for JSON testing , this will get called from DBActivity and display on app
     public String mytempJSONreturnFunc(){
-      String newst = jsonString2 ;
+        String newst = jsonString2 ;
         return newst;
     };
+    public String doPasswordsMatch() throws NoSuchAlgorithmException {
+        String[] password = loadUsers("user_pass");
+        String pass = password[0];
+        // will retrieve salt from DB as a string
+        String[] salt0 = loadUsers("salt");
+        String salt1 = salt0[0];
+        byte[] salt2 = salt1.getBytes();
+        String Opassword = "cat";
+        String shaPword = hashSha512.hashPaswordSHA512(Opassword, salt2);
+
+
+        String res = pass +"    "+ shaPword;
+        return  res;
+
+    }
 
 
 

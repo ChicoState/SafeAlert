@@ -2,12 +2,12 @@ package com.example.buddii;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 
 class hashSha512 {
 
-     static String hashPaswordSHA512(String hashthisWord) throws NoSuchAlgorithmException {
-        byte[] salt = getSalt();
+    static String hashPaswordSHA512(String hashthisWord, byte[] salt) throws NoSuchAlgorithmException {
         String hashedPword = null;
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-512");
@@ -28,7 +28,10 @@ class hashSha512 {
         return hashedPword;
     }
     //unique salt is created whenever a user is created and requires one
-    private static byte[] getSalt() throws NoSuchAlgorithmException {
+    static byte[] getSalt() throws NoSuchAlgorithmException
+
+    {
+
         //SHA1PRNG is a pure Java implementation which is not as strong as the algorithms used
         // by approved DRBG mechanisms in NIST SP800-90.
         SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");

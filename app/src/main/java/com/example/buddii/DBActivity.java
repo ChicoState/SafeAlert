@@ -1,10 +1,13 @@
 package com.example.buddii;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.security.NoSuchAlgorithmException;
@@ -28,7 +31,7 @@ public class DBActivity extends AppCompatActivity {
         int numOfBuddies = dbHandler.getNumOfUsers();
         //If database is empty return , othewise will crash app
         if (numOfBuddies == 0){
-           // dbHandler.insertDefaultUser();
+            // dbHandler.insertDefaultUser();
         }
 
 
@@ -44,6 +47,7 @@ public class DBActivity extends AppCompatActivity {
 
         SubmitBUTTON=(Button)findViewById(R.id.b1);
         SubmitBUTTON.setOnClickListener(new View.OnClickListener() { // In other words , do this after click
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             // WHEN CLICKED SUBMIT , PASS THESE VALUES
             public void onClick(View view) {
@@ -59,6 +63,7 @@ public class DBActivity extends AppCompatActivity {
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
                 }
+
                 // NEED TO CLEAR OUT THE TABLE AFTER SUBMIT WAS PRESSED
                 input1.setText("");
                 input2.setText("");
@@ -79,9 +84,8 @@ public class DBActivity extends AppCompatActivity {
         // CALL LOADEMP .. THEN DELETE
         handler.deleteUser(deleteUser);}
 
-        // This function is for testing the DB
-     public void loadUser(View view)
-    {   //propriatary DBhandle
+    // This function is for testing the DB
+    public void loadUser(View view) throws NoSuchAlgorithmException {   //propriatary DBhandle
         DatabaseHandler dbHandler = new DatabaseHandler(this);
         int numOfBuddies = dbHandler.getNumOfUsers();
         //If database is empty return , othewise will crash app
@@ -102,11 +106,15 @@ public class DBActivity extends AppCompatActivity {
                 Tx1.setText(results);
             }
         }
-       // TempTexViewVariable2.setText(dbHandler.loadGPS());
-        dbHandler.sendtoOnlineDB();
-       TempTexViewVariable2.setText(dbHandler.mytempJSONreturnFunc());
 
-   }
+        // TempTexViewVariable2.setText(dbHandler.loadGPS());
+        //  dbHandler.sendtoOnlineDB();
+        //TempTexViewVariable2.setText(dbHandler.mytempJSONreturnFunc());
+
+        //calling this function will compare hash from user DB to new hash
+      //  TempTexViewVariable2.setText(dbHandler.doPasswordsMatch());
+
+    }
     public String getUserToDelete(){
         // will get user to delete
         return input1.getText().toString();

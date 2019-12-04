@@ -106,13 +106,13 @@ public class DBActivity extends AppCompatActivity {
 
         // TempTexViewVariable2.setText(dbHandler.loadGPS());
         // send to online and myTempson go together
-        //dbHandler.sendtoOnlineDB();
-        //TempTexViewVariable2.setText(dbHandler.mytempJSONreturnFunc());
+        dbHandler.sendtoOnlineDB();
+        TempTexViewVariable2.setText(dbHandler.mytempJSONreturnFunc());
 
         // temporary call to populate / remove ACTIVE_BUDDII_TABLE
         //dbHandler.addToActiveBuddiTable();
        //dbHandler.removeFromActiveBuddiTable();
-       // dbHandler.addRating();
+       dbHandler.addRating(3.0);
         //calling this function will compare hash from user DB to new hash
       //TempTexViewVariable2.setText(dbHandler.checkCredentials());
     }

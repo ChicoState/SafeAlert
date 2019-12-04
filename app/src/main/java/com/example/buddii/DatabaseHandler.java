@@ -309,18 +309,36 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     //
-    public Cursor getAllData() {
-        String selectQuery = "Select * from "+NAME_OF_USERS_TABLE;
-        SQLiteDatabase My_Database = this.getReadableDatabase();
-        Cursor cursor = My_Database.rawQuery(selectQuery, null);
-        return cursor;
+    public Cursor getAllData(String fromThisDB) {
+
+        if (fromThisDB == "userTable")
+        {
+            String selectQuery = "Select * from "+NAME_OF_USERS_TABLE;
+            SQLiteDatabase My_Database = this.getReadableDatabase();
+            Cursor cursor = My_Database.rawQuery(selectQuery, null);
+            return cursor;
+        }
+        if (fromThisDB == "friendsTable")
+        {
+            String selectQuery = "Select * from "+NAME_OF_FRIENDS_TABLE;
+            SQLiteDatabase My_Database = this.getReadableDatabase();
+            Cursor cursor = My_Database.rawQuery(selectQuery, null);
+            return cursor;
+        }
+        else {
+
+            Cursor o = null;
+            return o;
+        }
+
+
     }
 
     // this function will create a JSON file and prepare it to send to an online DB
     public void sendtoOnlineDB()  {
 
 
-        Cursor cursor = getAllData();  //cursor hold all your data
+        Cursor cursor = getAllData("userTable");  //cursor hold all your data
         JSONObject jobj ;
         JSONArray arr = new JSONArray();
         while(cursor.moveToNext()) {
@@ -412,6 +430,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[]{String.valueOf(id)});
           My_Database.close();
     }
+
+   
     // will need Uid and rating as parameter
     public  String addRating(Double rating){
 

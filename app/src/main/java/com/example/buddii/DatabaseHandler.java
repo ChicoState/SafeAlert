@@ -412,13 +412,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[]{String.valueOf(id)});
           My_Database.close();
     }
-    public  String addRating(){
+    // will need Uid and rating as parameter
+    public  String addRating(Double rating){
+
         SQLiteDatabase My_Database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         // do all the average calculations here
-        String  rating= "5.9";
-       Integer Uid = 1;
-        values.put("user_ratings",rating);
+        String t_Rating =String.valueOf(rating);
+       Integer Uid = 2;
+        values.put("user_ratings",t_Rating);
         My_Database.update(NAME_OF_USERS_TABLE,values,"Uid ="+Uid, null);
         return "stuff";
     };

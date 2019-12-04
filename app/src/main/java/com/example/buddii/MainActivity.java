@@ -14,8 +14,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 
-import java.util.Random;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
          //getLocationPermission();
 
 
+
         btnFSR = findViewById(R.id.findRoute);
         btnBab = findViewById(R.id.beABuddii);
         btnTut = findViewById(R.id.Tutorial);
@@ -50,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 moveToBaB();
+                DatabaseHandler handler = new DatabaseHandler(MainActivity.this);
+                // will need to send the actual UID of user logged in as a parameter
+                handler.addToActiveBuddiTable();
             }
         });
         btnTst.setOnClickListener(new View.OnClickListener() {

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/blue_gradient_background"
+    android:hapticFeedbackEnabled="false"
+    android:orientation="vertical"
+    android:paddingLeft="25dp"
+    android:paddingTop="25dp"
+    android:paddingRight="25dp"
+    android:paddingBottom="25dp">
+
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="198dp"
+        android:layout_height="225dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:contentDescription="@string/todo"
+        android:cropToPadding="false"
+        android:scaleType="center"
+        tools:srcCompat="@tools:sample/avatars[14]" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="199dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/user_name"
+        android:textStyle="bold" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/message_icon"
+        style="@style/Widget.MaterialComponents.Button.Icon"
+        android:layout_width="69dp"
+        android:layout_height="63dp"
+        android:contentDescription="@string/send_a_message"
+        android:onClick="smsSendMessage"
+        android:shape="oval"
+        android:soundEffectsEnabled="false"
+        android:visibility="visible"
+        app:backgroundTint="#1E88E5"
+        app:icon="@drawable/ic_chat_black_24dp"
+        app:iconSize="40dp" />
+
+</LinearLayout>

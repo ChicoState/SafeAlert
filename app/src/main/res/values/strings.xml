@@ -3,10 +3,47 @@
     <string name="user_name">User</string>
     <string name="find_buddy_label">Find Buddii</string>
     <string name="bud_profile_pic">Contact Img Buddy</string>
-    <string name="activity_maps">Activity Maps</string>
+    <string name="activity_maps"></string>
+    <string name="title_activity_preferences">Settings</string>
     <string name="app_logo"> App Logo </string>
     <string name="sign_up_username">Username</string>
     <string name="sign_up_password">Password</string>
     <string name="login_button_next">Next</string>
     <string name="login_button_cancel">Cancel</string>
+    <string name="be_a_buddii">Be A Buddii</string>
+    <string name="find_route">Find Route</string>
+    <string name="editText">Search Location Here</string>
+    <string name="enter_coordinates_here">Enter Coordinates Here</string>
+    <string name="search">Search</string>
+    <string name="report">Report</string>
+    <string name="enter">Enter</string>
+    <string name="sms_message">SMS Message</string>
+
+
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="message">message</string>
+    <string name="todo">todo</string>
+    <string name="MainActivity">MainActivity</string>
+    <string name="send_a_message">Send a message</string>
+
+    <!-- Testing Purposes -->
+    <string name="test_name">Jane Doe</string>
+    <string name="test_age">25</string>
+    <string name="test_city">Chico</string>
+    <string name="test_rank">Score: 10</string>
+
 </resources>

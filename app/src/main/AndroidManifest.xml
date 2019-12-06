@@ -10,6 +10,17 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.REQUEST_COMPANION_USE_DATA_IN_BACKGROUND" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
 
     <application
         android:allowBackup="true"
@@ -20,9 +31,13 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".ScrollMap"
-            android:label="@string/title_activity_scroll_map"
+            android:name=".Map.UserView.ScrollMapUser"
+            android:label="@string/title_activity_scroll_map_user"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Map.BuddiiView.ScrollMapBuddii"
+            android:label="@string/title_activity_scroll_map"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".findingSafestRouteActivity" />
         <activity android:name=".beingABuddyActivity" />
         <activity android:name=".AboutUsActivity" />
@@ -44,7 +59,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".Map.MapsActivity"
             android:label="@string/activity_maps" />
         <activity android:name=".chooseRoute" />
         <activity android:name=".select_bud" />

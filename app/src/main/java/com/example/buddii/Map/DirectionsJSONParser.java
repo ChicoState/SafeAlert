@@ -1,4 +1,4 @@
-package com.example.buddii;
+package com.example.buddii.Map;
 
 import com.google.android.gms.maps.model.LatLng;
 

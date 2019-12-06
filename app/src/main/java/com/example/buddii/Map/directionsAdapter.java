@@ -1,3 +1,5 @@
+package com.example.buddii.Map;
+
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -7,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class directionsAdapter {
 
-    private static final String TAG = "directionsAdapter";
+    private static final String TAG = "com.example.buddii.Map.directionsAdapter";
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 

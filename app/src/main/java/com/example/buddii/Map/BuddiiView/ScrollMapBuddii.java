@@ -13,7 +13,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.example.buddii.Map.DirectionsJSONParser;
-import com.example.buddii.Map.MapsActivity;
 import com.example.buddii.R;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
@@ -209,17 +208,17 @@ public class ScrollMapBuddii extends AppCompatActivity implements OnMapReadyCall
         });
     }
 
-    private Vector<MapsActivity.LonLat> RetrieveLocations(){
+    private Vector<ScrollMapBuddii.LonLat> RetrieveLocations(){
         //put all of the longitudes and latitudes from the database
         //into a vector of type LonLat defined at the top
-        Vector<MapsActivity.LonLat> temp = new Vector<>();
+        Vector<ScrollMapBuddii.LonLat> temp = new Vector<>();
         return temp;
     }
 
-    private void setWaypoints(Vector<MapsActivity.LonLat> x) {
+    private void setWaypoints(Vector<ScrollMapBuddii.LonLat> x) {
 
         for(int i = 0; i < x.size(); i++) {
-            MapsActivity.LonLat temp = x.get(i);
+            ScrollMapBuddii.LonLat temp = x.get(i);
             mMap.addCircle(new CircleOptions().center(new LatLng(temp.getLon(),temp.getLat()))
                     .radius(20)
                     .strokePattern(PATTERN_POLYLINE_DOTTED)
@@ -301,25 +300,8 @@ public class ScrollMapBuddii extends AppCompatActivity implements OnMapReadyCall
         mapFragment.getMapAsync(this);
         mMarkerPoints = new ArrayList<>();
 
-        reportButton = findViewById(R.id.reportButton);
-        searchButton = findViewById(R.id.searchButton);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeBack();
-            }
-        });
-        reportButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                changeView();
-
-            }
-        });
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fabBuddii = (FloatingActionButton) findViewById(R.id.fabBuddii);
+        fabBuddii.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -348,17 +330,6 @@ public class ScrollMapBuddii extends AppCompatActivity implements OnMapReadyCall
         BuddiiTabUser.setVisibility(View.VISIBLE);
         BuddiiTabHome = findViewById(R.id.BuddiiTabHome);
         BuddiiTabHome.setVisibility(GONE);
-    }
-
-    private void changeView(){
-        findViewById(R.id.searchField).setVisibility(View.GONE);
-        findViewById(R.id.reportField).setVisibility(View.VISIBLE);
-    }
-
-    private void changeBack(){
-        findViewById(R.id.searchField).setVisibility(View.VISIBLE);
-        findViewById(R.id.reportField).setVisibility(View.GONE);
-        //getIncomingIntent();
     }
 
 
@@ -393,8 +364,11 @@ public class ScrollMapBuddii extends AppCompatActivity implements OnMapReadyCall
         // Add a marker in Sydney and move the camera
         LatLng chico = new LatLng(39.7285, -121.8375);
         mMap.addMarker(new MarkerOptions().position(chico).title("Marker in Chico"));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(5));
+        for(int i = 0; i < 1000; i+=2) {
+            i-=1;
+        }
         mMap.moveCamera(CameraUpdateFactory.newLatLng(chico));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override

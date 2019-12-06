@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".Map.UserView.ScrollMapUser"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".Map.UserView.ScrollMapUser">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
 
 
                 <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/toolbar"
+                    android:id="@+id/toolbarUser"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     app:layout_collapseMode="pin"
@@ -44,24 +44,45 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <include
-            layout="@layout/content_scroll_map"
+            layout="@layout/content_scroll_map_user"
             tools:ignore="IncludeLayoutParam" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageButton
+            android:id="@+id/fabUser"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_margin="@dimen/fab_margin"
-            app:layout_anchorGravity="bottom|right|end"
+            android:background="#00FFFFFF"
+            app:layout_anchor="@id/toolbarUser"
+            app:layout_anchorGravity="bottom|right"
             app:srcCompat="@android:drawable/sym_action_chat" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <fragment
-        android:id="@+id/mapUser"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="com.viralandroid.googlemapsandroidapi.MapsActivity" />
+        android:fitsSystemWindows="true"
+        tools:context=".Map.UserView.ScrollMapUser">
+
+        <fragment
+            android:id="@+id/mapUser"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            tools:context="com.viralandroid.googlemapsandroidapi.ScrollMapUser" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:clickable="true"
+            android:onClick="onCurrLocClick"
+            app:layout_anchor="@id/mapUser"
+            app:srcCompat="@android:drawable/ic_menu_mylocation" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </LinearLayout>

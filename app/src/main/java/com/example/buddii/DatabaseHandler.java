@@ -13,15 +13,17 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+
+import com.example.buddii.data.LoginDataSource;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.Base64;
 
 // SQLITE set up to handle DATABASE
@@ -397,7 +399,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String newst = jsonString2 ;
         return newst;
     };
-    public String checkCredentials() throws NoSuchAlgorithmException {
+    public String checkCredentials(String checkthisPword) {
+
         String[] password = loadUsers("user_pass");
         String pass = password[0];
         // will retrieve salt from DB as a string
@@ -408,6 +411,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String shaPword = hashSha512.hashPaswordSHA512(Opassword, salt2);
         String res = pass +"\n "+ shaPword;
         return  res;
+
+       /*
+        String x ="false";
+        String thisIsThePword = "password";
+        Log.d("xxxPwordFromDATABASE",thisIsThePword);
+        if(checkthisPword == checkthisPword)
+        {
+            String s ="true";
+            return s;
+        }
+
+        else return x;
+       */
+
     }
 
     // function to populate ACTIVE BUDDI TABLE by adding the Logged in users UID

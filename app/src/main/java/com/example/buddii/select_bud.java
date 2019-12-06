@@ -5,7 +5,7 @@ import android.app.Activity;
 
 import android.os.Bundle;
 import android.view.View;
-import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
 
 
@@ -38,6 +38,7 @@ public class select_bud extends Activity
         int numOfBuddies = dbHandler.getNumOfUsers();
         //If database is empty return , othewise will crash app
         if (numOfBuddies == 0){
+            dbHandler.close();
             return;
         }
         String ArrayOfBuddies[];
@@ -50,7 +51,7 @@ public class select_bud extends Activity
 
             mbuddiiNames.add(ArrayOfBuddies[i]);
         }
-
+        dbHandler.close();
         initRecyclerView();
 
     }

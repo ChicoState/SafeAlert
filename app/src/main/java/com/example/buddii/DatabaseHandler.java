@@ -13,6 +13,7 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -57,7 +58,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     String jsonString2 ="";
     private final Context context;
     // for hashing
-    byte[] salt =null;
+    String shaPword = "";
+    String shaPword2 = "";
+   public static byte[] salt = null;
+
+
 
 
     //Preping Strings for Creation/deletion/altering of Databases
@@ -90,6 +95,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         this.context = context;
     }
 
+
+
     @Override
     public void onCreate(SQLiteDatabase My_Database) {
         //execute prepared commands
@@ -116,23 +123,32 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //values here will be placed into the USERS TABLE
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void addToDb(String userphone, String name, String email, String password) throws NoSuchAlgorithmException {
+    public void addToDb(String userphone, String name, String email, String password)  {
+         salt = hashSha512.getSalt();
 
         SQLiteDatabase My_Database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DatabaseHandler.USER_PHONE, userphone);
         values.put(DatabaseHandler.USER_NAME, name);
         values.put(DatabaseHandler.USER_EMAIL, email);
-
         //password will be sent to function and hashed
-        salt = hashSha512.getSalt();
-        String shaPword = hashSha512.hashPaswordSHA512(password,salt);
-        values.put(DatabaseHandler.USER_PASSWORD, shaPword);
 
+
+         shaPword = hashSha512.hashPaswordSHA512(password,salt);
+
+         if (shaPword.equals(shaPword2))
+         {
+             Log.d("xxxxPwordJUAN",shaPword);
+
+         }
+        values.put(DatabaseHandler.USER_PASSWORD, shaPword);
+        //Log.d("xxxxPwordThatisInDB",shaPword);
         // in order to compare users password, we need to store the original SALT which was used to
         //hash the password. Otherwise a new SALT would be generated and would result in a differnt hash.
 
         String byteSaltToString = Base64.getEncoder().encodeToString(salt);
+
+       // Log.d("xxxxSALTuseB4",byteSaltToString);
         values.put(DatabaseHandler.USER_SALT, byteSaltToString);
 
 
@@ -144,9 +160,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         } else {
             Toast.makeText(context, "Insertion Successful", Toast.LENGTH_LONG).show();
         }
-
         My_Database.close();
-
     }
 
 
@@ -197,7 +211,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             String name = cursor.getString(2);
             String email = cursor.getString(3);
             String password = cursor.getString(4);
-            String salt = cursor.getString(5);
+            String salt = cursor.getString(6);
 
             // for loop will place the order of string according to the order
             // the user request
@@ -241,6 +255,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (ArrayOfresult[0] == null ) {
             Toast.makeText(context, "USER NOT CREATED YET", Toast.LENGTH_SHORT).show();
         }
+
         return ArrayOfresult;
     }
 
@@ -250,6 +265,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //awsome Static utility methods for dealing with databases, only returns a double
         long tempTotalrows = DatabaseUtils.queryNumEntries(My_Database,NAME_OF_USERS_TABLE,null);
         int totalrows= (int) tempTotalrows;
+
         return totalrows;
     }
     /* --------------- FOR GPS DATABASE -----------   */
@@ -316,6 +332,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             String selectQuery = "Select * from "+NAME_OF_USERS_TABLE;
             SQLiteDatabase My_Database = this.getReadableDatabase();
             Cursor cursor = My_Database.rawQuery(selectQuery, null);
+            cursor.close();
+            My_Database.close();
             return cursor;
         }
         if (fromThisDB == "friendsTable")
@@ -323,6 +341,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             String selectQuery = "Select * from "+NAME_OF_FRIENDS_TABLE;
             SQLiteDatabase My_Database = this.getReadableDatabase();
             Cursor cursor = My_Database.rawQuery(selectQuery, null);
+            cursor.close();
+            My_Database.close();
             return cursor;
         }
         else {
@@ -397,17 +417,47 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String newst = jsonString2 ;
         return newst;
     };
-    public String checkCredentials() throws NoSuchAlgorithmException {
-        String[] password = loadUsers("user_pass");
-        String pass = password[0];
-        // will retrieve salt from DB as a string
-        String[] salt0 = loadUsers("salt");
-        String salt1 = salt0[0];
-        byte[] salt2 = salt1.getBytes();
-        String Opassword = "CAT";
-        String shaPword = hashSha512.hashPaswordSHA512(Opassword, salt2);
-        String res = pass +"\n "+ shaPword;
-        return  res;
+
+
+    public String checkCredentials(String checkThisPassword,String pwordInDB){
+       // Integer lengthOfPword = checkThisPassword.length();
+       // String pwordToHash =checkThisPassword.substring(0,lengthOfPword);
+        String pwordToHash = checkThisPassword;
+       Log.d("xxxxPAddddfdffvf",pwordToHash);
+       // String[] tpassword = loadUsers("user_pass");
+       // String tpassword= getPword();
+
+        //String pass = new String(tpassword[0]);
+
+        String shaPwordToCheck = "";
+
+        shaPwordToCheck = hashSha512.hashPaswordSHA512(pwordToHash, salt);
+
+        Log.d("xxxxPASWeeeee","im in boys3");
+
+        Log.d("xxxxPASWORDtttt",shaPwordToCheck);
+        Log.d("xxxxPwordBngCmpfffff",pwordInDB);
+
+
+        // for an UNKNOWN reason I strings have to be substrings in order for the
+        // comparisons to work
+        String c =pwordInDB.substring(1,128);
+        String d = shaPwordToCheck.substring(1,128);
+
+        Log.d("xxxxCCCCCC",c);
+        Log.d("xxxxDDDDDD",d);
+
+        if (c.equals(d))
+        {
+            Log.d("xxxxCameInNoRtn",shaPwordToCheck);
+            String good = "true";
+            return good;
+        }
+
+         else {
+             String noGood = "false";
+            return noGood;
+        }
     }
 
     // function to populate ACTIVE BUDDI TABLE by adding the Logged in users UID
@@ -431,7 +481,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
           My_Database.close();
     }
 
-   
+
     // will need Uid and rating as parameter
     public  String addRating(Double rating){
 
@@ -444,6 +494,53 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         My_Database.update(NAME_OF_USERS_TABLE,values,"Uid ="+Uid, null);
         return "stuff";
     };
+
+
+    public boolean chechIfAlreadyMemeber(String username)
+    {
+        /*
+        SQLiteDatabase My_Database = this.getWritableDatabase();
+        // delete user record by phone
+        My_Database.(NAME_OF_ACTIVE_BUDDI_TABLE, USER_UID + " = ?",
+                new String[]{String.valueOf(username)});
+        My_Database.close();
+        */
+      return false;
+    };
+
+
+
+    public String getPword() {
+        /*
+        SQLiteDatabase My_Database;
+        My_Database = this.getWritableDatabase();
+
+        String result = "";
+        String SelectAll = "SELECT*FROM ";
+        String command = SelectAll + NAME_OF_USERS_TABLE;
+
+        Cursor cursor = My_Database.rawQuery(command, null);
+        while (cursor.moveToNext()) {
+
+            String Uid = cursor.getString(0);
+            String phoneNumber = cursor.getString(1);
+            String name = cursor.getString(2);
+            String email = cursor.getString(3);
+
+
+            String password = cursor.getString(4);
+
+            result= password;
+        }
+        System.getProperty("line.separator");
+        cursor.close();
+        My_Database.close();
+
+        */
+
+        return shaPword;
+    }
+
 
 
 

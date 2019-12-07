@@ -3,20 +3,29 @@ package com.example.buddii.Map.UserView;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
+import android.location.LocationListener;
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.example.buddii.Freakout;
+import com.example.buddii.MainActivity;
 import com.example.buddii.Map.DirectionsJSONParser;
-import com.example.buddii.Map.MapsActivity;
 import com.example.buddii.R;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -29,6 +38,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -39,11 +49,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.os.Environment;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -61,7 +74,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -72,13 +87,19 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
     Button btnPlay, btnRecord, btnStop, btnStopRecord;
     Context context;
     int brightness;
-    LinearLayout UserTabUser, UserTabHome;
+    LinearLayout UserTabInfo, UserTabHome, UserTabReport, UserTabRoute,UserTabChat;
+    Button UserHome, UserRoute;
+    private FusedLocationProviderClient client;
+    LocationManager locationManager;
+    LocationRequest locationRequest;
+    LocationCallback locationCallback;
 
     private GeofencingClient geofencingClient;
     private static final List<PatternItem> PATTERN_POLYLINE_DOTTED = null;
     private GoogleMap mMap;
     private LatLng mOrigin;
     private LatLng mDestination;
+    private LatLng curr = new LatLng(0,0);
     private Polyline mPolyline;
     ArrayList<LatLng> mMarkerPoints;
     LinkedList<Geofence> geofenceList = null;
@@ -209,17 +230,17 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
         });
     }
 
-    private Vector<MapsActivity.LonLat> RetrieveLocations(){
+    private Vector<ScrollMapUser.LonLat> RetrieveLocations(){
         //put all of the longitudes and latitudes from the database
         //into a vector of type LonLat defined at the top
-        Vector<MapsActivity.LonLat> temp = new Vector<>();
+        Vector<ScrollMapUser.LonLat> temp = new Vector<>();
         return temp;
     }
 
-    private void setWaypoints(Vector<MapsActivity.LonLat> x) {
+    private void setWaypoints(Vector<ScrollMapUser.LonLat> x) {
 
         for(int i = 0; i < x.size(); i++) {
-            MapsActivity.LonLat temp = x.get(i);
+            ScrollMapUser.LonLat temp = x.get(i);
             mMap.addCircle(new CircleOptions().center(new LatLng(temp.getLon(),temp.getLat()))
                     .radius(20)
                     .strokePattern(PATTERN_POLYLINE_DOTTED)
@@ -272,15 +293,48 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
                 .fillColor(Color.CYAN));
     }
 
+    private void getCurrLocation(){
+        client = LocationServices.getFusedLocationProviderClient(this);
+
+        if(ActivityCompat.checkSelfPermission(ScrollMapUser.this, ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
+
+        }
+
+        client.getLastLocation().addOnSuccessListener(ScrollMapUser.this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if(location!=null){
+                    LatLng curr = new LatLng(location.getLatitude(), location.getLongitude());
+                    mMap.addCircle(new CircleOptions().center(curr)
+                            .radius(1)
+                            .strokePattern(PATTERN_POLYLINE_DOTTED)
+                            .strokeColor(Color.BLUE)
+                            .fillColor(Color.CYAN));
+
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(curr));
+
+                    TextView textView = findViewById(R.id.locationUser);
+                    textView.setText(location.toString());
+                }else{
+                    Toast.makeText(ScrollMapUser.this, "FUCK YOU", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void requestPermissions(){
+        ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION}, 1);
+    }
+
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scroll_map_user);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        // tabListener();
+        Toolbar toolbarUser = findViewById(R.id.toolbarUser);
+        setSupportActionBar(toolbarUser);
+        requestPermissions();
+        getCurrLocation();
 
         //Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
         //Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 254);
@@ -301,34 +355,9 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
         mapFragment.getMapAsync(this);
         mMarkerPoints = new ArrayList<>();
 
-        reportButton = findViewById(R.id.reportButton);
-        searchButton = findViewById(R.id.searchButton);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeBack();
-            }
-        });
-        reportButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                changeView();
-
-            }
-        });
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
-    private void setupMediaRecorder() {
+     private void setupMediaRecorder() {
         mediaRecorder = new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -337,33 +366,99 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
     }
 
     public void onHomeClick(View view) {
-        UserTabUser = findViewById(R.id.BuddiiTabUser);
-        UserTabUser.setVisibility(View.GONE);
-        UserTabHome = findViewById(R.id.BuddiiTabHome);
-        UserTabHome.setVisibility(View.VISIBLE);
+        UserTabInfo = findViewById(R.id.UserTabInfo);
+        UserTabHome = findViewById(R.id.UserTabHome);
+        UserTabReport = findViewById(R.id.UserTabReport);
+        UserTabRoute = findViewById(R.id.UserTabRoute);
+        UserTabChat = findViewById(R.id.UserTabChat);
+        UserTabChat.setVisibility(VISIBLE);
+        UserTabInfo.setVisibility(View.GONE);
+        UserTabHome.setVisibility(VISIBLE);
+        UserTabReport.setVisibility(GONE);
+        UserTabRoute.setVisibility(GONE);
     }
 
-    public void onUserClick(View view) {
-        UserTabUser = findViewById(R.id.BuddiiTabUser);
-        UserTabUser.setVisibility(View.VISIBLE);
-        UserTabHome = findViewById(R.id.BuddiiTabHome);
+    public void onInfoClick(View view) {
+        UserTabInfo = findViewById(R.id.UserTabInfo);
+        UserTabHome = findViewById(R.id.UserTabHome);
+        UserTabReport = findViewById(R.id.UserTabReport);
+        UserTabRoute = findViewById(R.id.UserTabRoute);
+        UserTabChat = findViewById(R.id.UserTabChat);
+        UserTabChat.setVisibility(VISIBLE);
+        UserTabInfo.setVisibility(VISIBLE);
         UserTabHome.setVisibility(GONE);
+        UserTabRoute.setVisibility(GONE);
+        UserTabReport.setVisibility(GONE);
+    }
+    public void onRouteClick(View view){
+        UserTabInfo = findViewById(R.id.UserTabInfo);
+        UserTabHome = findViewById(R.id.UserTabHome);
+        UserTabReport = findViewById(R.id.UserTabReport);
+        UserTabRoute = findViewById(R.id.UserTabRoute);
+        UserTabChat = findViewById(R.id.UserTabChat);
+        UserTabChat.setVisibility(VISIBLE);
+        UserTabRoute.setVisibility(VISIBLE);
+        UserTabHome.setVisibility(GONE);
+        UserTabInfo.setVisibility(GONE);
+        UserTabReport.setVisibility(GONE);
     }
 
-    private void changeView(){
-        findViewById(R.id.searchField).setVisibility(View.GONE);
-        findViewById(R.id.reportField).setVisibility(View.VISIBLE);
+    public void onReportClick(View view){
+        UserTabInfo = findViewById(R.id.UserTabInfo);
+        UserTabHome = findViewById(R.id.UserTabHome);
+        UserTabReport = findViewById(R.id.UserTabReport);
+        UserTabRoute = findViewById(R.id.UserTabRoute);
+        UserTabChat = findViewById(R.id.UserTabChat);
+        UserTabChat.setVisibility(VISIBLE);
+        UserTabReport.setVisibility(VISIBLE);
+        UserTabHome.setVisibility(GONE);
+        UserTabRoute.setVisibility(GONE);
+        UserTabInfo.setVisibility(GONE);
     }
 
-    private void changeBack(){
-        findViewById(R.id.searchField).setVisibility(View.VISIBLE);
-        findViewById(R.id.reportField).setVisibility(View.GONE);
-        //getIncomingIntent();
+    public void onAcceptRouteClick(View view){
+        UserTabInfo = findViewById(R.id.UserTabInfo);
+        UserTabHome = findViewById(R.id.UserTabHome);
+        UserTabReport = findViewById(R.id.UserTabReport);
+        UserTabRoute = findViewById(R.id.UserTabRoute);
+        UserHome = findViewById(R.id.UserHome);
+        UserRoute = findViewById(R.id.UserRoute);
+        UserTabChat = findViewById(R.id.UserTabChat);
+        UserTabChat.setVisibility(VISIBLE);
+        UserTabRoute.setVisibility(GONE);
+        UserTabHome.setVisibility(VISIBLE);
+        UserTabInfo.setVisibility(GONE);
+        UserTabReport.setVisibility(GONE);
+        UserHome.setVisibility(VISIBLE);
+        UserRoute.setVisibility(GONE);
     }
 
+    public void onCurrLocClick(View view){
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(curr));
+    }
+
+    public void onBigAlertEnergyClick(View view) {
+        Toast.makeText(this, "Oh shit a rat", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(ScrollMapUser.this, Freakout.class);
+        startActivity(intent);
+
+    }
+
+    public void onChatClick(View view) {
+        UserTabInfo = findViewById(R.id.UserTabInfo);
+        UserTabHome = findViewById(R.id.UserTabHome);
+        UserTabReport = findViewById(R.id.UserTabReport);
+        UserTabRoute = findViewById(R.id.UserTabRoute);
+        UserTabChat = findViewById(R.id.UserTabChat);
+        UserTabChat.setVisibility(VISIBLE);
+        UserTabReport.setVisibility(GONE);
+        UserTabHome.setVisibility(GONE);
+        UserTabRoute.setVisibility(GONE);
+        UserTabInfo.setVisibility(GONE);
+    }
 
     public void onMapSearch(View view) {
-        EditText locationSearch = findViewById(R.id.searchText);
+        EditText locationSearch = findViewById(R.id.RouteManual);
         String location = locationSearch.getText().toString();
         List<Address>addressList = null;
 
@@ -387,14 +482,12 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        geofencingClient = LocationServices.getGeofencingClient(this);
-
 
         // Add a marker in Sydney and move the camera
-        LatLng chico = new LatLng(39.7285, -121.8375);
-        mMap.addMarker(new MarkerOptions().position(chico).title("Marker in Chico"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(chico));
+        LatLng Chico = new LatLng(39.7285, -121.8375);
+        mMap.addMarker(new MarkerOptions().position(Chico).title("Marker in Chico"));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(Chico));
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override

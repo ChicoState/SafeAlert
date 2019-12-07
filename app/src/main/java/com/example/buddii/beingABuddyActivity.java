@@ -16,7 +16,7 @@ public class beingABuddyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_being_abuddy);
 
-        Button playTutorialVideo = (Button)findViewById(R.id.playButton);
+        //Button playTutorialVideo = (Button)findViewById(R.id.playButton);
 
         getWindow().setFormat(PixelFormat.UNKNOWN);
 

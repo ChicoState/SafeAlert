@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.buddii.DBActivity;
 import com.example.buddii.DatabaseHandler;
 import com.example.buddii.MainActivity;
+import com.example.buddii.Map.UserView.ScrollMapUser;
 import com.example.buddii.R;
 
 public class LoginActivity extends AppCompatActivity {
@@ -147,5 +148,10 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
 
 
+    }
+
+    public void circumvent(View view) {
+        Intent intent = new Intent(LoginActivity.this, ScrollMapUser.class);
+        startActivity(intent);
     }
 }

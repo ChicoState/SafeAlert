@@ -14,8 +14,8 @@
         style="android:attr=buttonBarButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:alwaysDrawnWithCache="true"
-        android:animateLayoutChanges="true"
+        android:alwaysDrawnWithCache="false"
+        android:animateLayoutChanges="false"
         android:animationCache="false"
         android:background="@color/colorPrimary"
         android:orientation="horizontal">
@@ -24,25 +24,10 @@
             android:id="@+id/UserHome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:onClick="onHomeClick"
             android:text="Home"
-            app:backgroundTint="@color/colorPrimary"
-            tools:ignore="ButtonStyle" />
-
-        <Button
-            android:id="@+id/UserInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onUserClick"
-            android:text="Info"
-            app:backgroundTint="@color/colorPrimary" />
-
-        <Button
-            android:id="@+id/UserReport"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onUserClick"
-            android:text="Report"
+            android:visibility="gone"
             app:backgroundTint="@color/colorPrimary"
             tools:ignore="ButtonStyle" />
 
@@ -50,9 +35,30 @@
             android:id="@+id/UserRoute"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onUserClick"
+            android:layout_weight="1"
+            android:onClick="onRouteClick"
             android:text="Route"
+            android:visibility="visible"
             app:backgroundTint="@color/colorPrimary" />
+
+        <Button
+            android:id="@+id/UserInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onInfoClick"
+            android:text="Info"
+            app:backgroundTint="@color/colorPrimary" />
+
+        <Button
+            android:id="@+id/UserReport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="onReportClick"
+            android:text="Report"
+            app:backgroundTint="@color/colorPrimary"
+            tools:ignore="ButtonStyle" />
 
     </LinearLayout>
 
@@ -76,11 +82,21 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
+                <include
+                    layout="@layout/activity_being_abuddy"
+                    tools:ignore="IncludeLayoutParam" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/text_margin"
                     android:text="TESTESTESTESTESTESTESTEST" />
+
+                <Button
+                    android:id="@+id/userDropButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Drop Buddii" />
 
             </LinearLayout>
 
@@ -98,28 +114,34 @@
                     android:text="@string/lorem_ipsum_dolor_sit_amet_consectetur_adipiscing_elit_sed_do_eiusmod_tempor_incididunt_ut_labore_et_dolore_magna_aliqua_duis_at_tellus_at_urna_condimentum_odio_aenean_sed_adipiscing_diam_donec_adipiscing_eget_lorem_dolor_sed_viverra_ipsum_vitae_tempus_quam_pellentesque_nec_nam_duis_ultricies_lacus_sed_turpis_tincidunt_id_mauris_cursus_mattis_molestie_a_iaculis_at_erat_pellentesque_vitae_tortor_condimentum_lacinia_quis_vel_eros_dui_ut_ornare_lectus_sit_amet_est_amet_volutpat_consequat_mauris_nunc_congue_nisi_vitae_suscipit_tellus_velit_egestas_dui_id_ornare_lacus_viverra_vitae_congue_eu_consequat_ac_felis_donec_faucibus_pulvinar_elementum_integer_enim_neque_volutpat_ac_sit_amet_est_placerat_in_nulla_facilisi_etiam_dignissim_diam_quis_enim_lobortis_scelerisque_fermentum_faucibus_scelerisque_eleifend_donec_pretium_vulputate_sapien_nec_sagittis_aliquam_diam_vel_quam_elementum_pulvinar_commodo_nulla_facilisi_nullam_vehicula_nunc_consequat_interdum_varius_sit_magna_fermentum_iaculis_eu_non_diam_phasellus_vestibulum_lorem_sed_lobortis_feugiat_vivamus_at_augue_eget_arcu_dictum_varius_posuere_ac_ut_consequat_semper_viverra_nam_volutpat_est_velit_egestas_dui_id_ornare_etiam_tempor_orci_eu_lobortis_elementum_nibh_enim_praesent_elementum_facilisis_leo_vel_rhoncus_mattis_rhoncus_urna_neque_viverra_in_arcu_cursus_euismod_quis_viverra_nibh_pellentesque_nec_nam_aliquam_sem_et_erat_nam_at_lectus_urna_adipiscing_commodo_elit_at_imperdiet_dui_accumsan_sit_elit_scelerisque_mauris_pellentesque_pulvinar_pellentesque_habitant_morbi_maecenas_volutpat_blandit_aliquam_etiam_erat_velit_scelerisque_in_aliquam_etiam_erat_velit_scelerisque_elementum_sagittis_vitae_et_leo_duis_adipiscing_at_in_tellus_integer_feugiat_scelerisque_varius_morbi_tortor_posuere_ac_ut_consequat_semper_elit_sed_vulputate_mi_sit_nunc_vel_risus_commodo_viverra_maecenas_accumsan_lacus_vel_facilisis_consequat_ac_felis_donec_et_odio_pellentesque_diam_volutpat_commodo_ultrices_tincidunt_arcu_non_sodales_neque_sodales_ut_sit_amet_purus_gravida_quis_blandit_consectetur_adipiscing_elit_ut_aliquam_purus_sit_egestas_congue_quisque_egestas_diam_in_in_nibh_mauris_cursus_mattis_viverra_accumsan_in_nisl_nisi_ac_odio_tempor_orci_dapibus_ultrices_in_iaculis_eget_arcu_dictum_varius_duis_at_consectetur_eu_tincidunt_tortor_aliquam_nulla_facilisi" />
 
                 <Button
-                    android:id="@+id/btnStop"
+                    android:id="@+id/button3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Button" />
-
-                <Button
-                    android:id="@+id/btnStopRecord"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Button" />
-
-                <Button
-                    android:id="@+id/btnPlay"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Button" />
+                    android:text="Drop Route" />
 
                 <Button
                     android:id="@+id/btnRecord"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Button" />
+                    android:text="Record" />
+
+                <Button
+                    android:id="@+id/btnStopRecord"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Stop Recording" />
+
+                <Button
+                    android:id="@+id/btnPlay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Play" />
+
+                <Button
+                    android:id="@+id/btnStop"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Stop" />
             </LinearLayout>
 
             <LinearLayout
@@ -127,11 +149,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:visibility="visible"
-                tools:visibility="visible">
+                android:visibility="gone">
 
                 <EditText
-                    android:id="@+id/reportText"
+                    android:id="@+id/reportTextUser"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
                     android:layout_weight="0"
@@ -169,7 +190,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <EditText
                     android:id="@+id/RouteManual"
@@ -181,14 +202,36 @@
                     android:id="@+id/searchButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:onClick="onAcceptRouteClick"
                     android:text="Enter" />
 
                 <Button
                     android:id="@+id/acceptRoute"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:onClick="onAcceptRouteClick"
                     android:text="Accept Route"
                     android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/locationUser"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="TextView" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/UserTabChat"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
 
             </LinearLayout>
 

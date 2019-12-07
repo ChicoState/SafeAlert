@@ -24,7 +24,7 @@ public class LoginDataSource extends AppCompatActivity {
             Log.d("xxxPwordFromLogIn",password);
             //handler.checkCredentials(password)
             String checkCred = handler.checkCredentials(password);
-            if( checkCred == "true") {
+            if( checkCred == password) {
                 Log.d("xxxafterChkCdrntls",password);
                 LoggedInUser fakeUser =
                         new LoggedInUser(

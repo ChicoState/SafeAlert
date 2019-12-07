@@ -130,6 +130,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase My_Database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
+        Cursor c = My_Database.rawQuery("SELECT * FROM USERS_TABLE where user_name = " + " '" + name + "'", null);
+        if(c.getCount()>0)
+        {
+            Toast.makeText(context, "USER ALREADY EXITS", Toast.LENGTH_LONG).show();
+            return;
+        }
+        else
+        {
+            Toast.makeText(context, "WELCOME", Toast.LENGTH_LONG).show();
+        }
         /*
         String query = "SELECT user_name FROM USER_TABLE WHERE user_name = " + name;
 

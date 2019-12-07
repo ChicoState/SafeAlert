@@ -93,6 +93,7 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
     LocationManager locationManager;
     LocationRequest locationRequest;
     LocationCallback locationCallback;
+    LatLng Chico = new LatLng(37.421980,-122.084062);
 
     private GeofencingClient geofencingClient;
     private static final List<PatternItem> PATTERN_POLYLINE_DOTTED = null;
@@ -431,6 +432,9 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
         UserTabReport.setVisibility(GONE);
         UserHome.setVisibility(VISIBLE);
         UserRoute.setVisibility(GONE);
+
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(mOrigin));
+
     }
 
     public void onCurrLocClick(View view){
@@ -475,6 +479,13 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
             mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
             mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+
+
+
+            mOrigin = Chico;
+            mDestination = latLng;
+            drawRoute();
+
             //mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
         }
     }
@@ -484,7 +495,7 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng Chico = new LatLng(39.7285, -121.8375);
+        Chico = new LatLng(39.7285, -121.8375);
         mMap.addMarker(new MarkerOptions().position(Chico).title("Marker in Chico"));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(Chico));
@@ -494,7 +505,7 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
             public void onMapClick(LatLng latLng) { // Im aware this shit makes no sense right now just bare with me
 
                 // Already two locations
-                if(mMarkerPoints.size()>1){
+                if(mMarkerPoints.size()>=4){
                     mMarkerPoints.clear();
                     mMap.clear();
                 }
@@ -516,20 +527,38 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
                     options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
                 }else if(mMarkerPoints.size()==2){
                     options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                }else if(mMarkerPoints.size()==3){
+                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                }else if(mMarkerPoints.size()>=4){
+                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
                 }
 
                 // Add new marker to the Google Map Android API V2
                 mMap.addMarker(options);
 
                 // Checks, whether start and end locations are captured
-                if(mMarkerPoints.size() >= 2){
+                if(mMarkerPoints.size() == 2){
                     mOrigin = mMarkerPoints.get(0);
                     mDestination = mMarkerPoints.get(1);
                     drawRoute();
                 }
+                if(mMarkerPoints.size() == 3){
+                    mOrigin = mMarkerPoints.get(1);
+                    mDestination = mMarkerPoints.get(2);
+                    drawRoute();
+                }
+                if(mMarkerPoints.size() == 4){
+                    mOrigin = mMarkerPoints.get(2);
+                    mDestination = mMarkerPoints.get(3);
+                    drawRoute();
+                }
+                if(mMarkerPoints.size() >= 4){
+                    mOrigin = mMarkerPoints.get(3);
+                    mDestination = mMarkerPoints.get(4);
+                    drawRoute();
+                }
 
             }
-
 
         });
 

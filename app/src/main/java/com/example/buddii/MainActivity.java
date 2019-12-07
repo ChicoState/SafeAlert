@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         btnFSR = findViewById(R.id.findRoute);
         btnBab = findViewById(R.id.beABuddii);
         btnTut = findViewById(R.id.Tutorial);
-        btnTst = findViewById(R.id.testdb);
+        //btnTst = findViewById(R.id.testdb);
         btnFSR.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -54,12 +54,14 @@ public class MainActivity extends AppCompatActivity {
                 handler.addToActiveBuddiTable();
             }
         });
-        btnTst.setOnClickListener(new View.OnClickListener() {
+        /*btnTst.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 moveToDb();
             }
         });
+        */
+
 
 
        // UserTexViewVariable=(TextView)findViewById(R.id.bud2);
@@ -90,11 +92,11 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, TutorialActivity.class);
         startActivity(intent);
     }
-
+/*
     private void moveToDb(){
         Intent intent = new Intent(MainActivity.this, DBActivity.class);
         startActivity(intent);
         }
-
+*/
 
 }

@@ -68,14 +68,20 @@ public class LoginActivity extends AppCompatActivity {
                 loadingProgressBar.setVisibility(View.GONE);
                 if (loginResult.getError() != null) {
                     showLoginFailed(loginResult.getError());
+                    //setResult(Activity.RESULT_OK);
                 }
                 if (loginResult.getSuccess() != null) {
                     updateUiWithUser(loginResult.getSuccess());
+                   Intent intent = new Intent (LoginActivity.this, MainActivity.class);
+                   startActivity(intent);
                 }
                 setResult(Activity.RESULT_OK);
 
+
+
                 //Complete and destroy login activity once successful
-                finish();
+                //finish();
+
             }
         });
 
@@ -116,8 +122,7 @@ public class LoginActivity extends AppCompatActivity {
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 loginViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
-                Intent intent = new Intent (LoginActivity.this, MainActivity.class);
-                startActivity(intent);
+
             }
         });
 

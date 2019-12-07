@@ -9,8 +9,8 @@ import android.widget.Button;
 
 public class TutorialActivity extends AppCompatActivity {
     private Button btnabt;
-    private Button btnbnb;
-    private Button btnfsftr;
+    private Button btntutorial;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,8 +18,8 @@ public class TutorialActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tutorial);
 
         btnabt = findViewById(R.id.abtUS);
-        btnbnb = findViewById(R.id.beinB);
-        btnfsftr = findViewById(R.id.fndnR);
+        btntutorial = findViewById(R.id.beinB);
+
 
         btnabt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -28,17 +28,10 @@ public class TutorialActivity extends AppCompatActivity {
             }
         });
 
-        btnbnb.setOnClickListener(new View.OnClickListener() {
+        btntutorial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moveToBeing();
-            }
-        });
-
-        btnfsftr.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                moveTofinding();
+                moveToTutorial();
             }
         });
 
@@ -49,13 +42,10 @@ public class TutorialActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void moveToBeing(){
+    private void moveToTutorial(){
         Intent intent = new Intent (TutorialActivity.this, beingABuddyActivity.class);
         startActivity(intent);
     }
 
-    private void moveTofinding(){
-        Intent intent = new Intent (TutorialActivity.this, findingSafestRouteActivity.class);
-        startActivity(intent);
-    }
+
 }

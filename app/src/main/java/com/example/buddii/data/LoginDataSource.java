@@ -26,19 +26,19 @@ public class LoginDataSource extends AppCompatActivity {
     public Result<LoggedInUser> login(String username, String password){
 
 
-
-      //  boolean isAMember = handler.chechIfAlreadyMemeber(username);
-        String pwordInDB = handler.getPword();
-        String checkCred = handler.checkCredentials(pwordInDB, password);
+       //Log.d("xxxPwordFromLogIn",password);
+       boolean isAMember = handler.chechIfAlreadyMemeber(username);
+        String checkCred = handler.getPword(password);
+      //Log.d("xxxLogINpwordRTN", checkCred);
+        //String checkCred = handler.checkCredentials(pwordInDB, password);
         //  handler.close();
         try {
 
             // TODO: handle loggedInUser authentication
-            Log.d("xxxPwordFromLogIn",password);
+
 
             if( checkCred.equals("true")) {
-                Log.d("xxxafterChkCdrntls",password);
-                LoggedInUser fakeUser =
+                 LoggedInUser fakeUser =
                         new LoggedInUser(
                                 java.util.UUID.randomUUID().toString(),
                                 "Jane Doe");

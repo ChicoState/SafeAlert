@@ -60,6 +60,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // for hashing
     String shaPword = "";
     String shaPword2 = "";
+   public static String shaPwordToCompare = "";
    public static byte[] salt = null;
 
 
@@ -128,6 +129,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase My_Database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+
+        /*
+        String query = "SELECT user_name FROM USER_TABLE WHERE user_name = " + name;
+
+        Cursor  cursor = My_Database.rawQuery(query,null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+
+
+         */
+
+
         values.put(DatabaseHandler.USER_PHONE, userphone);
         values.put(DatabaseHandler.USER_NAME, name);
         values.put(DatabaseHandler.USER_EMAIL, email);
@@ -135,20 +150,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
          shaPword = hashSha512.hashPaswordSHA512(password,salt);
+         //prep for storing
+         shaPwordToCompare = shaPword.substring(0,128);
 
-         if (shaPword.equals(shaPword2))
-         {
-             Log.d("xxxxPwordJUAN",shaPword);
 
-         }
         values.put(DatabaseHandler.USER_PASSWORD, shaPword);
-        //Log.d("xxxxPwordThatisInDB",shaPword);
+
         // in order to compare users password, we need to store the original SALT which was used to
         //hash the password. Otherwise a new SALT would be generated and would result in a differnt hash.
 
         String byteSaltToString = Base64.getEncoder().encodeToString(salt);
-
-       // Log.d("xxxxSALTuseB4",byteSaltToString);
         values.put(DatabaseHandler.USER_SALT, byteSaltToString);
 
 
@@ -265,7 +276,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //awsome Static utility methods for dealing with databases, only returns a double
         long tempTotalrows = DatabaseUtils.queryNumEntries(My_Database,NAME_OF_USERS_TABLE,null);
         int totalrows= (int) tempTotalrows;
-
         return totalrows;
     }
     /* --------------- FOR GPS DATABASE -----------   */
@@ -420,10 +430,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
     public String checkCredentials(String checkThisPassword,String pwordInDB){
-       // Integer lengthOfPword = checkThisPassword.length();
-       // String pwordToHash =checkThisPassword.substring(0,lengthOfPword);
+
+
         String pwordToHash = checkThisPassword;
-       Log.d("xxxxPAddddfdffvf",pwordToHash);
+
+
        // String[] tpassword = loadUsers("user_pass");
        // String tpassword= getPword();
 
@@ -433,23 +444,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         shaPwordToCheck = hashSha512.hashPaswordSHA512(pwordToHash, salt);
 
-        Log.d("xxxxPASWeeeee","im in boys3");
 
-        Log.d("xxxxPASWORDtttt",shaPwordToCheck);
-        Log.d("xxxxPwordBngCmpfffff",pwordInDB);
-
-
-        // for an UNKNOWN reason I strings have to be substrings in order for the
+        // for an UNKNOWN reason the strings have to be substrings in order for the
         // comparisons to work
-        String c =pwordInDB.substring(1,128);
-        String d = shaPwordToCheck.substring(1,128);
+        String t_pwordInDB =pwordInDB.substring(0,128);
+        String t_shaPwordToCheck = shaPwordToCheck.substring(0,128);
 
-        Log.d("xxxxCCCCCC",c);
-        Log.d("xxxxDDDDDD",d);
+      //  Log.d("xxxxCCCCCC",t_pwordInDB);
+      //  Log.d("xxxxDDDDDD",t_shaPwordToCheck);
 
-        if (c.equals(d))
+        if (t_pwordInDB.equals(t_shaPwordToCheck))
         {
-            Log.d("xxxxCameInNoRtn",shaPwordToCheck);
+
             String good = "true";
             return good;
         }
@@ -498,8 +504,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public boolean chechIfAlreadyMemeber(String username)
     {
-        /*
+
         SQLiteDatabase My_Database = this.getWritableDatabase();
+         /*
         // delete user record by phone
         My_Database.(NAME_OF_ACTIVE_BUDDI_TABLE, USER_UID + " = ?",
                 new String[]{String.valueOf(username)});
@@ -509,8 +516,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     };
 
 
+                                // qwerty
+    public String getPword(String pwordFromLogIn) {
 
-    public String getPword() {
+
+
+
         /*
         SQLiteDatabase My_Database;
         My_Database = this.getWritableDatabase();
@@ -537,8 +548,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         My_Database.close();
 
         */
+        String password1 = shaPwordToCompare;
+        String checkCred = checkCredentials(pwordFromLogIn, password1);
 
-        return shaPword;
+        return checkCred;
     }
 
 

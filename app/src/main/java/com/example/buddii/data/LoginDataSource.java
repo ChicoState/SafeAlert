@@ -27,7 +27,7 @@ public class LoginDataSource extends AppCompatActivity {
 
 
        //Log.d("xxxPwordFromLogIn",password);
-       boolean isAMember = handler.chechIfAlreadyMemeber(username);
+      // boolean isAMember = handler.chechIfAlreadyMemeber(username);
         String checkCred = handler.getPword(password);
       //Log.d("xxxLogINpwordRTN", checkCred);
         //String checkCred = handler.checkCredentials(pwordInDB, password);

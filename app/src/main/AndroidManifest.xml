@@ -21,6 +21,9 @@
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -45,7 +48,7 @@
         <activity android:name=".beABuddy" />
         <activity
             android:name=".PreferencesActivity"
-            android:label="@string/title_activity_preferences"/>
+            android:label="@string/title_activity_preferences"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -57,7 +60,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
+        
         <activity android:name=".chooseRoute" />
         <activity android:name=".select_bud" />
         <activity android:name=".DBActivity" />
@@ -66,6 +69,7 @@
                   android:label="@string/title_activity_login_buddii">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

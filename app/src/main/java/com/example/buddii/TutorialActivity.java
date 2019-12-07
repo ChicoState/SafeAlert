@@ -18,7 +18,7 @@ public class TutorialActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tutorial);
 
         btnabt = findViewById(R.id.abtUS);
-        btntutorial = findViewById(R.id.beinB);
+        btntutorial = findViewById(R.id.tutorial);
 
 
         btnabt.setOnClickListener(new View.OnClickListener() {

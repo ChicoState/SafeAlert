@@ -8,11 +8,15 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+
+
 public class MainActivity extends AppCompatActivity {
+
     private Button btnFSR;
     private Button btnBab;
     private Button btnTut;
@@ -22,10 +26,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+         //getLocationPermission();
 
-        //getLocationPermission();
+
 
         btnFSR = findViewById(R.id.findRoute);
         btnBab = findViewById(R.id.beABuddii);
@@ -43,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 moveToBaB();
+                DatabaseHandler handler = new DatabaseHandler(MainActivity.this);
+                // will need to send the actual UID of user logged in as a parameter
+                handler.addToActiveBuddiTable();
             }
         });
         btnTst.setOnClickListener(new View.OnClickListener() {
@@ -61,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 moveToTut();
             }
         });
+
 
     }
 

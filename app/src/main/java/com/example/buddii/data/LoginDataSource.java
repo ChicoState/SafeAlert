@@ -1,32 +1,44 @@
 package com.example.buddii.data;
 
+import com.example.buddii.DBActivity;
 import com.example.buddii.DatabaseHandler;
 import com.example.buddii.data.model.LoggedInUser;
-import com.example.buddii.ui.login.LoginActivity;
+import java.security.NoSuchAlgorithmException;
 
 import java.io.IOException;
 import java.lang.Exception;
+
+import android.os.Build;
 import android.util.Log;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.
+ *
  */
 public class LoginDataSource extends AppCompatActivity {
 
+    DatabaseHandler handler=new DatabaseHandler(LoginDataSource.this);
+
 
     public Result<LoggedInUser> login(String username, String password){
+
+
+       //Log.d("xxxPwordFromLogIn",password);
+       boolean isAMember = handler.chechIfAlreadyMemeber(username);
+        String checkCred = handler.getPword(password);
+      //Log.d("xxxLogINpwordRTN", checkCred);
+        //String checkCred = handler.checkCredentials(pwordInDB, password);
+        //  handler.close();
         try {
 
-            DatabaseHandler handler=new DatabaseHandler(LoginDataSource.this);
             // TODO: handle loggedInUser authentication
-            Log.d("xxxPwordFromLogIn",password);
-            //handler.checkCredentials(password)
-            String checkCred = handler.checkCredentials(password);
-            if( checkCred == password) {
-                Log.d("xxxafterChkCdrntls",password);
-                LoggedInUser fakeUser =
+
+
+            if( checkCred.equals("true")) {
+                 LoggedInUser fakeUser =
                         new LoggedInUser(
                                 java.util.UUID.randomUUID().toString(),
                                 "Jane Doe");

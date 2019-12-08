@@ -96,8 +96,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         this.context = context;
     }
 
-
-
     @Override
     public void onCreate(SQLiteDatabase My_Database) {
         //execute prepared commands
@@ -140,18 +138,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         {
             Toast.makeText(context, "WELCOME", Toast.LENGTH_LONG).show();
         }
-        /*
-        String query = "SELECT user_name FROM USER_TABLE WHERE user_name = " + name;
-
-        Cursor  cursor = My_Database.rawQuery(query,null);
-
-        if (cursor != null) {
-            cursor.moveToFirst();
-        }
-
-
-         */
-
 
         values.put(DatabaseHandler.USER_PHONE, userphone);
         values.put(DatabaseHandler.USER_NAME, name);

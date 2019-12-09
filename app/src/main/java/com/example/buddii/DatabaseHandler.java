@@ -16,7 +16,15 @@ import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -129,6 +137,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
 
         Cursor c = My_Database.rawQuery("SELECT * FROM USERS_TABLE where user_name = " + " '" + name + "'", null);
+
         if(c.getCount()>0)
         {
             Toast.makeText(context, "USER ALREADY EXITS", Toast.LENGTH_LONG).show();
@@ -161,13 +170,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         long status = My_Database.insert(NAME_OF_USERS_TABLE, null, values);
 
+
+
         if (status <= 0) {
             //TOAST ...ITS A CELEBRATION
             Toast.makeText(context, "Insertion Unsuccessful", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(context, "Insertion Successful", Toast.LENGTH_LONG).show();
         }
-        My_Database.close();
+
+       // My_Database.close();
+      //  c.close();
+        sendtoOnlineDB();
+        String Jsonxx = mytempJSONreturnFunc();
+        Log.d("xxx",Jsonxx);
+
+
+
     }
 
 
@@ -335,11 +354,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         if (fromThisDB == "userTable")
         {
-            String selectQuery = "Select * from "+NAME_OF_USERS_TABLE;
+
             SQLiteDatabase My_Database = this.getReadableDatabase();
+            String selectQuery = "Select * from "+NAME_OF_USERS_TABLE;
             Cursor cursor = My_Database.rawQuery(selectQuery, null);
-            cursor.close();
-            My_Database.close();
+         //   cursor.close();
+         //   My_Database.close();
             return cursor;
         }
         if (fromThisDB == "friendsTable")
@@ -348,7 +368,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             SQLiteDatabase My_Database = this.getReadableDatabase();
             Cursor cursor = My_Database.rawQuery(selectQuery, null);
             cursor.close();
-            My_Database.close();
+         //   My_Database.close();
             return cursor;
         }
         else {

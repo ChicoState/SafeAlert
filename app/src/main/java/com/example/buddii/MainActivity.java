@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //testWrite();
-        testRetrieve();
+        //testRetrieve();
         btnFSR = findViewById(R.id.findRoute);
         btnBab = findViewById(R.id.beABuddii);
         btnTut = findViewById(R.id.Tutorial);

@@ -24,6 +24,7 @@ import com.example.buddii.DBActivity;
 import com.example.buddii.DatabaseHandler;
 import com.example.buddii.MainActivity;
 import com.example.buddii.R;
+import com.example.buddii.data.LoginDataSource;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -34,6 +35,8 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_buddii);
+        DatabaseHandler handler=new DatabaseHandler(LoginActivity.this);
+        String toPutInDB = handler.retrieveFromFireBaseDB();
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 

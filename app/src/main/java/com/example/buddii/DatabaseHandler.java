@@ -201,6 +201,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
+    public String retrieveFromFireBaseDB(){
+        return "";
+    }
+
+
     // DELETE A USER BY PASSING THE USERS ID
     public void deleteUser(String id) {
         int Tlength =Toast.LENGTH_SHORT;

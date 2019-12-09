@@ -1,6 +1,5 @@
 package com.example.buddii.Map;
 
-import com.example.buddii.Map.UserView.ScrollMapUser;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
@@ -14,10 +13,10 @@ import java.util.Vector;
 
 public class DirectionsJSONParser {
     /** Receives a JSONObject and returns a list of lists containing latitude and longitude */
-    Vector pointsA = new Vector();
-    Vector pointsTurn = new Vector();
-    Vector pointsTurnFrom = new Vector();
-    Vector pointsTurnAfter = new Vector();
+    public static Vector pointsA = new Vector();
+    public static Vector pointsTurn = new Vector();
+    public static Vector pointsTurnFrom = new Vector();
+    public static Vector pointsTurnAfter = new Vector();
     public List<List<HashMap<String,String>>> parse(JSONObject jObject){
 
         List<List<HashMap<String, String>>> routes = new ArrayList<>() ;
@@ -47,16 +46,14 @@ public class DirectionsJSONParser {
                         /** Traversing all points */
                         for(int l=0;l<list.size();l++){
                             if(l == 0){
-                                pointsA.add(list.get(1).latitude);
-                                pointsA.add(list.get(1).longitude);
                                 pointsTurn.add(list.get(1).latitude);
                                 pointsTurnFrom.add(list.get(list.size()-1).latitude);
                                 pointsTurn.add(list.get(1).longitude);
                                 pointsTurnFrom.add(list.get(list.size()-1).longitude);
                                 pointsTurnAfter.add(list.get(list.size()-2).latitude);
                                 pointsTurnAfter.add(list.get(list.size()-2).longitude);
-                                ScrollMapUser.turnObject turningObject = null;
-                                turningObject.getPoint(list.get(1).longitude, list.get(1).latitude, list.get(list.size()-1).longitude, list.get(list.size()-1).latitude, list.get(list.size()-2).longitude, list.get(list.size()-2).latitude);
+                                //turningObject.getPoint(list.get(1).longitude, list.get(1).latitude, list.get(list.size()-1).longitude, list.get(list.size()-1).latitude, list.get(list.size()-2).longitude, list.get(list.size()-2).latitude);
+
                             }
 
                             HashMap<String, String> hm = new HashMap<String, String>();
@@ -69,7 +66,6 @@ public class DirectionsJSONParser {
                     routes.add(path);
                 }
             }
-
 
 
         } catch (JSONException e) {

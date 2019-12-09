@@ -38,9 +38,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.buddii.Freakout;
+import com.example.buddii.Map.DirectionItem;
 import com.example.buddii.Map.DirectionsJSONParser;
+import com.example.buddii.Map.DirectionsRecyclerAdapter;
 import com.example.buddii.Map.GeofenceTrasitionService;
 import com.example.buddii.R;
 import com.google.android.gms.common.ConnectionResult;
@@ -118,6 +122,11 @@ public class ScrollMapUser extends AppCompatActivity
     private static final String TAG = ScrollMapUser.class.getSimpleName();
     private Geofence geofence;
     String directionTestString;
+    ArrayList<DirectionItem> directionList = new ArrayList<>();
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
 
     private GeofencingClient geofencingClient;
     private static final List<PatternItem> PATTERN_POLYLINE_DOTTED = null;
@@ -129,7 +138,6 @@ public class ScrollMapUser extends AppCompatActivity
     ArrayList<LatLng> mMarkerPoints;
     LinkedList<Geofence> geofenceList = null;
     Location currentLocation;
-
 
     private int mLocationPermissionGranted = 0;
     private int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
@@ -146,7 +154,6 @@ public class ScrollMapUser extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-
         // Call GoogleApiClient connection when starting the Activity
         googleApiClient.connect();
     }
@@ -154,25 +161,15 @@ public class ScrollMapUser extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-
         // Disconnect GoogleApiClient when stopping Activity
         googleApiClient.disconnect();
     }
-
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-    }
-
+    public void onConnected(@Nullable Bundle bundle) { }
     @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
+    public void onConnectionSuspended(int i) { }
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) { }
 
     public class LonLat {
         private double longitude;
@@ -195,21 +192,10 @@ public class ScrollMapUser extends AppCompatActivity
         }
     }
 
-    public class turnObject {
-        private LatLng pointTurn;
-        private LatLng pointTurnFrom;
-        private LatLng pointTurnAfter;
-
-        public void getPoint(double pointTurnLat, double pointTurnLon, double pointTurnFromLat, double pointTurnFromLon, double pointTurnAfterLat, double pointTurnAfterLon){
-            pointTurn = new LatLng(pointTurnLat, pointTurnLon);
-            pointTurnFrom = new LatLng(pointTurnFromLat, pointTurnFromLon);
-            pointTurnAfter = new LatLng(pointTurnAfterLat, pointTurnAfterLon);
-            makeDirections(pointTurn, pointTurnFrom, pointTurnAfter);
-        }
-    }
 
     private void makeDirections(LatLng pT, LatLng pTF, LatLng pTA){
         double firstRise, secondRise, firstRun, secondRun;
+
         firstRise = pTF.latitude - pTA.latitude;
         secondRise = pT.latitude - pTF.latitude;
         firstRun = pTF.longitude - pTA.longitude;
@@ -217,18 +203,28 @@ public class ScrollMapUser extends AppCompatActivity
 
         if(firstRun < secondRun) {
             if(firstRise >= secondRise){
+                directionList.add(new DirectionItem(R.drawable.common_google_signin_btn_icon_dark, "Right", "Line 2"));
                 directionTestString += " right,";
             }else{
+                directionList.add(new DirectionItem(R.drawable.common_google_signin_btn_icon_dark, "Left", "Line 2"));
                 directionTestString += " left,";
             }
         }else{
             if(firstRise >= secondRise){
+                directionList.add(new DirectionItem(R.drawable.common_google_signin_btn_icon_dark, "Left", "Line 2"));
                 directionTestString += " left,";
             }else{
+                directionList.add(new DirectionItem(R.drawable.common_google_signin_btn_icon_dark, "Right", "Line 2"));
                 directionTestString += " right,";
             }
         }
 
+    }
+
+    private void makeDirectionsAdapter(){
+        for(int i = 0; i < DirectionsJSONParser.pointsTurn.size()-1; i+=2){
+            makeDirections(new LatLng((Double)DirectionsJSONParser.pointsTurn.elementAt(i),(Double)DirectionsJSONParser.pointsTurn.elementAt(i+1)), new LatLng((Double)DirectionsJSONParser.pointsTurnFrom.elementAt(i), (Double)DirectionsJSONParser.pointsTurnFrom.elementAt(i+1)),new LatLng((Double)DirectionsJSONParser.pointsTurnAfter.elementAt(i),(Double)DirectionsJSONParser.pointsTurnAfter.elementAt(i+1)));
+        }
     }
 
     protected void requestMediaPermission() {
@@ -451,13 +447,22 @@ public class ScrollMapUser extends AppCompatActivity
         requestPermissions();
         getCurrLocation();
 
+
+        mRecyclerView = findViewById(R.id.directionsRecycler);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mAdapter = new DirectionsRecyclerAdapter(directionList);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+
+
         //Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
         //Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 254);
 
-        btnPlay = findViewById(R.id.btnPlay);
-        btnRecord = (Button) findViewById(R.id.btnRecord);
-        btnStop = findViewById(R.id.btnStop);
-        btnStopRecord = findViewById(R.id.btnStopRecord);
+        //btnPlay = findViewById(R.id.btnPlay);
+        //btnRecord = (Button) findViewById(R.id.btnRecord);
+        //btnStop = findViewById(R.id.btnStop);
+        //btnStopRecord = findViewById(R.id.btnStopRecord);
 
         if (checkMediaPermissions()) {
             setupRecorder();
@@ -573,18 +578,7 @@ public class ScrollMapUser extends AppCompatActivity
             AlertDialog alert=alertDialog.create();
             alert.show();
         }
-        else{
-            AlertDialog.Builder alertDialog=new AlertDialog.Builder(mContext);
-            alertDialog.setTitle("Confirm Location");
-            alertDialog.setMessage("Your Location is enabled, please enjoy");
-            alertDialog.setNegativeButton("Back to interface",new DialogInterface.OnClickListener(){
-                public void onClick(DialogInterface dialog, int which){
-                    dialog.cancel();
-                }
-            });
-            AlertDialog alert=alertDialog.create();
-            alert.show();
-        }
+
     }
 
      private void setupMediaRecorder() {
@@ -681,7 +675,6 @@ public class ScrollMapUser extends AppCompatActivity
         mMap.clear();
     }
 
-
     public void onCurrLocClick(View view){
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()),15));
     }
@@ -704,6 +697,8 @@ public class ScrollMapUser extends AppCompatActivity
         UserTabHome.setVisibility(GONE);
         UserTabRoute.setVisibility(GONE);
         UserTabInfo.setVisibility(GONE);
+
+        makeDirectionsAdapter();
 
         TextView textView = findViewById(R.id.directionsTester);
         textView.setText(directionTestString);
@@ -1088,7 +1083,6 @@ public class ScrollMapUser extends AppCompatActivity
         }
     }
 
-
     private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>> > {
 
         // Parsing the data in non-ui thread
@@ -1097,6 +1091,7 @@ public class ScrollMapUser extends AppCompatActivity
 
             JSONObject jObject;
             List<List<HashMap<String, String>>> routes = null;
+
             try{
                 jObject = new JSONObject(jsonData[0]);
                 DirectionsJSONParser parser = new DirectionsJSONParser();
@@ -1152,5 +1147,7 @@ public class ScrollMapUser extends AppCompatActivity
                 Toast.makeText(getApplicationContext(),"No route is found", Toast.LENGTH_LONG).show();
         }
     }
+
+
 
 }

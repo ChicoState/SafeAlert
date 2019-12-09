@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.buddii.DBActivity;
 import com.example.buddii.DatabaseHandler;
 import com.example.buddii.MainActivity;
+import com.example.buddii.Map.BuddiiView.ScrollMapBuddii;
 import com.example.buddii.Map.UserView.ScrollMapUser;
 import com.example.buddii.R;
 

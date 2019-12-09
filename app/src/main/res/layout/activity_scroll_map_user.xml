@@ -48,17 +48,6 @@
             layout="@layout/content_scroll_map_user"
             tools:ignore="IncludeLayoutParam" />
 
-        <ImageButton
-            android:id="@+id/fabUser"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="@dimen/fab_margin"
-            android:background="#00FFFFFF"
-            android:onClick="onChatClick"
-            app:layout_anchor="@id/toolbarUser"
-            app:layout_anchorGravity="bottom|right"
-            app:srcCompat="@android:drawable/sym_action_chat" />
-
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

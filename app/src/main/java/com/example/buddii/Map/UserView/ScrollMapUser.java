@@ -2,62 +2,75 @@ package com.example.buddii.Map.UserView;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.hardware.GeomagneticField;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.location.LocationListener;
-import android.media.Image;
+import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import com.example.buddii.Freakout;
-import com.example.buddii.MainActivity;
-import com.example.buddii.Map.DirectionsJSONParser;
-import com.example.buddii.R;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.GeofencingClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CircleOptions;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PatternItem;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import android.os.Environment;
+import android.provider.Settings;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import android.os.Environment;
-import android.os.Looper;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import com.example.buddii.Freakout;
+import com.example.buddii.Map.DirectionsJSONParser;
+import com.example.buddii.Map.GeofenceTrasitionService;
+import com.example.buddii.R;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.GeofencingRequest;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PatternItem;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONObject;
 
@@ -78,33 +91,44 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallback {
+public class ScrollMapUser extends AppCompatActivity
+        implements
+        OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     final int REQUEST_PERMISSION_CODE = 1000;
     MediaPlayer mediaPlayer = new MediaPlayer();
     MediaRecorder mediaRecorder;
     String pathSave;
     Button btnPlay, btnRecord, btnStop, btnStopRecord;
-    Context context;
+    Context mContext;
     int brightness;
-    LinearLayout UserTabInfo, UserTabHome, UserTabReport, UserTabRoute,UserTabChat;
+    LinearLayout UserTabInfo, UserTabHome, UserTabReport, UserTabRoute, UserTabChat;
     Button UserHome, UserRoute;
     private FusedLocationProviderClient client;
     LocationManager locationManager;
     LocationRequest locationRequest;
     LocationCallback locationCallback;
-    LatLng Chico = new LatLng(37.421980,-122.084062);
+    LatLng Chico = new LatLng(37.421980, -122.084062);
+    private static final long GEO_DURATION = 60 * 60 * 1000;
+    private static final String GEOFENCE_REQ_ID = "My Geofence";
+    private static final float GEOFENCE_RADIUS = 500.0f;
+    private PendingIntent geoFencePendingIntent;
+    private final int GEOFENCE_REQ_CODE = 0;
+    private GoogleApiClient googleApiClient;
+    private static final String TAG = ScrollMapUser.class.getSimpleName();
+    private Geofence geofence;
+    String directionTestString;
 
     private GeofencingClient geofencingClient;
     private static final List<PatternItem> PATTERN_POLYLINE_DOTTED = null;
     private GoogleMap mMap;
     private LatLng mOrigin;
     private LatLng mDestination;
-    private LatLng curr = new LatLng(0,0);
+    private LatLng curr = new LatLng(0, 0);
     private Polyline mPolyline;
     ArrayList<LatLng> mMarkerPoints;
     LinkedList<Geofence> geofenceList = null;
-
+    Location currentLocation;
 
 
     private int mLocationPermissionGranted = 0;
@@ -113,21 +137,98 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
     private Button reportButton;
     private Button searchButton;
 
+    public static Intent makeNotificationIntent(Context applicationContext, String msg) {
+            Log.d(TAG,msg);
+            return new Intent(applicationContext, ScrollMapUser.class);
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // Call GoogleApiClient connection when starting the Activity
+        googleApiClient.connect();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        // Disconnect GoogleApiClient when stopping Activity
+        googleApiClient.disconnect();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
     public class LonLat {
         private double longitude;
         private double latitude;
-        public void setLongitude(double lon){
+
+        public void setLongitude(double lon) {
             this.longitude = lon;
         }
-        public void setLatitude(double lat){
+
+        public void setLatitude(double lat) {
             this.latitude = lat;
         }
-        public double getLat(){
+
+        public double getLat() {
             return this.latitude;
         }
-        public double getLon(){
+
+        public double getLon() {
             return this.longitude;
         }
+    }
+
+    public class turnObject {
+        private LatLng pointTurn;
+        private LatLng pointTurnFrom;
+        private LatLng pointTurnAfter;
+
+        public void getPoint(double pointTurnLat, double pointTurnLon, double pointTurnFromLat, double pointTurnFromLon, double pointTurnAfterLat, double pointTurnAfterLon){
+            pointTurn = new LatLng(pointTurnLat, pointTurnLon);
+            pointTurnFrom = new LatLng(pointTurnFromLat, pointTurnFromLon);
+            pointTurnAfter = new LatLng(pointTurnAfterLat, pointTurnAfterLon);
+            makeDirections(pointTurn, pointTurnFrom, pointTurnAfter);
+        }
+    }
+
+    private void makeDirections(LatLng pT, LatLng pTF, LatLng pTA){
+        double firstRise, secondRise, firstRun, secondRun;
+        firstRise = pTF.latitude - pTA.latitude;
+        secondRise = pT.latitude - pTF.latitude;
+        firstRun = pTF.longitude - pTA.longitude;
+        secondRun = pT.longitude - pTF.longitude;
+
+        if(firstRun < secondRun) {
+            if(firstRise >= secondRise){
+                directionTestString += " right,";
+            }else{
+                directionTestString += " left,";
+            }
+        }else{
+            if(firstRise >= secondRise){
+                directionTestString += " left,";
+            }else{
+                directionTestString += " right,";
+            }
+        }
+
     }
 
     protected void requestMediaPermission() {
@@ -231,7 +332,7 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
         });
     }
 
-    private Vector<ScrollMapUser.LonLat> RetrieveLocations(){
+    private Vector<ScrollMapUser.LonLat> RetrieveLocations() {
         //put all of the longitudes and latitudes from the database
         //into a vector of type LonLat defined at the top
         Vector<ScrollMapUser.LonLat> temp = new Vector<>();
@@ -240,17 +341,18 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
 
     private void setWaypoints(Vector<ScrollMapUser.LonLat> x) {
 
-        for(int i = 0; i < x.size(); i++) {
+        for (int i = 0; i < x.size(); i++) {
             ScrollMapUser.LonLat temp = x.get(i);
-            mMap.addCircle(new CircleOptions().center(new LatLng(temp.getLon(),temp.getLat()))
+            mMap.addCircle(new CircleOptions().center(new LatLng(temp.getLon(), temp.getLat()))
                     .radius(20)
                     .strokePattern(PATTERN_POLYLINE_DOTTED)
                     .strokeColor(Color.RED)
-                    .fillColor(Color.YELLOW));;
+                    .fillColor(Color.YELLOW));
+            ;
         }
     }
 
-    private void setBlueThings(){ //THIS IS TEMPORARY YOU SONS OF BITCHES
+    private void setBlueThings() { //THIS IS TEMPORARY YOU SONS OF BITCHES
 
         mMap.addCircle(new CircleOptions().center(new LatLng(39.726408, -121.847657))
                 .radius(10)
@@ -294,17 +396,17 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
                 .fillColor(Color.CYAN));
     }
 
-    private void getCurrLocation(){
+    private void getCurrLocation() {
         client = LocationServices.getFusedLocationProviderClient(this);
 
-        if(ActivityCompat.checkSelfPermission(ScrollMapUser.this, ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
+        if (ActivityCompat.checkSelfPermission(ScrollMapUser.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
         }
 
         client.getLastLocation().addOnSuccessListener(ScrollMapUser.this, new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                if(location!=null){
+                if (location != null) {
                     LatLng curr = new LatLng(location.getLatitude(), location.getLongitude());
                     mMap.addCircle(new CircleOptions().center(curr)
                             .radius(1)
@@ -316,24 +418,36 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
 
                     TextView textView = findViewById(R.id.locationUser);
                     textView.setText(location.toString());
-                }else{
+                } else {
                     Toast.makeText(ScrollMapUser.this, "FUCK YOU", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-    private void requestPermissions(){
+    private void requestPermissions() {
         ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION}, 1);
     }
 
-    @SuppressLint("WrongViewCast")
+    private void createGoogleApi() {
+        Log.d(TAG, "createGoogleApi()");
+        if ( googleApiClient == null ) {
+            googleApiClient = new GoogleApiClient.Builder( this )
+                    .addConnectionCallbacks( this )
+                    .addOnConnectionFailedListener( this )
+                    .addApi( LocationServices.API )
+                    .build();
+        }
+    }
+
+    @SuppressLint({"WrongViewCast", "NewApi"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scroll_map_user);
         Toolbar toolbarUser = findViewById(R.id.toolbarUser);
         setSupportActionBar(toolbarUser);
+        createGoogleApi();
         requestPermissions();
         getCurrLocation();
 
@@ -351,11 +465,126 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
             requestMediaPermission();
         }
 
+        //LOCATION LISTENER
+        mContext = this;
+        locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    Activity#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for Activity#requestPermissions for more details.
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                2000,
+                10, locationListenerGPS);
+        isLocationEnabled();
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapUser);
-        mapFragment.getMapAsync(this);
+        mapFragment.getMapAsync((OnMapReadyCallback) this);
         mMarkerPoints = new ArrayList<>();
 
+        startGeofence();
+
+    }
+
+    LocationListener locationListenerGPS = new LocationListener(){
+        private float[] mRotationMatrix = new float[16];
+        float mDeclination;
+        SensorEvent event;
+
+        @Override
+        public void onLocationChanged(Location location) {
+            currentLocation = location;
+            double latitude=location.getLatitude();
+            double longitude=location.getLongitude();
+            String msg="New Latitude: "+latitude + "New Longitude: "+longitude;
+            Toast.makeText(mContext,msg,Toast.LENGTH_LONG).show();
+            GeomagneticField field = new GeomagneticField(
+                    (float)location.getLatitude(),
+                    (float)location.getLongitude(),
+                    (float)location.getAltitude(),
+                    System.currentTimeMillis()
+            );
+
+            markerLocation(new LatLng(location.getLatitude(), location.getLongitude()));
+
+            // getDeclination returns degrees
+            mDeclination = field.getDeclination();
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            if(event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+                SensorManager.getRotationMatrixFromVector(
+                        mRotationMatrix , event.values);
+                float[] orientation = new float[3];
+                SensorManager.getOrientation(mRotationMatrix, orientation);
+                float bearing = (float) (Math.toDegrees(orientation[0]) + mDeclination);
+                updateCamera(bearing);
+            }
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+
+        private void updateCamera(float bearing){
+            CameraPosition oldPos = mMap.getCameraPosition();
+
+            CameraPosition pos = CameraPosition.builder(oldPos).bearing(bearing).build();
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(pos));
+
+        }
+    };
+
+    protected void onResume(){
+        super.onResume();
+        isLocationEnabled();
+    }
+
+    private void isLocationEnabled() {
+
+        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            AlertDialog.Builder alertDialog=new AlertDialog.Builder(mContext);
+            alertDialog.setTitle("Enable Location");
+            alertDialog.setMessage("Your locations setting is not enabled. Please enabled it in settings menu.");
+            alertDialog.setPositiveButton("Location Settings", new DialogInterface.OnClickListener(){
+                public void onClick(DialogInterface dialog, int which){
+                    Intent intent=new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                }
+            });
+            alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+                public void onClick(DialogInterface dialog, int which){
+                    dialog.cancel();
+                }
+            });
+            AlertDialog alert=alertDialog.create();
+            alert.show();
+        }
+        else{
+            AlertDialog.Builder alertDialog=new AlertDialog.Builder(mContext);
+            alertDialog.setTitle("Confirm Location");
+            alertDialog.setMessage("Your Location is enabled, please enjoy");
+            alertDialog.setNegativeButton("Back to interface",new DialogInterface.OnClickListener(){
+                public void onClick(DialogInterface dialog, int which){
+                    dialog.cancel();
+                }
+            });
+            AlertDialog alert=alertDialog.create();
+            alert.show();
+        }
     }
 
      private void setupMediaRecorder() {
@@ -377,6 +606,7 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
         UserTabHome.setVisibility(VISIBLE);
         UserTabReport.setVisibility(GONE);
         UserTabRoute.setVisibility(GONE);
+        startGeofence();
     }
 
     public void onInfoClick(View view) {
@@ -433,12 +663,27 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
         UserHome.setVisibility(VISIBLE);
         UserRoute.setVisibility(GONE);
 
-        mMap.animateCamera(CameraUpdateFactory.newLatLng(mOrigin));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),15));
 
     }
 
+    public void onDropRoute(View view) {
+        UserTabInfo = findViewById(R.id.UserTabInfo);
+        UserTabHome = findViewById(R.id.UserTabHome);
+        UserTabReport = findViewById(R.id.UserTabReport);
+        UserTabRoute = findViewById(R.id.UserTabRoute);
+        UserTabChat = findViewById(R.id.UserTabChat);
+        UserTabChat.setVisibility(VISIBLE);
+        UserTabInfo.setVisibility(View.GONE);
+        UserTabHome.setVisibility(GONE);
+        UserTabReport.setVisibility(GONE);
+        UserTabRoute.setVisibility(GONE);
+        mMap.clear();
+    }
+
+
     public void onCurrLocClick(View view){
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(curr));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()),15));
     }
 
     public void onBigAlertEnergyClick(View view) {
@@ -459,6 +704,9 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
         UserTabHome.setVisibility(GONE);
         UserTabRoute.setVisibility(GONE);
         UserTabInfo.setVisibility(GONE);
+
+        TextView textView = findViewById(R.id.directionsTester);
+        textView.setText(directionTestString);
     }
 
     public void onMapSearch(View view) {
@@ -480,14 +728,178 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
             mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
             mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
 
-
-
-            mOrigin = Chico;
+            mOrigin = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
             mDestination = latLng;
             drawRoute();
+        }
+    }
+
+    //GEOFENCE AREA
+
+    private Marker locationMarker;
+    // Create a Location Marker
+    private void markerLocation(LatLng latLng) { //CALLED IN ONLOCATIONCHANGED
+        Toast.makeText(this, "markerLocation", Toast.LENGTH_SHORT).show();
+        Log.i(TAG, "\n\n\nmarkerLocation("+latLng+")\n\n\n");
+        String title = latLng.latitude + ", " + latLng.longitude;
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(latLng)
+                .title(title);
+        if ( mMap!=null ) {
+            // Remove the anterior marker
+            if ( locationMarker != null )
+                locationMarker.remove();
+            locationMarker = mMap.addMarker(markerOptions);
+            float zoom = 14f;
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
+            mMap.animateCamera(cameraUpdate);
+        }
+    }
+
+    private Marker geoFenceMarker;
+    // Create a marker for the geofence creation
+    private void markerForGeofence(LatLng latLng) {
+        Toast.makeText(this, "markerForGeofence", Toast.LENGTH_SHORT).show();
+        Log.i(TAG, "\n\n\nmarkerForGeofence("+latLng+")\n\n\n");
+        String title = latLng.latitude + ", " + latLng.longitude;
+        // Define marker options
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(latLng)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                .title(title);
+        if ( mMap!=null ) {
+            // Remove last geoFenceMarker
+            if (geoFenceMarker != null)
+                geoFenceMarker.remove();
+
+            geoFenceMarker = mMap.addMarker(markerOptions);
+        }
+        startGeofence();
+        //onResult();
+    }
+
+    private Geofence createGeofence( LatLng latLng, float radius ) {
+        Toast.makeText(this, "createGeofence", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "\n\n\ncreateGeofence\n\n\n");
+        return new Geofence.Builder()
+                .setRequestId(GEOFENCE_REQ_ID)
+                .setCircularRegion( latLng.latitude, latLng.longitude, radius)
+                .setExpirationDuration( GEO_DURATION )
+                .setTransitionTypes( Geofence.GEOFENCE_TRANSITION_ENTER
+                        | Geofence.GEOFENCE_TRANSITION_EXIT )
+                .build();
+
+    }
+
+    private GeofencingRequest createGeofenceRequest(Geofence geofence ) {
+        Toast.makeText(this, "createGeofenceRequest", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "\n\n\ncreateGeofenceRequest\n\n\n");
+        return new GeofencingRequest.Builder()
+                .setInitialTrigger( GeofencingRequest.INITIAL_TRIGGER_ENTER )
+                .addGeofence( geofence )
+                .build();
+    }
+
+    private PendingIntent createGeofencePendingIntent() {
+        Toast.makeText(this, "createGeofencePendingIntent", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "\n\n\ncreateGeofencePendingIntent\n\n\n");
+        if ( geoFencePendingIntent != null )
+            return geoFencePendingIntent;
+
+        Intent intent = new Intent( this, GeofenceTrasitionService.class);
+        return PendingIntent.getService(
+                this, GEOFENCE_REQ_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT );
+    }
+
+    PendingIntent mGeofencePendingIntent;
+
+    // Add the created GeofenceRequest to the device's monitoring list
+    private void addGeofence(GeofencingRequest request) {
+        Toast.makeText(this, "addGeofence", Toast.LENGTH_SHORT).show();
+            mGeofencePendingIntent = createGeofencePendingIntent();
+
+            PendingResult<Status> result = LocationServices.GeofencingApi.addGeofences(
+                    googleApiClient,
+                    request,
+                    mGeofencePendingIntent
+            );
+            result.setResultCallback(new ResultCallback<Status>(){
+                @Override
+                public void onResult(Status status){
+                    if(status.isSuccess()){
+                        drawGeofence();
+                    }else{
+                        drawGeofence();
+                        Toast.makeText(ScrollMapUser.this, "FUCK ME IN HALF", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+    }
+
+    // Draw Geofence circle on GoogleMap
+    private Circle geoFenceLimits;
+    private void drawGeofence() {
+        Toast.makeText(this, "Draw Geofence", Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "\n\n\ndrawGeofence()\n\n\n");
+
+        if ( geoFenceLimits != null )
+            geoFenceLimits.remove();
+
+        CircleOptions circleOptions = new CircleOptions()
+                .center( geoFenceMarker.getPosition())
+                .strokeColor(Color.argb(50, 70,70,70))
+                .fillColor( Color.argb(100, 150,150,150) )
+                .radius( GEOFENCE_RADIUS );
+        geoFenceLimits = mMap.addCircle( circleOptions );
+    }
+
+
+    // Start Geofence creation process
+    private void startGeofence() {
+        Log.i(TAG, "\n\n\nstartGeofence()\n\n\n");
+        if( geoFenceMarker != null ) {
+            Geofence geofence = createGeofence( geoFenceMarker.getPosition(), GEOFENCE_RADIUS );
+            GeofencingRequest geofenceRequest = createGeofenceRequest( geofence );
+            addGeofence( geofenceRequest );
+        } else {
+            Log.e(TAG, "\n\n\nGeofence marker is null\n\n\n");
+        }
+    }
+
+
+    //GEOFENCE AREA
+
+    public void onReport(View view){
+        EditText locationReport = findViewById(R.id.reportTextUser);
+        String location = locationReport.getText().toString();
+        List<Address>addressList = null;
+
+        if (location != null || !location.equals("")) {
+            Geocoder geocoder = new Geocoder(this);
+            try {
+                addressList = geocoder.getFromLocationName(location, 2);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            assert addressList != null;
+            Address address = addressList.get(0);
+            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+
+            mOrigin = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+            mDestination = latLng;
+            markerForGeofence(latLng);
+            }
 
             //mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-        }
+    }
+
+
+    public void onCurrLocReport(View view){
+        //Add location to database and add a geofence onto the map that is at this location;
+        markerForGeofence(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
     }
 
     @Override
@@ -497,7 +909,7 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
         // Add a marker in Sydney and move the camera
         Chico = new LatLng(39.7285, -121.8375);
         mMap.addMarker(new MarkerOptions().position(Chico).title("Marker in Chico"));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(25));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(Chico));
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -505,7 +917,7 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
             public void onMapClick(LatLng latLng) { // Im aware this shit makes no sense right now just bare with me
 
                 // Already two locations
-                if(mMarkerPoints.size()>=4){
+                if(mMarkerPoints.size()>=3){
                     mMarkerPoints.clear();
                     mMap.clear();
                 }
@@ -676,6 +1088,7 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
         }
     }
 
+
     private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>> > {
 
         // Parsing the data in non-ui thread
@@ -684,7 +1097,6 @@ public class ScrollMapUser extends AppCompatActivity implements OnMapReadyCallba
 
             JSONObject jObject;
             List<List<HashMap<String, String>>> routes = null;
-
             try{
                 jObject = new JSONObject(jsonData[0]);
                 DirectionsJSONParser parser = new DirectionsJSONParser();

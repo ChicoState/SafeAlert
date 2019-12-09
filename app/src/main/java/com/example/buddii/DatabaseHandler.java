@@ -189,13 +189,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         sendtoOnlineDB();
         String Jsonxx = mytempJSONreturnFunc();
         Log.d("xxx",Jsonxx);
+        // sending to ONLINE firebase DB
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         String jsonString; //set to json string
         Map<String, Object> jsonMap = new Gson().fromJson(Jsonxx, new TypeToken<HashMap<String, Object>>() {}.getType());
         Task<Void> myRef = database.getReference().child("usersdb").child("users").updateChildren(jsonMap);
-        //firebaseDatabaseRef.child("users").child(uid).updateChildren(jsonMap);
-       // firebaseDatabaseRef.child("users").child(uid).child({your new node}).setValue(jsonMap);
+
 
 
     }

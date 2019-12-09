@@ -20,11 +20,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +35,8 @@ import org.json.JSONObject;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 // SQLITE set up to handle DATABASE
 public class DatabaseHandler extends SQLiteOpenHelper {
@@ -184,7 +189,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         sendtoOnlineDB();
         String Jsonxx = mytempJSONreturnFunc();
         Log.d("xxx",Jsonxx);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
 
+        String jsonString; //set to json string
+        Map<String, Object> jsonMap = new Gson().fromJson(Jsonxx, new TypeToken<HashMap<String, Object>>() {}.getType());
+        Task<Void> myRef = database.getReference().child("usersdb").child("users").updateChildren(jsonMap);
+        //firebaseDatabaseRef.child("users").child(uid).updateChildren(jsonMap);
+       // firebaseDatabaseRef.child("users").child(uid).child({your new node}).setValue(jsonMap);
 
 
     }

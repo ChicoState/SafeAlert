@@ -202,6 +202,52 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
     public String retrieveFromFireBaseDB(){
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child("usersdb").child("users").child("data");
+        myRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+               String key = dataSnapshot.getKey();
+                String email = dataSnapshot.child("email").getValue(String.class);
+                String namex = dataSnapshot.child("name").getValue(String.class);
+                String pass = dataSnapshot.child("user_pass").getValue(String.class);
+                String phone = dataSnapshot.child("user_phone").getValue(String.class);
+                String salt = dataSnapshot.child("user_salt").getValue(String.class);
+                 Log.d("xxxtEmail",email);
+                Log.d("xxxtKKEY",key);
+                Log.d("xxxtNamemm",namex);
+               /* ArrayList<String> myArrayList = null;
+                myArrayList.add(key + email+ namex);
+                ArrayAdapter myArrayAdapter = null;
+                myArrayAdapter.notifyDataSetChanged();
+
+                */
+
+            }
+
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
         return "";
     }
 

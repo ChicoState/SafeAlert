@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_login_buddii);
-        intialDBSYNC();
+       // intialDBSYNC();
 
 
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
@@ -75,6 +75,7 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
             @Override
             public void onChanged(@Nullable LoginResult loginResult) {
+
                 if (loginResult == null) {
                     return;
                 }
@@ -141,6 +142,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent (LoginActivity.this, DBActivity.class);
+                intialDBSYNC();
                 startActivity(intent);
             }
         });

@@ -26,12 +26,10 @@ public class LoginDataSource extends AppCompatActivity {
     public Result<LoggedInUser> login(String username, String password){
 
 
-       //Log.d("xxxPwordFromLogIn",password);
-      // boolean isAMember = handler.chechIfAlreadyMemeber(username);
+
         String checkCred = handler.getPword(password);
       //Log.d("xxxLogINpwordRTN", checkCred);
-        //String checkCred = handler.checkCredentials(pwordInDB, password);
-        //  handler.close();
+
         try {
 
             // TODO: handle loggedInUser authentication

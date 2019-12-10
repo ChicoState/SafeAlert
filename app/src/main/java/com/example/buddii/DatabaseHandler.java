@@ -146,7 +146,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         Cursor c = My_Database.rawQuery("SELECT * FROM USERS_TABLE where user_name = " + " '" + name + "'", null);
 
-        if(c.getCount()>0)
+        if(c.getCount()>0 && flag != true)
         {
             Toast.makeText(context, "USER ALREADY EXITS", Toast.LENGTH_LONG).show();
             return;
@@ -223,10 +223,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
                String key = dataSnapshot.getKey();
-                Log.d("xxxxkeyRTN",key);
+                //Log.d("xxxxkeyRTTTN",key);
                String uID = dataSnapshot.child("uID").getValue(String.class);
-               uID = key;
-                Log.d("xxxUIDis",uID);
+               //uID = key;
+               // Log.d("xxxUIDis",uID);
                if(uID == ""){
                    Log.d("xxxxuIDRTN","UIDretuning");
                }
@@ -239,13 +239,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 String pass = dataSnapshot.child("user_pass").getValue(String.class);
                 String phone = dataSnapshot.child("user_phone").getValue(String.class);
                 String salt = dataSnapshot.child("user_salt").getValue(String.class);
-               /*
+
                 Log.d("xxxtEmail",email);
-               Log.d("xxxPASSis",pass);
+             //  Log.d("xxxPASSis",pass);
                 Log.d("xxxNAMEis",namex);
                 Log.d("xxxPHONEis",phone);
                 Log.d("xxxSALTis",salt);
-                */
+
                 usersObj= new JSONObject();
                 try {
 
@@ -357,9 +357,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 Log.d("xxarrLisasd",email0);
                 Log.d("xxarrLssD",pass0);
                 Log.d("xxarrsaase",salt0);
+                // need to set UID correct and check to see if UID is already In DB, no DUplicates
+                addToDb(phone0,name0,email0,pass0,salt0,true);
 
             } // for
-
+    /*
             // if unique id is in DB then return
             if(chechIfUniqueIdInSqlDB(id) == true){
                 return;
@@ -369,11 +371,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
                 addToDb(phone0,name0,email0,pass0,salt0,true);
             }
-
-
-
-
-
+*/
 
 
         } catch (JSONException e) {
@@ -383,7 +381,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public boolean chechIfUniqueIdInSqlDB(String uID){
-
+    //sql query to search for UID
         return false;
 
     }
@@ -716,9 +714,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public boolean chechIfAlreadyMemeber(String username)
     {
-
+        /*
         SQLiteDatabase My_Database = this.getWritableDatabase();
-         /*
+
         // delete user record by phone
         My_Database.(NAME_OF_ACTIVE_BUDDI_TABLE, USER_UID + " = ?",
                 new String[]{String.valueOf(username)});
@@ -738,13 +736,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void setLoggedInUser(String usernameFromLogIn){
+        /*
         SQLiteDatabase My_Database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         Cursor c = My_Database.rawQuery("SELECT Uid FROM USERS_TABLE where user_name = " + " '" + usernameFromLogIn + "'", null);
         String Uid0 = c.getString(0);
         Log.d("xxxUCURSORUID",Uid0);
-
+            */
 
 
     }

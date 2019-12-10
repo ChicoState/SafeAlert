@@ -119,53 +119,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void testRetrieve(){
-
-       FirebaseDatabase database = FirebaseDatabase.getInstance();
-       DatabaseReference myRef = database.getReference().child("usersdb").child("users");
-        myRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                String key = dataSnapshot.getKey();
-                String email = dataSnapshot.child("email").getValue(String.class);
-                String namex = dataSnapshot.child("name").getValue(String.class);
-                // String passx = dataSnapshot.child("user_pass").getValue(String.class);
-                //String phone = dataSnapshot.child("user_email").getValue(String.class);
-                Log.d("xxxtEmail",email);
-                Log.d("xxxtKKEY",key);
-                Log.d("xxxtNamemm",namex);
-               /* ArrayList<String> myArrayList = null;
-                myArrayList.add(key + email+ namex);
-                ArrayAdapter myArrayAdapter = null;
-                myArrayAdapter.notifyDataSetChanged();
-               */
-            }
-
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-
-        });
-
-    }
-
     private void moveToBaB()
     {
         Intent intent = new Intent (MainActivity.this, select_bud.class);

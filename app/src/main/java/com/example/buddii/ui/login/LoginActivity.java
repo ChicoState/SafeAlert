@@ -2,6 +2,7 @@ package com.example.buddii.ui.login;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -33,22 +35,16 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        String isEmptyJSON = "{\"data\":[]}";
-
-        DatabaseHandler handler=new DatabaseHandler(LoginActivity.this);
-
-       // check if Firebase DB has users
-         handler.checkFireBaseDBForUsers();
-        //If YES then SYNC ,add to sqlDB (no repeats)
-
-        //if NO
-        Log.d("xxxFRMLOGIN", "inLogIn");
-
 
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_login_buddii);
+        intialDBSYNC();
 
 
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
@@ -148,6 +144,20 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void intialDBSYNC(){
+        String isEmptyJSON = "{\"data\":[]}";
+
+        DatabaseHandler handler=new DatabaseHandler(LoginActivity.this);
+
+        // check if Firebase DB has users
+        handler.checkFireBaseDBForUsers();
+        //If YES then SYNC ,add to sqlDB (no repeats)
+
+        Log.d("xxxFRMLOGIN", "inLogIn");
+
+
     }
 
     private void updateUiWithUser(LoggedInUserView model)

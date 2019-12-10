@@ -38,6 +38,8 @@ public class LoginDataSource extends AppCompatActivity {
 
 
             if( checkCred.equals("true")) {
+               //will sey UID for logged in user
+                // handler.setLoggedInUser(username);
                  LoggedInUser fakeUser =
                         new LoggedInUser(
                                 java.util.UUID.randomUUID().toString(),

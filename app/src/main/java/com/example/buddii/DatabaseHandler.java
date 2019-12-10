@@ -72,12 +72,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private final Context context;
     // for hashing
     String shaPword = "";
-    String shaPword2 = "";
-   public static String shaPwordToCompare = "";
-   public static byte[] salt = null;
+    public static String shaPwordToCompare = "";
+    public static byte[] salt = null;
     public static String jsonToSend = "nothing";
-   public static JSONObject usersObj ;
-   public static JSONArray arr1 = new JSONArray();
+    public static JSONObject usersObj ;
+    public static JSONArray arr1 = new JSONArray();
+    public static String loggedInUserUniqueID = " ";
 
 
 
@@ -211,7 +211,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public String checkFireBaseDBForUsers(){
 
-        Log.d("xxxFromRTV","InRTN");
+        Log.d("xxxFromRTV","InFRomCHKFireBase");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child("usersdb").child("users").child("data");
 
@@ -223,14 +223,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
                String key = dataSnapshot.getKey();
-            //   Log.d("xxxKeyis",key);
-               if (key == ""){
-                   Log.d("xxxxkeyRTN","KEYretuning");
-                   return;
-               };
-
+                Log.d("xxxxkeyRTN",key);
                String uID = dataSnapshot.child("uID").getValue(String.class);
-               // Log.d("xxxUIDis",uID);
+               uID = key;
+                Log.d("xxxUIDis",uID);
                if(uID == ""){
                    Log.d("xxxxuIDRTN","UIDretuning");
                }
@@ -364,7 +360,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
             } // for
 
-            // if unique isd is in DB then retun
+            // if unique id is in DB then return
             if(chechIfUniqueIdInSqlDB(id) == true){
                 return;
             }
@@ -655,17 +651,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
         String pwordToHash = checkThisPassword;
-
-
        // String[] tpassword = loadUsers("user_pass");
        // String tpassword= getPword();
-
         //String pass = new String(tpassword[0]);
-
         String shaPwordToCheck = "";
-
         shaPwordToCheck = hashSha512.hashPaswordSHA512(pwordToHash, salt);
-
 
         // for an UNKNOWN reason the strings have to be substrings in order for the
         // comparisons to work
@@ -741,42 +731,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                                 // qwerty
     public String getPword(String pwordFromLogIn) {
 
-
-
-
-        /*
-        SQLiteDatabase My_Database;
-        My_Database = this.getWritableDatabase();
-
-        String result = "";
-        String SelectAll = "SELECT*FROM ";
-        String command = SelectAll + NAME_OF_USERS_TABLE;
-
-        Cursor cursor = My_Database.rawQuery(command, null);
-        while (cursor.moveToNext()) {
-
-            String Uid = cursor.getString(0);
-            String phoneNumber = cursor.getString(1);
-            String name = cursor.getString(2);
-            String email = cursor.getString(3);
-
-
-            String password = cursor.getString(4);
-
-            result= password;
-        }
-        System.getProperty("line.separator");
-        cursor.close();
-        My_Database.close();
-
-        */
         String password1 = shaPwordToCompare;
         String checkCred = checkCredentials(pwordFromLogIn, password1);
 
         return checkCred;
     }
 
+    public void setLoggedInUser(String usernameFromLogIn){
+        SQLiteDatabase My_Database = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
 
+        Cursor c = My_Database.rawQuery("SELECT Uid FROM USERS_TABLE where user_name = " + " '" + usernameFromLogIn + "'", null);
+        String Uid0 = c.getString(0);
+        Log.d("xxxUCURSORUID",Uid0);
+
+
+
+    }
 
 
 

@@ -51,7 +51,7 @@ public class DBActivity extends AppCompatActivity {
                 data4=input4.getText().toString();
                 //THEN PASS
                 DatabaseHandler handler=new DatabaseHandler(DBActivity.this);
-                 handler.addToDb(data1,data2,data3,data4);
+                 handler.addToDb(data1,data2,data3,data4,"" ,false);
                //NEED TO CLEAR OUT THE TABLE AFTER SUBMIT WAS PRESSED
                 input1.setText("");
                 input2.setText("");

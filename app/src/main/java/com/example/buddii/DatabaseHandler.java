@@ -138,7 +138,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //values here will be placed into the USERS TABLE
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void addToDb(String userphone, String name, String email, String password)  {
+    public void addToDb(String userphone, String name, String email, String password, String salt0 ,Boolean flag)  {
          salt = hashSha512.getSalt();
 
         SQLiteDatabase My_Database = this.getWritableDatabase();
@@ -189,19 +189,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
        // My_Database.close();
       //  c.close();
-        setLocalDBToJSON();
-        String Jsonxx = mytempJSONreturnFunc();
-        //Log.d("xxx",Jsonxx);
-        // sending to ONLINE firebase DB
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-        String jsonString; //set to json string
-        Map<String, Object> jsonMap = new Gson().fromJson(Jsonxx, new TypeToken<HashMap<String, Object>>() {}.getType());
-        Task<Void> myRef = database.getReference().child("usersdb").child("users").updateChildren(jsonMap);
+        // this flag will indicated that the function is being called from the register page
+        // and not from the initial sync from log in ( removes repetative inserts)
+        if (flag == false) {
+            setLocalDBToJSON();
+            String Jsonxx = mytempJSONreturnFunc();
+            //Log.d("xxx",Jsonxx);
+            // sending to ONLINE firebase DB
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+            String jsonString; //set to json string
+            Map<String, Object> jsonMap = new Gson().fromJson(Jsonxx, new TypeToken<HashMap<String, Object>>() {
+            }.getType());
+            Task<Void> myRef = database.getReference().child("usersdb").child("users").updateChildren(jsonMap);
+        }
     }
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public String checkFireBaseDBForUsers(){
 
         Log.d("xxxFromRTV","InRTN");
@@ -323,21 +330,51 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return jsonToSend;
     }
 
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void dbSYNC(String jsonString)  {
 
 
         try {
             JSONObject jsnobject = new JSONObject(jsonString);
             JSONArray jsonArray = jsnobject.getJSONArray("data");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject explrObject = jsonArray.getJSONObject(i);
+            String id ="";
+            String phone0 ="";
+            String name0 ="";
+            String email0 ="";
+            String pass0 ="";
+            String salt0 ="";
+            for (int i = 0; i < jsonArray.length(); ++i) {
+                JSONObject rec = jsonArray.getJSONObject(i);
+                 id = rec.getString("uID");
+                 phone0 = rec.getString("user_phone");
+                 name0 = rec.getString("user_name");
+                 email0 = rec.getString("user_email");
+                 pass0 = rec.getString("user_pass");
+                 salt0 = rec.getString("user_salt");
+
+
+                Log.d("xxarrListID",id);
+                Log.d("xxarrLione",phone0);
+                Log.d("xxarrListda",name0);
+                Log.d("xxarrLisasd",email0);
+                Log.d("xxarrLssD",pass0);
+                Log.d("xxarrsaase",salt0);
+
+            } // for
+
+            // if unique isd is in DB then retun
+            if(chechIfUniqueIdInSqlDB(id) == true){
+                return;
             }
-            for (int i = 0; i < recs.length(); ++i) {
-                JSONObject rec = recs.getJSONObject(i);
-                int id = rec.getInt("id");
-                String loc = rec.getString("loc");
-                // ...
+            //otherwise send to SQLite DB
+            else {
+
+                addToDb(phone0,name0,email0,pass0,salt0,true);
             }
+
+
 
 
 
@@ -347,63 +384,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             e.printStackTrace();
         }
 
-/*
-        try {
+    }
 
-        Log.d("xxxInSYNC",jsonString);
-            ArrayList<String> stringArray = new ArrayList<String>();
+    public boolean chechIfUniqueIdInSqlDB(String uID){
 
-        JSONArray jsonArray = null;
-
-            jsonArray = new JSONArray(jsonString);
-
-
-            for (int i = 0; i < jsonArray.length(); i++) {
-
-                    stringArray.add(jsonArray.getString(i));
-                 String zz = jsonArray.getString(i);
-                Log.d("xxarrList",zz);
-
-
-            }
-            String ccc =stringArray.get(0).toString();
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
- */
-
-       /*
-        JSONObject myjson = null;
-        try {
-            myjson = new JSONObject(String.valueOf(dataToSend));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        try {
-            JSONArray the_json_array = myjson.getJSONArray("data");
-
-            int size = the_json_array.length();
-            ArrayList<JSONObject> arrays = new ArrayList<JSONObject>();
-            for (int i = 0; i < size; i++) {
-                JSONObject another_json_object = the_json_array.getJSONObject(i);
-
-                arrays.add(another_json_object);
-            }
-
-//Finally
-            JSONObject[] jsons = new JSONObject[arrays.size()];
-            arrays.toArray(jsons);
-            Log.d("xxxSYNCarr",the_json_array.toString());
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-    */
-
+        return false;
 
     }
 

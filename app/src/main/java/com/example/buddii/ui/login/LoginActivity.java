@@ -35,13 +35,18 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
+        String isEmptyJSON = "{\"data\":[]}";
 
         DatabaseHandler handler=new DatabaseHandler(LoginActivity.this);
-        String initialize = handler.retrieveFromFireBaseDB();
-        Log.d("xxxLOGIN", "inlogIN");
-        String toPutInDB = handler.retrieveFromFireBaseDB();
-        Log.d("xxxRTVEDJSON", toPutInDB);
+
+       // check if Firebase DB has users
+         handler.checkFireBaseDBForUsers();
+        //If YES then SYNC ,add to sqlDB (no repeats)
+
+        //if NO
+        Log.d("xxxFRMLOGIN", "inLogIn");
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_buddii);
 

@@ -32,8 +32,8 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
+
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -189,7 +189,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
        // My_Database.close();
       //  c.close();
-        sendtoOnlineDB();
+        setLocalDBToJSON();
         String Jsonxx = mytempJSONreturnFunc();
         //Log.d("xxx",Jsonxx);
         // sending to ONLINE firebase DB
@@ -198,14 +198,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String jsonString; //set to json string
         Map<String, Object> jsonMap = new Gson().fromJson(Jsonxx, new TypeToken<HashMap<String, Object>>() {}.getType());
         Task<Void> myRef = database.getReference().child("usersdb").child("users").updateChildren(jsonMap);
-
-
-
     }
 
 
-    public String retrieveFromFireBaseDB(){
 
+    public String checkFireBaseDBForUsers(){
 
         Log.d("xxxFromRTV","InRTN");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -216,12 +213,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Log.d("xxxxCHLADD","inCHLDADD");
+
 
                String key = dataSnapshot.getKey();
             //   Log.d("xxxKeyis",key);
                if (key == ""){
-                                      Log.d("xxxxkeyRTN","KEYretuning");
+                   Log.d("xxxxkeyRTN","KEYretuning");
                    return;
                };
 
@@ -291,13 +288,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
             } //end of loop
 
-
-
-
-
-
-
-
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
@@ -327,12 +317,98 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         jsonToSend=usersObj.toString();
+
+            dbSYNC(jsonToSend);
+
         return jsonToSend;
     }
 
-    public String firsebaseToJSON(){
-        return "";
+    public void dbSYNC(String jsonString)  {
+
+
+        try {
+            JSONObject jsnobject = new JSONObject(jsonString);
+            JSONArray jsonArray = jsnobject.getJSONArray("data");
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject explrObject = jsonArray.getJSONObject(i);
+            }
+            for (int i = 0; i < recs.length(); ++i) {
+                JSONObject rec = recs.getJSONObject(i);
+                int id = rec.getInt("id");
+                String loc = rec.getString("loc");
+                // ...
+            }
+
+
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+/*
+        try {
+
+        Log.d("xxxInSYNC",jsonString);
+            ArrayList<String> stringArray = new ArrayList<String>();
+
+        JSONArray jsonArray = null;
+
+            jsonArray = new JSONArray(jsonString);
+
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+
+                    stringArray.add(jsonArray.getString(i));
+                 String zz = jsonArray.getString(i);
+                Log.d("xxarrList",zz);
+
+
+            }
+            String ccc =stringArray.get(0).toString();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+ */
+
+       /*
+        JSONObject myjson = null;
+        try {
+            myjson = new JSONObject(String.valueOf(dataToSend));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        try {
+            JSONArray the_json_array = myjson.getJSONArray("data");
+
+            int size = the_json_array.length();
+            ArrayList<JSONObject> arrays = new ArrayList<JSONObject>();
+            for (int i = 0; i < size; i++) {
+                JSONObject another_json_object = the_json_array.getJSONObject(i);
+
+                arrays.add(another_json_object);
+            }
+
+//Finally
+            JSONObject[] jsons = new JSONObject[arrays.size()];
+            arrays.toArray(jsons);
+            Log.d("xxxSYNCarr",the_json_array.toString());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    */
+
+
     }
+
+
+
 
 
     // DELETE A USER BY PASSING THE USERS ID
@@ -526,7 +602,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     // this function will create a JSON file and prepare it to send to an online DB
-    public void sendtoOnlineDB()  {
+    public void setLocalDBToJSON()  {
 
 
         Cursor cursor = getAllData("userTable");  //cursor hold all your data

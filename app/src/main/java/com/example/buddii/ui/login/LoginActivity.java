@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -31,12 +32,20 @@ public class LoginActivity extends AppCompatActivity {
     private LoginViewModel loginViewModel;
 
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+
+        DatabaseHandler handler=new DatabaseHandler(LoginActivity.this);
+        String initialize = handler.retrieveFromFireBaseDB();
+        Log.d("xxxLOGIN", "inlogIN");
+        String toPutInDB = handler.retrieveFromFireBaseDB();
+        Log.d("xxxRTVEDJSON", toPutInDB);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_buddii);
-        DatabaseHandler handler=new DatabaseHandler(LoginActivity.this);
-        String toPutInDB = handler.retrieveFromFireBaseDB();
+
+
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 

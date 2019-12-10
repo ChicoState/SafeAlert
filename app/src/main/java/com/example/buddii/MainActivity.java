@@ -138,8 +138,7 @@ public class MainActivity extends AppCompatActivity {
                 myArrayList.add(key + email+ namex);
                 ArrayAdapter myArrayAdapter = null;
                 myArrayAdapter.notifyDataSetChanged();
-                
-                */
+               */
             }
 
 

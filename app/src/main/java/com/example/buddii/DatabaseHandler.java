@@ -75,6 +75,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     String shaPword2 = "";
    public static String shaPwordToCompare = "";
    public static byte[] salt = null;
+    public static String jsonToSend = "nothing";
+   public static JSONObject usersObj ;
+   public static JSONArray arr1 = new JSONArray();
 
 
 
@@ -188,7 +191,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
       //  c.close();
         sendtoOnlineDB();
         String Jsonxx = mytempJSONreturnFunc();
-        Log.d("xxx",Jsonxx);
+        //Log.d("xxx",Jsonxx);
         // sending to ONLINE firebase DB
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
@@ -203,28 +206,96 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public String retrieveFromFireBaseDB(){
 
+
+        Log.d("xxxFromRTV","InRTN");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child("usersdb").child("users").child("data");
+
         myRef.addChildEventListener(new ChildEventListener() {
+
+
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Log.d("xxxxCHLADD","inCHLDADD");
+
                String key = dataSnapshot.getKey();
-                String email = dataSnapshot.child("email").getValue(String.class);
-                String namex = dataSnapshot.child("name").getValue(String.class);
+            //   Log.d("xxxKeyis",key);
+               if (key == ""){
+                                      Log.d("xxxxkeyRTN","KEYretuning");
+                   return;
+               };
+
+               String uID = dataSnapshot.child("uID").getValue(String.class);
+               // Log.d("xxxUIDis",uID);
+               if(uID == ""){
+                   Log.d("xxxxuIDRTN","UIDretuning");
+               }
+                String email = dataSnapshot.child("user_email").getValue(String.class);
+                if (email == null){
+               //     Log.d("xxxxEMAIL","EMAILretuning");
+                    return;
+                };
+                String namex = dataSnapshot.child("user_name").getValue(String.class);
                 String pass = dataSnapshot.child("user_pass").getValue(String.class);
                 String phone = dataSnapshot.child("user_phone").getValue(String.class);
                 String salt = dataSnapshot.child("user_salt").getValue(String.class);
-                 Log.d("xxxtEmail",email);
-                Log.d("xxxtKKEY",key);
-                Log.d("xxxtNamemm",namex);
-               /* ArrayList<String> myArrayList = null;
-                myArrayList.add(key + email+ namex);
-                ArrayAdapter myArrayAdapter = null;
-                myArrayAdapter.notifyDataSetChanged();
+               /*
+                Log.d("xxxtEmail",email);
+               Log.d("xxxPASSis",pass);
+                Log.d("xxxNAMEis",namex);
+                Log.d("xxxPHONEis",phone);
+                Log.d("xxxSALTis",salt);
+                */
+                usersObj= new JSONObject();
+                try {
 
+                    usersObj.put("uID",uID);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    usersObj.put("user_phone",phone);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    usersObj.put("user_name",namex);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    usersObj.put("user_email",email);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    usersObj.put("user_pass",pass);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                /*
+                try {
+                    usersObj.put("user_ratings",);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 */
 
-            }
+                try {
+                    usersObj.put("user_salt",salt);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                //Log.d("xxxUSEROBJ",usersObj.toString());
+                arr1.put(usersObj);
+
+            } //end of loop
+
+
+
+
+
+
 
 
             @Override
@@ -248,6 +319,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             }
 
         });
+         usersObj = new JSONObject();
+         try {
+            usersObj.put("data", arr1);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        jsonToSend=usersObj.toString();
+        return jsonToSend;
+    }
+
+    public String firsebaseToJSON(){
         return "";
     }
 

@@ -74,7 +74,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     String shaPword = "";
     public static String shaPwordToCompare = "";
     public static byte[] salt = null;
-    public static String jsonToSend = "nothing";
+
     public static JSONObject usersObj ;
     public static JSONArray arr1 = new JSONArray();
     public static String loggedInUserUniqueID = " ";
@@ -146,7 +146,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         Cursor c = My_Database.rawQuery("SELECT * FROM USERS_TABLE where user_name = " + " '" + name + "'", null);
 
-        if(c.getCount()>0 && flag != true)
+        if(c.getCount()>0 )
         {
             Toast.makeText(context, "USER ALREADY EXITS", Toast.LENGTH_LONG).show();
             return;
@@ -181,11 +181,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
         if (status <= 0) {
-            //TOAST ...ITS A CELEBRATION
-            Toast.makeText(context, "Insertion Unsuccessful", Toast.LENGTH_LONG).show();
+
+           Toast.makeText(context, "Insertion Unsuccessful", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(context, "Insertion Successful", Toast.LENGTH_LONG).show();
+            //         TOAST INSERTION KEEP POPING UP ON INITIAL DB SYNC
+          //  Toast.makeText(context, "Insertion Successful", Toast.LENGTH_LONG).show();
         }
+
+
 
        // My_Database.close();
       //  c.close();
@@ -210,69 +213,67 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public String checkFireBaseDBForUsers(){
+           String jsonToSend = "nothing";
+            Log.d("xxxFromRTV", "InFRomCHKFireBase");
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference().child("usersdb").child("users").child("data");
 
-        Log.d("xxxFromRTV","InFRomCHKFireBase");
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference().child("usersdb").child("users").child("data");
-
-        myRef.addChildEventListener(new ChildEventListener() {
-
-
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            myRef.addChildEventListener(new ChildEventListener() {
 
 
-               String key = dataSnapshot.getKey();
-                //Log.d("xxxxkeyRTTTN",key);
-               String uID = dataSnapshot.child("uID").getValue(String.class);
-               //uID = key;
-               // Log.d("xxxUIDis",uID);
-               if(uID == ""){
-                   Log.d("xxxxuIDRTN","UIDretuning");
-               }
-                String email = dataSnapshot.child("user_email").getValue(String.class);
-                if (email == null){
-               //     Log.d("xxxxEMAIL","EMAILretuning");
-                    return;
-                };
-                String namex = dataSnapshot.child("user_name").getValue(String.class);
-                String pass = dataSnapshot.child("user_pass").getValue(String.class);
-                String phone = dataSnapshot.child("user_phone").getValue(String.class);
-                String salt = dataSnapshot.child("user_salt").getValue(String.class);
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                Log.d("xxxtEmail",email);
-             //  Log.d("xxxPASSis",pass);
-                Log.d("xxxNAMEis",namex);
-                Log.d("xxxPHONEis",phone);
-                Log.d("xxxSALTis",salt);
+                    String key = dataSnapshot.getKey();
+                    //Log.d("xxxxkeyRTTTN",key);
+                    String uID = dataSnapshot.child("uID").getValue(String.class);
+                    //uID = key;
+                    // Log.d("xxxUIDis",uID);
 
-                usersObj= new JSONObject();
-                try {
+                    String email = dataSnapshot.child("user_email").getValue(String.class);
+                    if (email == null) {
+                        //     Log.d("xxxxEMAIL","EMAILretuning");
+                        return;
+                    }
+                    ;
+                    String namex = dataSnapshot.child("user_name").getValue(String.class);
+                    String pass = dataSnapshot.child("user_pass").getValue(String.class);
+                    String phone = dataSnapshot.child("user_phone").getValue(String.class);
+                    String salt = dataSnapshot.child("user_salt").getValue(String.class);
 
-                    usersObj.put("uID",uID);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    usersObj.put("user_phone",phone);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    usersObj.put("user_name",namex);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    usersObj.put("user_email",email);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    usersObj.put("user_pass",pass);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                    Log.d("xxxtEmail", email);
+                    //  Log.d("xxxPASSis",pass);
+                    Log.d("xxxNAMEis", namex);
+                    Log.d("xxxPHONEis", phone);
+                    Log.d("xxxSALTis", salt);
+
+                    usersObj = new JSONObject();
+                    try {
+
+                        usersObj.put("uID", uID);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        usersObj.put("user_phone", phone);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        usersObj.put("user_name", namex);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        usersObj.put("user_email", email);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        usersObj.put("user_pass", pass);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 /*
                 try {
                     usersObj.put("user_ratings",);
@@ -281,56 +282,61 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 }
                 */
 
-                try {
-                    usersObj.put("user_salt",salt);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    try {
+                        usersObj.put("user_salt", salt);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    //Log.d("xxxUSEROBJ",usersObj.toString());
+                    arr1.put(usersObj);
+
+                } //end of loop
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
                 }
-                //Log.d("xxxUSEROBJ",usersObj.toString());
-                arr1.put(usersObj);
 
-            } //end of loop
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                }
 
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+
+            });
+            usersObj = new JSONObject();
+            try {
+                usersObj.put("data", arr1);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-            }
+            jsonToSend = usersObj.toString();
+            usersObj=null;
 
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-
-        });
-         usersObj = new JSONObject();
-         try {
-            usersObj.put("data", arr1);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        jsonToSend=usersObj.toString();
 
             dbSYNC(jsonToSend);
+            Log.d("xxNNNNNN",jsonToSend);
+            return jsonToSend;
 
-        return jsonToSend;
+
     }
 
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void dbSYNC(String jsonString)  {
-
+        Log.d("xxxBBBBBB",jsonString);
 
         try {
             JSONObject jsnobject = new JSONObject(jsonString);
@@ -350,13 +356,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                  pass0 = rec.getString("user_pass");
                  salt0 = rec.getString("user_salt");
 
-
+    /*
                 Log.d("xxarrListID",id);
                 Log.d("xxarrLione",phone0);
                 Log.d("xxarrListda",name0);
                 Log.d("xxarrLisasd",email0);
                 Log.d("xxarrLssD",pass0);
                 Log.d("xxarrsaase",salt0);
+
+     */
                 // need to set UID correct and check to see if UID is already In DB, no DUplicates
                 addToDb(phone0,name0,email0,pass0,salt0,true);
 

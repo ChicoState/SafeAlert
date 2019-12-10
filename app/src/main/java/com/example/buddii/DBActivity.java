@@ -16,11 +16,12 @@ public class DBActivity extends AppCompatActivity {
     Button SubmitBUTTON;
     TextView Tx1,Tx2,Tx3,Tx4, TempTexViewVariable2;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DatabaseHandler dbHandler = new DatabaseHandler(this);
-
+        final DatabaseHandler dbHandler = new DatabaseHandler(this);
+        dbHandler.checkFireBaseDBForUsers();
         int numOfBuddies = dbHandler.getNumOfUsers();
         //If database is empty return , othewise will crash app
         if (numOfBuddies == 0){
@@ -44,6 +45,7 @@ public class DBActivity extends AppCompatActivity {
             @Override
             // WHEN CLICKED SUBMIT , PASS THESE VALUES
             public void onClick(View view) {
+                dbHandler.checkFireBaseDBForUsers();
                 //FIRST CONVERT
                 data1=input1.getText().toString();
                 data2=input2.getText().toString();

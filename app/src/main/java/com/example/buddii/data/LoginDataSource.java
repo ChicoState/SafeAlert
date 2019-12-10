@@ -23,11 +23,12 @@ public class LoginDataSource extends AppCompatActivity {
     DatabaseHandler handler=new DatabaseHandler(LoginDataSource.this);
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public Result<LoggedInUser> login(String username, String password){
 
 
 
-        String checkCred = handler.getPword(password);
+        String checkCred = handler.getPword(password,username);
       //Log.d("xxxLogINpwordRTN", checkCred);
 
         try {

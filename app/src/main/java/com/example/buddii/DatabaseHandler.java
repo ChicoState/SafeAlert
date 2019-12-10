@@ -78,6 +78,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static JSONObject usersObj ;
     public static JSONArray arr1 = new JSONArray();
     public static String loggedInUserUniqueID = " ";
+    public static String passwordStoredToCheck = "";
+    public static byte[] salt5 = null;
 
 
 
@@ -152,8 +154,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             return;
         }
         else
-        {
-            Toast.makeText(context, "WELCOME", Toast.LENGTH_LONG).show();
+        {   // on initial SYNC THIS KEEPS showinf UP
+          //  Toast.makeText(context, "WELCOME", Toast.LENGTH_LONG).show();
         }
 
         values.put(DatabaseHandler.USER_PHONE, userphone);
@@ -239,13 +241,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     String namex = dataSnapshot.child("user_name").getValue(String.class);
                     String pass = dataSnapshot.child("user_pass").getValue(String.class);
                     String phone = dataSnapshot.child("user_phone").getValue(String.class);
-                    String salt = dataSnapshot.child("user_salt").getValue(String.class);
+                    String salt1 = dataSnapshot.child("user_salt").getValue(String.class);
 
                     Log.d("xxxtEmail", email);
                     //  Log.d("xxxPASSis",pass);
                     Log.d("xxxNAMEis", namex);
                     Log.d("xxxPHONEis", phone);
-                    Log.d("xxxSALTis", salt);
+                    Log.d("xxxSALTis", salt1);
 
                     usersObj = new JSONObject();
                     try {
@@ -283,7 +285,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 */
 
                     try {
-                        usersObj.put("user_salt", salt);
+                        usersObj.put("user_salt", salt1);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -326,7 +328,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
             dbSYNC(jsonToSend);
-            Log.d("xxNNNNNN",jsonToSend);
+         //   Log.d("xxNNNNNN",jsonToSend);
             return jsonToSend;
 
 
@@ -336,7 +338,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void dbSYNC(String jsonString)  {
-        Log.d("xxxBBBBBB",jsonString);
+      //  Log.d("xxxBBBBBB",jsonString);
 
         try {
             JSONObject jsnobject = new JSONObject(jsonString);
@@ -445,7 +447,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             String name = cursor.getString(2);
             String email = cursor.getString(3);
             String password = cursor.getString(4);
-            String salt = cursor.getString(6);
+            String salt3 = cursor.getString(6);
 
             // for loop will place the order of string according to the order
             // the user request
@@ -467,7 +469,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     arrayOfIndecesHolder[i] = password;
                 }
                 if (requestHolderArray[i].equals("salt")) {
-                    arrayOfIndecesHolder[i] = salt;
+                    arrayOfIndecesHolder[i] = salt3;
                 }
             }
             for (int i = 0 ; i < numOfRequest; i++) {
@@ -653,36 +655,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     };
 
 
-    public String checkCredentials(String checkThisPassword,String pwordInDB){
 
-
-        String pwordToHash = checkThisPassword;
-       // String[] tpassword = loadUsers("user_pass");
-       // String tpassword= getPword();
-        //String pass = new String(tpassword[0]);
-        String shaPwordToCheck = "";
-        shaPwordToCheck = hashSha512.hashPaswordSHA512(pwordToHash, salt);
-
-        // for an UNKNOWN reason the strings have to be substrings in order for the
-        // comparisons to work
-        String t_pwordInDB =pwordInDB.substring(0,128);
-        String t_shaPwordToCheck = shaPwordToCheck.substring(0,128);
-
-      //  Log.d("xxxxCCCCCC",t_pwordInDB);
-      //  Log.d("xxxxDDDDDD",t_shaPwordToCheck);
-
-        if (t_pwordInDB.equals(t_shaPwordToCheck))
-        {
-
-            String good = "true";
-            return good;
-        }
-
-         else {
-             String noGood = "false";
-            return noGood;
-        }
-    }
 
     // function to populate ACTIVE BUDDI TABLE by adding the Logged in users UID
     //will be called when be a buddii button is pressed
@@ -734,11 +707,95 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     };
 
 
-                                // qwerty
-    public String getPword(String pwordFromLogIn) {
 
-        String password1 = shaPwordToCompare;
-        String checkCred = checkCredentials(pwordFromLogIn, password1);
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public String getPword(String pwordFromLogIn, final String userNameFromLogIn) {
+
+
+
+        Log.d("xxxfffff","IN GETPWORD");
+        // need to retrive password from SQLITE WHERE NAME matches
+       /*SQLiteDatabase My_Database0 = this.getReadableDatabase();
+
+        Cursor c = My_Database0.rawQuery("SELECT * FROM USERS_TABLE where user_name = " + " '" + userNameFromLogIn + "'", null);
+        String Uid0 = c.getString(0);
+        Log.d("xxxUCURSORUID",Uid0);
+
+        */
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child("usersdb").child("users").child("data");
+
+        myRef.addChildEventListener(new ChildEventListener() {
+
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+
+                String key = dataSnapshot.getKey();
+
+                String uID = dataSnapshot.child("uID").getValue(String.class);
+                String email = dataSnapshot.child("user_email").getValue(String.class);
+                String namex = dataSnapshot.child("user_name").getValue(String.class);
+                String pass = dataSnapshot.child("user_pass").getValue(String.class);
+                String phone = dataSnapshot.child("user_phone").getValue(String.class);
+                String salt0 = dataSnapshot.child("user_salt").getValue(String.class);
+
+                Log.d("xxxN----", uID);
+                Log.d("xxxP-----",pass);
+                Log.d("xxxN----", namex);
+                Log.d("xxxCHKTHSNAM-", userNameFromLogIn);
+                String t_nameFromDB = namex.substring(0);
+
+
+                if (t_nameFromDB.equals(userNameFromLogIn)){
+                    Log.d("xxx-MATCHCC","THESE MATCH");
+
+                    passwordStoredToCheck = pass;
+                 salt5 = salt0.getBytes();
+
+
+              }
+
+
+
+
+            } //end of loop
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+        Log.d("xxxfffff","IN AfetrPWORD");
+        Log.d("xxxpChecnPword2",passwordStoredToCheck);
+
+
+
+        // dealut pword from LAST log in user IS  shaPwordToCompare
+        // dealut SALT from LAST log in user IS salt
+
+
+
+        String passwordStoredToCheck0 = shaPwordToCompare;
+        String checkCred = checkCredentials(pwordFromLogIn, shaPwordToCompare,  salt);
 
         return checkCred;
     }
@@ -753,7 +810,38 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Log.d("xxxUCURSORUID",Uid0);
             */
 
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public String checkCredentials(String checkThisPassword, String pwordInDB, byte[] salt6){
+        if(salt6 == null){
+            Log.d("xxxNULLSALT","saltIsNULL");
+            return "false";
+        }
 
+        String pwordToHash = checkThisPassword;
+
+        String shaPwordToCheck = "";
+        shaPwordToCheck = hashSha512.hashPaswordSHA512(pwordToHash, salt6);
+
+        // for an UNKNOWN reason the strings have to be substrings in order for the
+        // comparisons to work
+        String t_pwordInDB =pwordInDB.substring(0,128);
+        String t_shaPwordToCheck = shaPwordToCheck.substring(0,128);
+
+        //  Log.d("xxxxCCCCCC",t_pwordInDB);
+        //  Log.d("xxxxDDDDDD",t_shaPwordToCheck);
+
+        if (t_pwordInDB.equals(t_shaPwordToCheck))
+        {
+
+            String good = "true";
+            return good;
+        }
+
+        else {
+            String noGood = "false";
+            return noGood;
+        }
     }
 
 

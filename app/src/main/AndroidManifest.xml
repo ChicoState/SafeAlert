@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.buddii">
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -7,6 +8,8 @@
          location permissions for the 'MyLocation' functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
         android:allowBackup="true"
@@ -14,8 +17,16 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".beABuddy"></activity>
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".findingSafestRouteActivity" />
+        <activity android:name=".beingABuddyActivity" />
+        <activity android:name=".AboutUsActivity" />
+        <activity android:name=".TutorialActivity" />
+        <activity android:name=".beABuddy" />
+        <activity
+            android:name=".PreferencesActivity"
+            android:label="@string/title_activity_preferences" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -31,8 +42,10 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/activity_maps" />
+        <activity android:name=".SMS_Activity" />
         <activity android:name=".chooseRoute" />
         <activity android:name=".select_bud" />
+        <activity android:name=".DBActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

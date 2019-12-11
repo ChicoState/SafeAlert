@@ -16,7 +16,7 @@
         android:alwaysDrawnWithCache="false"
         android:animateLayoutChanges="false"
         android:animationCache="false"
-        android:background="@color/colorPrimary"
+        android:background="@color/primaryColor"
         android:orientation="horizontal">
 
         <Button
@@ -26,7 +26,7 @@
             android:layout_weight="2"
             android:onClick="onHomeClick"
             android:text="Home"
-            app:backgroundTint="@color/colorPrimary" />
+            app:backgroundTint="@color/primaryColor" />
 
         <Button
             android:id="@+id/UserInfo"
@@ -35,7 +35,7 @@
             android:layout_weight="2"
             android:onClick="onUserClick"
             android:text="Info"
-            app:backgroundTint="@color/colorPrimary" />
+            app:backgroundTint="@color/primaryColor" />
 
         <ImageButton
             android:id="@+id/imageButton"

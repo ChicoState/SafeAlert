@@ -17,7 +17,7 @@
         android:alwaysDrawnWithCache="false"
         android:animateLayoutChanges="false"
         android:animationCache="false"
-        android:background="@color/colorPrimary"
+        android:background="@color/primaryColor"
         android:orientation="horizontal">
 
         <Button
@@ -28,7 +28,7 @@
             android:onClick="onHomeClick"
             android:text="Home"
             android:visibility="gone"
-            app:backgroundTint="@color/colorPrimary"
+            app:backgroundTint="@color/primaryColor"
             tools:ignore="ButtonStyle" />
 
         <Button
@@ -39,7 +39,7 @@
             android:onClick="onRouteClick"
             android:text="Route"
             android:visibility="visible"
-            app:backgroundTint="@color/colorPrimary" />
+            app:backgroundTint="@color/primaryColor" />
 
         <Button
             android:id="@+id/UserInfo"
@@ -48,7 +48,7 @@
             android:layout_weight="1"
             android:onClick="onInfoClick"
             android:text="Info"
-            app:backgroundTint="@color/colorPrimary" />
+            app:backgroundTint="@color/primaryColor" />
 
         <Button
             android:id="@+id/UserReport"
@@ -57,7 +57,7 @@
             android:layout_weight="1"
             android:onClick="onReportClick"
             android:text="Report"
-            app:backgroundTint="@color/colorPrimary"
+            app:backgroundTint="@color/primaryColor"
             tools:ignore="ButtonStyle" />
 
         <ImageButton

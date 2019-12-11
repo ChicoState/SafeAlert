@@ -16,11 +16,9 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -52,8 +50,6 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -83,7 +79,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 import java.util.Vector;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -96,27 +91,15 @@ public class ScrollMapUser extends AppCompatActivity
         OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     final int REQUEST_PERMISSION_CODE = 1000;
-    MediaPlayer mediaPlayer = new MediaPlayer();
     MediaRecorder mediaRecorder;
     String pathSave;
-    Button btnPlay, btnRecord, btnStop, btnStopRecord;
     Context mContext;
-    int brightness;
     LinearLayout UserTabInfo, UserTabHome, UserTabReport, UserTabRoute, UserTabChat;
     Button UserHome, UserRoute;
     private FusedLocationProviderClient client;
     LocationManager locationManager;
-    LocationRequest locationRequest;
-    LocationCallback locationCallback;
-    LatLng Chico = new LatLng(37.421980, -122.084062);
-    private static final long GEO_DURATION = 60 * 60 * 1000;
-    private static final String GEOFENCE_REQ_ID = "My Geofence";
-    private static final float GEOFENCE_RADIUS = 500.0f;
-    private PendingIntent geoFencePendingIntent;
-    private final int GEOFENCE_REQ_CODE = 0;
     private GoogleApiClient googleApiClient;
     private static final String TAG = ScrollMapUser.class.getSimpleName();
-    private Geofence geofence;
     String directionTestString;
     ArrayList<DirectionItem> directionList = new ArrayList<>();
     private RecyclerView mRecyclerView;
@@ -125,26 +108,17 @@ public class ScrollMapUser extends AppCompatActivity
     private Circle currLocMovingCircle;
     GeofencingClient mGeofencingClient;
     PendingIntent mGeofencePendingIntent;
-    ArrayList<Geofence> mGeofenceList = new ArrayList<Geofence>();
     int numero = 0;
 
 
-    private GeofencingClient geofencingClient;
     private static final List<PatternItem> PATTERN_POLYLINE_DOTTED = null;
     private GoogleMap mMap;
     private LatLng mOrigin;
     private LatLng mDestination;
-    private LatLng curr = new LatLng(0, 0);
     private Polyline mPolyline;
     ArrayList<LatLng> mMarkerPoints;
     LinkedList<Geofence> geofenceList = null;
     Location currentLocation;
-
-    private int mLocationPermissionGranted = 0;
-    private int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-
-    private Button reportButton;
-    private Button searchButton;
 
     public static Intent makeNotificationIntent(Context applicationContext, String msg) {
         Log.d(TAG, msg);
@@ -270,76 +244,7 @@ public class ScrollMapUser extends AppCompatActivity
         }
     }
 
-    protected void setupRecorder() {
 
-        btnRecord.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                //Toast.makeText(ScrollMapUser.this, "TEST\n\n\n\n\n\n", Toast.LENGTH_SHORT).show();
-                pathSave = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + UUID.randomUUID().toString() + "_audio_record.3gp";
-                setupMediaRecorder();
-                try {
-                    mediaRecorder.prepare();
-                    mediaRecorder.start();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                btnPlay.setEnabled(false);
-                btnStop.setEnabled(false);
-
-                //Toast.makeText(ScrollMapUser.this, "Recording...", Toast.LENGTH_SHORT).show();
-
-            }
-
-        });
-
-        btnStopRecord.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                mediaRecorder.stop();
-                btnStopRecord.setEnabled(false);
-                btnRecord.setEnabled(true);
-                btnPlay.setEnabled(true);
-                btnStop.setEnabled(false);
-            }
-        });
-
-        btnPlay.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                btnStop.setEnabled(true);
-                btnStopRecord.setEnabled(false);
-                btnRecord.setEnabled(false);
-
-                mediaPlayer = new MediaPlayer();
-                try {
-                    mediaPlayer.setDataSource(pathSave);
-                    mediaPlayer.prepare();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-
-                mediaPlayer.start();
-                //Toast.makeText(ScrollMapUser.this, "Playing...", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-        btnStop.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                btnStopRecord.setEnabled(false);
-                btnRecord.setVisibility(View.INVISIBLE);
-                btnStop.setEnabled(false);
-                btnPlay.setEnabled(true);
-
-                if (mediaPlayer != null) {
-                    mediaPlayer.stop();
-                    mediaPlayer.release();
-                    setupMediaRecorder();
-                }
-            }
-
-
-        });
-    }
 
     private Vector<ScrollMapUser.LonLat> RetrieveLocations() {
         //put all of the longitudes and latitudes from the database
@@ -469,21 +374,6 @@ public class ScrollMapUser extends AppCompatActivity
         mAdapter = new DirectionsRecyclerAdapter(directionList);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-
-
-        //Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
-        //Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 254);
-
-        //btnPlay = findViewById(R.id.btnPlay);
-        //btnRecord = (Button) findViewById(R.id.btnRecord);
-        //btnStop = findViewById(R.id.btnStop);
-        //btnStopRecord = findViewById(R.id.btnStopRecord);
-
-        if (checkMediaPermissions()) {
-            setupRecorder();
-        } else {
-            requestMediaPermission();
-        }
 
         //LOCATION LISTENER
         mContext = this;
@@ -770,11 +660,6 @@ public class ScrollMapUser extends AppCompatActivity
             drawRoute();
         }
     }
-
-    //GEOFENCE AREA
-
-
-    //GEOFENCE AREA
 
     public void onReport(View view) {
         EditText locationReport = findViewById(R.id.reportTextUser);

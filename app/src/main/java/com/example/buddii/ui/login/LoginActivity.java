@@ -42,7 +42,9 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
+        DatabaseHandler handler=new DatabaseHandler(LoginActivity.this);
+        //initialize , first pass always returns NULL
+        String[] posZeroLatPosOneLong = handler.loadGPS("0");
         setContentView(R.layout.activity_login_buddii);
        // intialDBSYNC();
 

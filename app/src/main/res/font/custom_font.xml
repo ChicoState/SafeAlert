@@ -5,41 +5,41 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
 
 <!-- regular -->
 <font
-    android:font="@font/objectSans_Regular"
+    android:font="@font/objectsans_regular"
     android:fontStyle="normal"
     android:fontWeight="400"
 
-    app:font="@font/objectSans_Regular"
+    app:font="@font/objectsans_regular"
     app:fontStyle="normal"
     app:fontWeight="400" />
 
 <!-- italic -->
 <font
-    android:font="@font/objectSans_Slanted"
+    android:font="@font/objectsans_slanted"
     android:fontStyle="italic"
     android:fontWeight="400"
 
-    app:font="@font/objectSans_Slanted"
+    app:font="@font/objectsans_slanted"
     app:fontStyle="italic"
     app:fontWeight="400" />
 
 <!-- bold -->
 <font
-    android:font="@font/objectSans_Heavy"
+    android:font="@font/objectsans_heavy"
     android:fontStyle="normal"
     android:fontWeight="700"
 
-    app:font="@font/ObjectSans"
+    app:font="@font/objectsans_heavy"
     app:fontStyle="normal"
     app:fontWeight="700" />
 
 <!-- bold italic -->
 <font
-    android:font="@font/objectSans_HeavySlanted"
+    android:font="@font/objectsans_heavyslanted"
     android:fontStyle="normal"
     android:fontWeight="700"
 
-    app:font="@font/objectSans_HeavySlanted"
+    app:font="@font/objectsans_heavyslanted"
     app:fontStyle="normal"
     app:fontWeight="700" />
 </font-family>

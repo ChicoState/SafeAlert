@@ -95,7 +95,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private String CREATE_FLAG_TABLE = "CREATE TABLE " + NAME_OF_FLAG_TABLE + "( Uid INTEGER)";
 
 
-    private String CREATE_GPS_TABLE = "CREATE TABLE " + GPS_TABLE + "(" + LATITUDE + " PlaceHolder," +
+    private String CREATE_GPS_TABLE = "CREATE TABLE " + GPS_TABLE + "( Uid INTEGER primary key autoincrement," + LATITUDE + " PlaceHolder," +
             LONGITUTDE + " PlaceHolder"  + ")";
 
     //Will Replace table if exist ( replace USER)

@@ -45,6 +45,8 @@ public class LoginActivity extends AppCompatActivity {
         DatabaseHandler handler=new DatabaseHandler(LoginActivity.this);
         //initialize , first pass always returns NULL
         String[] posZeroLatPosOneLong = handler.loadGPS("0");
+
+        String checkCred = handler.getPword("<>","<>");
         setContentView(R.layout.activity_login_buddii);
        // intialDBSYNC();
 

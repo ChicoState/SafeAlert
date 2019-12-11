@@ -858,7 +858,11 @@ public static  String[] posZeroLatPosOneLong = new String[3];
                     Log.d("xxx-MATCHCC","THESE MATCH");
 
                     passwordStoredToCheck = pass;
-                 salt5 = salt0.getBytes();
+                    Log.d("xxx-SLATFROMFIRE",salt0);
+                     salt5 = Base64.getDecoder().decode(salt0);
+               //  salt5 = salt0.getBytes();
+                    String byteSaltToString = Base64.getEncoder().encodeToString(salt5);
+                    Log.d("xxxpSALT2CHECKd",byteSaltToString);
 
 
               }
@@ -890,11 +894,13 @@ public static  String[] posZeroLatPosOneLong = new String[3];
 
         });
         Log.d("xxxfffff","IN AfetrPWORD");
-        Log.d("xxxpChecnPword2",passwordStoredToCheck);
+
 
 
         String passwordStoredToCheck0 = shaPwordToCompare;
-        String checkCred = checkCredentials(pwordFromLogIn, shaPwordToCompare,  salt);
+
+        //                                 INPUT PWORD        PWORDFROMFIREBASE  SLATFROMFIREBASE
+        String checkCred = checkCredentials(pwordFromLogIn, passwordStoredToCheck,  salt5);
 
         return checkCred;
     }
@@ -927,8 +933,8 @@ public static  String[] posZeroLatPosOneLong = new String[3];
         String t_pwordInDB =pwordInDB.substring(0,128);
         String t_shaPwordToCheck = shaPwordToCheck.substring(0,128);
 
-        //  Log.d("xxxxCCCCCC",t_pwordInDB);
-        //  Log.d("xxxxDDDDDD",t_shaPwordToCheck);
+        Log.d("xxxxCCCCCC",t_pwordInDB);
+        Log.d("xxxxDDDDDD",t_shaPwordToCheck);
 
         if (t_pwordInDB.equals(t_shaPwordToCheck))
         {

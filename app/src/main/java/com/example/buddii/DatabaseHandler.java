@@ -88,7 +88,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Basically a concatination of SQL COMMANDS
 
     private String CREATE_TABLE = "CREATE TABLE " + NAME_OF_USERS_TABLE + "( Uid INTEGER primary key autoincrement," + USER_PHONE + " PlaceHolder," +
-            USER_NAME + " PlaceHolder," + USER_EMAIL + " PlaceHolder," + USER_PASSWORD + " PlaceHolder ," + USER_RATINGS+ "," + USER_SALT +  ")";
+            USER_NAME + " PlaceHolder," + USER_EMAIL + " PlaceHolder," + USER_PASSWORD + " PlaceHolder ," + USER_RATINGS+ "," + USER_SALT + ","+ USER_FLAG +  ")";
 
     private String CREATE_FRIENDS_TABLE = "CREATE TABLE " + NAME_OF_FRIENDS_TABLE + "( Uid INTEGER)";
     private String CREATE_ACTIVE_BUDDII_TABLE = "CREATE TABLE " + NAME_OF_ACTIVE_BUDDI_TABLE + "( Uid INTEGER)";
@@ -121,7 +121,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         My_Database.execSQL(CREATE_GPS_TABLE);
         My_Database.execSQL(CREATE_FRIENDS_TABLE);
         My_Database.execSQL(CREATE_ACTIVE_BUDDII_TABLE);
-        My_Database.execSQL(CREATE_FLAG_TABLE);
+       // My_Database.execSQL(CREATE_FLAG_TABLE);
 
         // testing of dynamic colums
         My_Database.execSQL(INSERT_DYNAMIC_TABLE);
@@ -142,6 +142,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void addToDb(String userphone, String name, String email, String password, String salt0 ,Boolean flag)  {
          salt = hashSha512.getSalt();
+
+         // temp flag
+        String flagForUser = "none";
 
         SQLiteDatabase My_Database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -176,6 +179,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String byteSaltToString = Base64.getEncoder().encodeToString(salt);
         values.put(DatabaseHandler.USER_SALT, byteSaltToString);
+        values.put(DatabaseHandler.USER_FLAG, flagForUser);
 
 
         long status = My_Database.insert(NAME_OF_USERS_TABLE, null, values);
@@ -632,6 +636,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             }
             try {
                 jobj.put("user_salt",cursor.getString(6));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            try {
+                jobj.put("user_flag",cursor.getString(7));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

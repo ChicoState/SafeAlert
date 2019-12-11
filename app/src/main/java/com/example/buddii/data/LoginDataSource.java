@@ -23,21 +23,22 @@ public class LoginDataSource extends AppCompatActivity {
     DatabaseHandler handler=new DatabaseHandler(LoginDataSource.this);
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public Result<LoggedInUser> login(String username, String password){
 
 
-       //Log.d("xxxPwordFromLogIn",password);
-      // boolean isAMember = handler.chechIfAlreadyMemeber(username);
-        String checkCred = handler.getPword(password);
+
+        String checkCred = handler.getPword(password,username);
       //Log.d("xxxLogINpwordRTN", checkCred);
-        //String checkCred = handler.checkCredentials(pwordInDB, password);
-        //  handler.close();
+
         try {
 
             // TODO: handle loggedInUser authentication
 
 
             if( checkCred.equals("true")) {
+               //will sey UID for logged in user
+                // handler.setLoggedInUser(username);
                  LoggedInUser fakeUser =
                         new LoggedInUser(
                                 java.util.UUID.randomUUID().toString(),

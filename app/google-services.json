@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "288517531558-418vsmiug3f582ji1jo2kdbadmqeoolg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.buddii",
+            "certificate_hash": "51698ef50b683e861dd14a58dac2c245678a1381"
+          }
+        },
+        {
           "client_id": "288517531558-0t2kslr9ikrldkblbossq8tulilvbnvl.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -30,6 +38,13 @@
             {
               "client_id": "288517531558-0t2kslr9ikrldkblbossq8tulilvbnvl.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "288517531558-bpgj28st0v4g4c5nfaq31bse9f1mq3sb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jgutierrez.database1"
+              }
             }
           ]
         }
@@ -37,12 +52,20 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:288517531558:android:27e04817961da67340d167",
+        "mobilesdk_app_id": "1:288517531558:android:8a61f57a286ef5f640d167",
         "android_client_info": {
           "package_name": "com.example.myfirstapp"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "288517531558-9montl3ve0s4vsrrgp2jbboa3rehdgtb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.myfirstapp",
+            "certificate_hash": "51698ef50b683e861dd14a58dac2c245678a1381"
+          }
+        },
         {
           "client_id": "288517531558-0t2kslr9ikrldkblbossq8tulilvbnvl.apps.googleusercontent.com",
           "client_type": 3
@@ -59,6 +82,13 @@
             {
               "client_id": "288517531558-0t2kslr9ikrldkblbossq8tulilvbnvl.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "288517531558-bpgj28st0v4g4c5nfaq31bse9f1mq3sb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jgutierrez.database1"
+              }
             }
           ]
         }

@@ -1,9 +1,11 @@
 package com.example.buddii.ui.login;
 
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import android.os.Build;
 import android.util.Patterns;
 
 import com.example.buddii.data.LoginRepository;
@@ -29,6 +31,7 @@ public class LoginViewModel extends ViewModel {
         return loginResult;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void login(String username, String password) {
         // can be launched in a separate asynchronous job
         Result<LoggedInUser> result = loginRepository.login(username, password);

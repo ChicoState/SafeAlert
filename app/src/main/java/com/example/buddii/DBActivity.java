@@ -2,6 +2,7 @@ package com.example.buddii;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -111,22 +112,26 @@ public class DBActivity extends AppCompatActivity {
         //calling this function will compare hash from user DB to new hash
        // String ppppp ="qwerty";
     // TempTexViewVariable2.setText(dbHandler.checkCredentials(ppppp));
+
+        /* GPS TABLE TESTING
         Double lat = 9.99;
         Double longt = 2.22;
-
         dbHandler.addGPS(lat,longt);
+               */
+        // tests loading GPS table
+      // String xxxxxx = DatabaseHandler.LongLat.lat_tt;
+
+
+
+        //dbHandler.tempGetGPS();
+
+        String[] posZeroLatPosOneLong = dbHandler.loadGPS("0");
+        String lat = posZeroLatPosOneLong[0];
+        String longg = posZeroLatPosOneLong[1]; //for testing
+        String resss = lat + "  " + longg; // for testing
+         TempTexViewVariable2.setText(resss);
     }
 
-    /*
-    public String callGetPword()
-    {
-        DatabaseHandler dbHandler = new DatabaseHandler(this);
-        String temp_pword = "";
-        DatabaseHandler.getPword(temp_pword);
-        return temp_pword;
-    }
-
-     */
     public String getUserToDelete(){
         // will get user to delete
         return input1.getText().toString();

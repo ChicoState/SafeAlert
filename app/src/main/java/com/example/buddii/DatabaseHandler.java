@@ -26,6 +26,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -72,6 +73,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private final Context context;
     // for hashing
     String shaPword = "";
+
+    // Gobal variable
     public static String shaPwordToCompare = "";
     public static byte[] salt = null;
 
@@ -83,6 +86,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static double tempcount = 0;
     public static JSONObject jobjForGPS ;
     public static JSONArray arrForGPS = new JSONArray();
+
 
 
 
@@ -119,6 +123,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase My_Database) {
+         String[] tempArr = new String[3];
+        tempArr=loadGPS("0");
+
         //execute prepared commands
         My_Database.execSQL(CREATE_TABLE);
         My_Database.execSQL(CREATE_GPS_TABLE);
@@ -508,7 +515,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         int totalrows= (int) tempTotalrows;
         return totalrows;
     }
-    /* --------------- FOR GPS DATABASE -----------   */
+    /* --------------- FOR ` DATABASE -----------   */
     /*  EXAMPLE OF FUNCTION CALL TO ADD TO GPS DATABASE FROM ANOTHER JAVA FILE (MapsActivity in this case) :
 
         double latitude = 11.12345;
@@ -520,7 +527,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
 
     public void addGPS (Double t_latitude ,Double t_longitude) throws JSONException {
-        Integer userID = (0 );
+        Integer userID = 0;
 
         jobjForGPS  = new JSONObject();;
         jobjForGPS.put("uID",userID);
@@ -539,34 +546,125 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             Map<String, Object> jsonMap = new Gson().fromJson(stringGPSToSend, new TypeToken<HashMap<String, Object>>() {
             }.getType());
             Task<Void> myRef = database.getReference().child("dbgps").updateChildren(jsonMap);
-     
 
     }
+/*
+    public static class LongLat {
 
-    public String loadGPS() {
+        public static String lat_tt;
+        public String Long_tt;
 
-        String result = "";
-        String SelectAll = "SELECT*FROM ";
-        String command = SelectAll + GPS_TABLE;
 
-        SQLiteDatabase My_Database = this.getWritableDatabase();
-        Cursor cursor = My_Database.rawQuery(command, null);
-        while (cursor.moveToNext()) {
-            String result0 = cursor.getString(0);
-            String results1 = cursor.getString(1);
-            // concat results
-            result += "Latitude: " + result0 + " Longitude: " + results1 + " " + "\n";
+        public LongLat() {
 
         }
-        System.getProperty("line.separator");
 
-        cursor.close();
-        My_Database.close();
-        // if nothing was appended then TOAST this
-        if (result == "" ) {
-            Toast.makeText(context, "NO LONG OR LAT IN DB", Toast.LENGTH_SHORT).show();
+        public LongLat(String long_tt, String lat_tt) {
+            this.Long_tt = Long_tt;
+            this.lat_tt = lat_tt;
+            Log.d("xxtttLONGtt", long_tt);
         }
-        return result;
+    }
+        private ValueEventListener mPostListener;
+
+
+        public void tempGetGPS(){
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference().child("dbgps").child("gpsdata");
+            ValueEventListener postListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // Get Post object and use the values to update the UI
+                    LongLat longlat = dataSnapshot.getValue(LongLat.class);
+
+                    LongLat longgg = dataSnapshot.getValue(LongLat.class);
+
+                }
+
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Getting Post failed, log a message
+                    Log.w("loadPost:onCancelled", databaseError.toException());
+                    // [START_EXCLUDE]
+
+                    // [END_EXCLUDE]
+                }
+            };
+          //  mPostReference.addValueEventListener(postListener);
+
+
+        }
+
+ */
+public static  String[] posZeroLatPosOneLong = new String[3];
+
+
+
+    public String[] loadGPS(final String passedUID) {
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child("dbgps").child("gpsdata");
+
+        myRef.addChildEventListener(new ChildEventListener() {
+
+
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+
+                String key = dataSnapshot.getKey();
+                Integer uID = dataSnapshot.child("uID").getValue(Integer.class);
+                Double d1 = (Double) dataSnapshot.child("latitude").getValue();
+                Double d2 = (Double) dataSnapshot.child("longitude").getValue();
+
+                String converted_Lat =String.valueOf(d1);
+                String converted_Long = String.valueOf(d2);
+
+               String converted_UID = String.valueOf(uID);
+                Log.d("xx---LATB4",converted_Lat);
+                Log.d("xx---LONGB4",converted_Long);
+               // Log.d("xxx-----",key);
+                Log.d("xx:::::::::" ,  passedUID);
+                Log.d("xx:::" ,  converted_UID);
+                if(passedUID.equals(converted_UID)){
+                  //  Log.d("xx:::IN" , "WE IN");
+                    Log.d("xx---LATINN",converted_Lat);
+                    Log.d("xx---LONINN",converted_Long);
+                    posZeroLatPosOneLong[0]= converted_Lat;
+                    posZeroLatPosOneLong[1]= converted_Long;
+
+                }
+
+
+            } //end of loop
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+       // Log.d("xxLatAFTERxx",posZeroLatPosOneLong[0]);
+       // Log.d("xxLongAFTERxx", posZeroLatPosOneLong[1]);
+        return posZeroLatPosOneLong;
     }
 
     //
@@ -729,14 +827,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
         Log.d("xxxfffff","IN GETPWORD");
-        // need to retrive password from SQLITE WHERE NAME matches
-       /*SQLiteDatabase My_Database0 = this.getReadableDatabase();
-
-        Cursor c = My_Database0.rawQuery("SELECT * FROM USERS_TABLE where user_name = " + " '" + userNameFromLogIn + "'", null);
-        String Uid0 = c.getString(0);
-        Log.d("xxxUCURSORUID",Uid0);
-
-        */
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child("usersdb").child("users").child("data");
 
@@ -801,12 +891,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         });
         Log.d("xxxfffff","IN AfetrPWORD");
         Log.d("xxxpChecnPword2",passwordStoredToCheck);
-
-
-
-        // dealut pword from LAST log in user IS  shaPwordToCompare
-        // dealut SALT from LAST log in user IS salt
-
 
 
         String passwordStoredToCheck0 = shaPwordToCompare;

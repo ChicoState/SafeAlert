@@ -96,8 +96,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         this.context = context;
     }
 
-
-
     @Override
     public void onCreate(SQLiteDatabase My_Database) {
         //execute prepared commands
@@ -117,9 +115,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         My_Database.execSQL(DROP_TABLE);
         onCreate(My_Database);
     }
-
-
-
     // Values passed on from MainActivity,JAVA
     //values here will be placed into the USERS TABLE
 
@@ -171,7 +166,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         } else {
             Toast.makeText(context, "Insertion Successful", Toast.LENGTH_LONG).show();
         }
+
         My_Database.close();
+
     }
 
 

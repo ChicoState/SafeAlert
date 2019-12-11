@@ -17,6 +17,8 @@
     <string name="search">Search</string>
     <string name="report">Report</string>
     <string name="enter">Enter</string>
+    <string name="sms_message">SMS Message</string>
+
 
 
     <!-- Preference Titles -->
@@ -143,4 +145,13 @@
     <string name="title_activity_scroll_map_user">ScrollMapUser</string>
     <string name="enter_destination">Enter Destination</string>
     <string name="chat_bubble">Chat Bubble</string>
+
+    <string name="send_a_message">Send a message</string>
+
+    <!-- Testing Purposes -->
+    <string name="test_name">Jane Doe</string>
+    <string name="test_age">25</string>
+    <string name="test_city">Chico</string>
+    <string name="test_rank">Score: 10</string>
+
 </resources>

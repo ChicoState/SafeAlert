@@ -80,6 +80,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static String loggedInUserUniqueID = " ";
     public static String passwordStoredToCheck = "";
     public static byte[] salt5 = null;
+    public static double tempcount = 0;
+    public static JSONObject jobjForGPS ;
+    public static JSONArray arrForGPS = new JSONArray();
 
 
 
@@ -134,8 +137,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         onCreate(My_Database);
     }
 
-
-
     // Values passed on from MainActivity,JAVA
     //values here will be placed into the USERS TABLE
 
@@ -150,10 +151,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
 
         Cursor c = My_Database.rawQuery("SELECT * FROM USERS_TABLE where user_name = " + " '" + name + "'", null);
-
+    // set flag condition here so wont taoast so much
         if(c.getCount()>0 )
         {
-            Toast.makeText(context, "USER ALREADY EXITS", Toast.LENGTH_LONG).show();
+           // Toast.makeText(context, "USER ALREADY EXITS", Toast.LENGTH_LONG).show();
             return;
         }
         else
@@ -208,7 +209,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             // sending to ONLINE firebase DB
             FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-            String jsonString; //set to json string
+
             Map<String, Object> jsonMap = new Gson().fromJson(Jsonxx, new TypeToken<HashMap<String, Object>>() {
             }.getType());
             Task<Void> myRef = database.getReference().child("usersdb").child("users").updateChildren(jsonMap);
@@ -518,22 +519,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
      */
 
-    public void addGPS (Double Alatitude ,Double Alongitude)
-    {
-        SQLiteDatabase My_Database = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DatabaseHandler.LONGITUTDE,Alongitude );
-        values.put(DatabaseHandler.LATITUDE, Alatitude);
+    public void addGPS (Double t_latitude ,Double t_longitude) throws JSONException {
+        Integer userID = (0 );
 
-        long status = My_Database.insert(GPS_TABLE, null, values);
+        jobjForGPS  = new JSONObject();;
+        jobjForGPS.put("uID",userID);
+        jobjForGPS.put("latitude",t_latitude );
+        jobjForGPS.put("longitude",t_longitude );
+        arrForGPS.put(jobjForGPS);
 
-        if (status <= 0) {
-            //TOAST ...ITS A CELEBRATION
-            Toast.makeText(context, "Insertion Unsuccessful", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Insertion Successful", Toast.LENGTH_SHORT).show();
-        }
-        My_Database.close();
+        jobjForGPS = new JSONObject();
+        jobjForGPS.put("gpsdata", arrForGPS);
+
+        String stringGPSToSend = jobjForGPS.toString();
+
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+            Map<String, Object> jsonMap = new Gson().fromJson(stringGPSToSend, new TypeToken<HashMap<String, Object>>() {
+            }.getType());
+            Task<Void> myRef = database.getReference().child("dbgps").updateChildren(jsonMap);
+     
 
     }
 

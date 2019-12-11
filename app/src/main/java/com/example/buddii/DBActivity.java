@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONException;
+
 public class DBActivity extends AppCompatActivity {
     EditText input1,input2,input3,input4;
     String data1,data2,data3,data4, deleteUser;
@@ -74,7 +76,7 @@ public class DBActivity extends AppCompatActivity {
 
     // This function is for testing the DB
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void loadUser(View view) {
+    public void loadUser(View view) throws JSONException {
         DatabaseHandler dbHandler = new DatabaseHandler(this);
         int numOfBuddies = dbHandler.getNumOfUsers();
         //If database is empty return , othewise will crash app
@@ -109,6 +111,10 @@ public class DBActivity extends AppCompatActivity {
         //calling this function will compare hash from user DB to new hash
        // String ppppp ="qwerty";
     // TempTexViewVariable2.setText(dbHandler.checkCredentials(ppppp));
+        Double lat = 9.99;
+        Double longt = 2.22;
+
+        dbHandler.addGPS(lat,longt);
     }
 
     /*

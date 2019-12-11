@@ -22,7 +22,6 @@
  *
  */
 package com.example.buddii;
-
 import android.app.PendingIntent;
 import android.content.pm.PackageManager;
 import android.Manifest;
@@ -30,10 +29,8 @@ import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -45,7 +42,6 @@ import androidx.core.app.ActivityCompat;
  * - Receive SMS messages and display them in a toast.
  */
 public class SMS_Activity extends AppCompatActivity {
-
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 1;
     /**
      * Creates the activity, sets the view, and checks for SMS permission.
@@ -91,7 +87,7 @@ public class SMS_Activity extends AppCompatActivity {
                 } else {
                     // Permission denied.
                     Log.d(TAG, getString(R.string.failure_permission));
-                    Toast.makeText(MainActivity.this, getString(R.string.failure_permission), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(MainActivity.this, getString(R.string.failure_permission), Toast.LENGTH_SHORT).show();
                     // Disable the message button.
                     //disableSMSButton();
                 }
@@ -100,11 +96,10 @@ public class SMS_Activity extends AppCompatActivity {
     }
 
     /**
-     * Makes the call button (phone_icon) invisible so that it can't be used,
-     * and makes the Retry button visible.
-     */
-
-     /*private void disableSMSButton() {
+     * DISABLE SMS BUTTON
+     * Makes the SMS button (phone_icon) invisible so that it can't be used,
+     * and makes the Retry button visible
+        private void disableSMSButton() {
         Toast.makeText(this, R.string.phone_disabled, Toast.LENGTH_LONG).show();
         ImageButton callButton = (ImageButton) findViewById(R.id.message_icon);
         callButton.setVisibility(View.INVISIBLE);
@@ -112,21 +107,23 @@ public class SMS_Activity extends AppCompatActivity {
             Button retryButton = (Button) findViewById(R.id.button_retry);
             retryButton.setVisibility(View.VISIBLE);
         }
-       }*/
+     *}
+     * */
 
     /**
+     * ENABLE SMS_Button
      * Makes the call button (phone_icon) visible so that it can be used.
      */
     private void enableSMSButton() {
-        ImageButton callButton = (ImageButton) findViewById(R.id.message_icon);
+        Button callButton = (Button) findViewById(R.id.message_button);
         callButton.setVisibility(View.VISIBLE);
     }
 
     /**
-     * Enables the call button, and sends an intent to start the activity.
+     * RETRY SMS
+     * Enables the SMS/Chat button, and sends an intent to start the activity.
      *
      * @param view View (Retry button) that was clicked.
-
     public void retryApp(View view) {
         enableSMSButton();
         Intent intent = getPackageManager().getLaunchIntentForPackage(getPackageName());
@@ -134,8 +131,8 @@ public class SMS_Activity extends AppCompatActivity {
     }
     */
 
-
     /**
+     * SEND SMS MESSAGE
      * Defines a string (destinationAddress) for the phone number
      * and gets the input text for the SMS message.
      * Uses SmsManager.sendTextMessage to send the message.
@@ -145,14 +142,10 @@ public class SMS_Activity extends AppCompatActivity {
      */
     public void smsSendMessage(View view) {
         // Set the destination phone number to contact's phone number
-        // String destinationAddress = editText.getText().toString();
-        String destinationAddress = editText.getText().toString();
-
-        // Find the sms_message view.
-        //EditText smsEditText = findViewById(R.id.sms_message);
-
+        // Using a test number generated for app testing
+        String destinationAddress = "7603328855";
+        // Predetermined SMS Message to send to the Buddii Guard
         String smsMessage = "Buddi has requested you as her Buddii Guard";
-
         // Set the service center address if needed, otherwise null.
         String scAddress = null;
         // Set pending intents to broadcast
@@ -160,7 +153,7 @@ public class SMS_Activity extends AppCompatActivity {
         PendingIntent sentIntent = null, deliveryIntent = null;
         // Check for permission first.
         checkForSmsPermission();
-        // Use SmsManager.
+        // Use SmsManager
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(destinationAddress, scAddress, smsMessage, sentIntent, deliveryIntent);
     }

@@ -1,14 +1,19 @@
 package com.example.buddii;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+
+
 
 
 public class DBActivity extends AppCompatActivity {
@@ -17,10 +22,17 @@ public class DBActivity extends AppCompatActivity {
     Button SubmitBUTTON;
     TextView Tx1,Tx2,Tx3,Tx4, TempTexViewVariable2;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DatabaseHandler dbHandler = new DatabaseHandler(this);
+
+        int numOfBuddies = dbHandler.getNumOfUsers();
+        //If database is empty return , othewise will crash app
+        if (numOfBuddies == 0){
+            // dbHandler.insertDefaultUser();
+        }
+
 
         // LOAD USERS INPUT BY ID INTO USER VARIABLE
         setContentView(R.layout.database_activity);
@@ -34,6 +46,7 @@ public class DBActivity extends AppCompatActivity {
 
         SubmitBUTTON=(Button)findViewById(R.id.b1);
         SubmitBUTTON.setOnClickListener(new View.OnClickListener() { // In other words , do this after click
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             // WHEN CLICKED SUBMIT , PASS THESE VALUES
             public void onClick(View view) {
@@ -44,7 +57,11 @@ public class DBActivity extends AppCompatActivity {
                 data4=input4.getText().toString();
                 //THEN PASS
                 DatabaseHandler handler=new DatabaseHandler(DBActivity.this);
-                handler.addToDb(data1,data2,data3,data4);
+                try {
+                    handler.addToDb(data1,data2,data3,data4);
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
                 // NEED TO CLEAR OUT THE TABLE AFTER SUBMIT WAS PRESSED
                 input1.setText("");
                 input2.setText("");
@@ -63,14 +80,19 @@ public class DBActivity extends AppCompatActivity {
         // CALL LOADEMP .. THEN DELETE
         handler.deleteUser(deleteUser);}
 
-        // This function is fpr testing the DB
-     public void loadUser(View view)
-    {   //propriatary DBhandle
+    // This function is for testing the DB
+    public void loadUser(View view) throws NoSuchAlgorithmException {   //propriatary DBhandle
         DatabaseHandler dbHandler = new DatabaseHandler(this);
+        int numOfBuddies = dbHandler.getNumOfUsers();
+        //If database is empty return , othewise will crash app
+        if (numOfBuddies == 0){
+            return;
+        }
 
         String ArrayOfBuddies[];
         String results = "";
-        int numOfBuddies = dbHandler.getNumOfUsers();
+
+        // by default load these attributes
         ArrayOfBuddies=(dbHandler.loadUsers("Uid,email,name,phoneNumber"));
 
         for (int i = 0 ; i < numOfBuddies; i++) {
@@ -79,16 +101,27 @@ public class DBActivity extends AppCompatActivity {
             if (i == (numOfBuddies- 1))
             {
                 Tx1.setText(results);
-
             }
         }
 
-        TempTexViewVariable2.setText(dbHandler.loadGPS());
-   }
+        // TempTexViewVariable2.setText(dbHandler.loadGPS());
+        // send to online and myTempson go together
+        dbHandler.sendtoOnlineDB();
+        TempTexViewVariable2.setText(dbHandler.mytempJSONreturnFunc());
 
+        // temporary call to populate / remove ACTIVE_BUDDII_TABLE
+        //dbHandler.addToActiveBuddiTable();
+       //dbHandler.removeFromActiveBuddiTable();
+       dbHandler.addRating(3.0);
+        //calling this function will compare hash from user DB to new hash
+      //TempTexViewVariable2.setText(dbHandler.checkCredentials());
+    }
     public String getUserToDelete(){
+        // will get user to delete
         return input1.getText().toString();
     };
+
+
 
 }
 

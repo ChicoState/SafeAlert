@@ -54,6 +54,16 @@
             app:cornerRadius="20dp"
             app:iconPadding="10dp" />
 
+        <Button
+            android:id="@+id/add_friend_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/add_friend_button"
+            app:backgroundTint="#1B71DE"
+            app:cornerRadius="20dp"
+            app:iconPadding="10dp" />
+
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"

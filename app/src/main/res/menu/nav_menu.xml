@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <group>
         <item
-            android:id="@+id/nav_profile"
-            android:title="@string/bud_profile_pic" />
+            android:id="@+id/nav_home"
+            android:title="@string/nav_home" />
         <item
             android:id="@+id/nav_map"
-            android:title="@string/test_name" />
+            android:title="@string/nav_map" />
         <item
-            android:id="@+id/nav_buddii"
-            android:title="@string/app_name" />
+            android:id="@+id/nav_profile"
+            android:title="@string/nav_profile" />
         <item
             android:id="@+id/nav_settings"
-            android:title="@string/test_age" />
+            android:title="@string/nav_settings" />
+        <item
+            android:id="@+id/nav_sign_out"
+            android:title="@string/nav_sign_out" />
     </group>
 </menu>

@@ -23,9 +23,7 @@
         android:layout_marginLeft="30dp"
         android:layout_toRightOf="@+id/buddiiImage"
         android:text="@string/user_name"
-        android:textSize="17sp"/>
-
-
+        android:textSize="17sp" />
 
 
 </LinearLayout>

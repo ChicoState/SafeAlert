@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void moveToBaB()
     {
-        Intent intent = new Intent (MainActivity.this, select_bud.class);
+        Intent intent = new Intent (MainActivity.this, beABuddy.class);
         startActivity(intent);
     }
 

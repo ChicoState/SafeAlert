@@ -707,6 +707,7 @@ public class ScrollMapUser extends AppCompatActivity
 
         Intent intent = new Intent(ScrollMapUser.this, Freakout.class);
         startActivity(intent);
+        DatabaseHandler dbHandlerAlert = new DatabaseHandler(ScrollMapUser.this);
     }
 
     public static Polyline getPolyline(){

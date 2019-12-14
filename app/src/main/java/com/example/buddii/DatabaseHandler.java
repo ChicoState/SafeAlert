@@ -80,8 +80,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public static JSONObject usersObj ;
     public static JSONArray arr1 = new JSONArray();
-    public static String loggedInUserUniqueID = " ";
-    public static String passwordStoredToCheck = "";
+    public static Integer loggedInUserUniqueID = -1;
+    public static String passwordStoredToCheck = null;
     public static byte[] salt5 = null;
     public static double tempcount = 0;
     public static JSONObject jobjForGPS ;
@@ -124,7 +124,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase My_Database) {
          String[] tempArr = new String[3];
-        tempArr=loadGPS("0");
+        tempArr=loadGPS();
 
         //execute prepared commands
         My_Database.execSQL(CREATE_TABLE);
@@ -527,7 +527,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
      */
 
     public void addGPS (Double t_latitude ,Double t_longitude) throws JSONException {
-        Integer userID = 0;
+        Log.d("xxII", loggedInUserUniqueID.toString());
+        if (loggedInUserUniqueID.equals( -1 ))
+        {
+            return;
+        }
+        Integer userID = loggedInUserUniqueID;
+
+
 
         jobjForGPS  = new JSONObject();;
         jobjForGPS.put("uID",userID);
@@ -548,60 +555,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             Task<Void> myRef = database.getReference().child("dbgps").updateChildren(jsonMap);
 
     }
-/*
-    public static class LongLat {
 
-        public static String lat_tt;
-        public String Long_tt;
-
-
-        public LongLat() {
-
-        }
-
-        public LongLat(String long_tt, String lat_tt) {
-            this.Long_tt = Long_tt;
-            this.lat_tt = lat_tt;
-            Log.d("xxtttLONGtt", long_tt);
-        }
-    }
-        private ValueEventListener mPostListener;
-
-
-        public void tempGetGPS(){
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference myRef = database.getReference().child("dbgps").child("gpsdata");
-            ValueEventListener postListener = new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    // Get Post object and use the values to update the UI
-                    LongLat longlat = dataSnapshot.getValue(LongLat.class);
-
-                    LongLat longgg = dataSnapshot.getValue(LongLat.class);
-
-                }
-
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // Getting Post failed, log a message
-                    Log.w("loadPost:onCancelled", databaseError.toException());
-                    // [START_EXCLUDE]
-
-                    // [END_EXCLUDE]
-                }
-            };
-          //  mPostReference.addValueEventListener(postListener);
-
-
-        }
-
- */
 public static  String[] posZeroLatPosOneLong = new String[3];
 
 
 
-    public String[] loadGPS(final String passedUID) {
+    public String[] loadGPS() {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child("dbgps").child("gpsdata");
@@ -623,13 +582,14 @@ public static  String[] posZeroLatPosOneLong = new String[3];
                 String converted_Lat =String.valueOf(d1);
                 String converted_Long = String.valueOf(d2);
 
-               String converted_UID = String.valueOf(uID);
+
                 Log.d("xx---LATB4",converted_Lat);
                 Log.d("xx---LONGB4",converted_Long);
                // Log.d("xxx-----",key);
-                Log.d("xx:::::::::" ,  passedUID);
-                Log.d("xx:::" ,  converted_UID);
-                if(passedUID.equals(converted_UID)){
+               // Log.d("xx:::::::::" ,  passedUID);
+              //  Log.d("xxxxII:::" ,  converted_UID);
+                Log.d("xxxxIIII",loggedInUserUniqueID.toString());
+                if(loggedInUserUniqueID.equals(uID)){
                   //  Log.d("xx:::IN" , "WE IN");
                     Log.d("xx---LATINN",converted_Lat);
                     Log.d("xx---LONINN",converted_Long);
@@ -650,7 +610,6 @@ public static  String[] posZeroLatPosOneLong = new String[3];
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
             }
-
             @Override
             public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
@@ -852,11 +811,12 @@ public static  String[] posZeroLatPosOneLong = new String[3];
                 Log.d("xxxN----", namex);
                 Log.d("xxxCHKTHSNAM-", userNameFromLogIn);
                 String t_nameFromDB = namex.substring(0);
-
+                Integer c_uID =Integer.parseInt(uID);
 
                 if (t_nameFromDB.equals(userNameFromLogIn)){
                     Log.d("xxx-MATCHCC","THESE MATCH");
 
+                    loggedInUserUniqueID = c_uID;
                     passwordStoredToCheck = pass;
                     Log.d("xxx-SLATFROMFIRE",salt0);
                      salt5 = Base64.getDecoder().decode(salt0);

@@ -113,11 +113,10 @@ public class DBActivity extends AppCompatActivity {
        // String ppppp ="qwerty";
     // TempTexViewVariable2.setText(dbHandler.checkCredentials(ppppp));
 
-        /* GPS TABLE TESTING
-        Double lat = 9.99;
+        Double lat2 = 3.33;
         Double longt = 2.22;
-        dbHandler.addGPS(lat,longt);
-               */
+        dbHandler.addGPS(lat2,longt);
+
         // tests loading GPS table
       // String xxxxxx = DatabaseHandler.LongLat.lat_tt;
 
@@ -125,7 +124,7 @@ public class DBActivity extends AppCompatActivity {
 
         //dbHandler.tempGetGPS();
 
-        String[] posZeroLatPosOneLong = dbHandler.loadGPS("0");
+        String[] posZeroLatPosOneLong = dbHandler.loadGPS();
         String lat = posZeroLatPosOneLong[0];
         String longg = posZeroLatPosOneLong[1]; //for testing
         String resss = lat + "  " + longg; // for testing

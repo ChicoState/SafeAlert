@@ -26,10 +26,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.buddii.DBActivity;
 import com.example.buddii.DatabaseHandler;
 import com.example.buddii.MainActivity;
-import com.example.buddii.Map.BuddiiView.ScrollMapBuddii;
-import com.example.buddii.Map.UserView.ScrollMapUser;
 import com.example.buddii.R;
-import com.example.buddii.data.LoginDataSource;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -50,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
 
         String checkCred = handler.getPword("<>","<>");
         setContentView(R.layout.activity_login_buddii);
-       // intialDBSYNC();
+        // intialDBSYNC();
 
 
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
@@ -148,7 +145,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent (LoginActivity.this, DBActivity.class);
-             //   intialDBSYNC();
+                //   intialDBSYNC();
                 startActivity(intent);
             }
         });
@@ -186,8 +183,8 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    public void circumvent(View view) {
-        Intent intent = new Intent(LoginActivity.this, ScrollMapUser.class);
+    public void moveToHome(View view) {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         startActivity(intent);
     }
 }

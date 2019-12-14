@@ -45,7 +45,7 @@
             android:name=".Map.BuddiiView.ScrollMapBuddii"
             android:label="@string/title_activity_scroll_map"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".findingSafestRouteActivity" />
+        <activity android:name=".Map.findingSafestRouteActivity" />
         <activity android:name=".beingABuddyActivity" />
         <activity android:name=".AboutUsActivity" />
         <activity android:name=".TutorialActivity" />

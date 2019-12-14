@@ -24,11 +24,12 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="110dp "
             android:layout_gravity="center"
             android:adjustViewBounds="false"
             android:contentDescription="TODO"
-            tools:srcCompat="@tools:sample/avatars[0]" />
+            android:visibility="visible"
+            android:src="@drawable/profile" />
 
         <TextView
             android:id="@+id/textView_Name"
@@ -39,7 +40,7 @@
             android:lineSpacingExtra="8sp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="Jane Doe"
+            android:text="Eric Beeriokart"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textSize="24sp"
             android:textStyle="bold" />

@@ -1,18 +1,15 @@
 package com.example.buddii.data;
 
-import com.example.buddii.DBActivity;
-import com.example.buddii.DatabaseHandler;
-import com.example.buddii.data.model.LoggedInUser;
-import java.security.NoSuchAlgorithmException;
-
-import java.io.IOException;
-import java.lang.Exception;
-
 import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.buddii.DatabaseHandler;
+import com.example.buddii.data.model.LoggedInUser;
+
+import java.io.IOException;
 
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.
@@ -29,7 +26,7 @@ public class LoginDataSource extends AppCompatActivity {
 
 
         String checkCred = handler.getPword(password,username);
-      //Log.d("xxxLogINpwordRTN", checkCred);
+        //Log.d("xxxLogINpwordRTN", checkCred);
 
         try {
 
@@ -37,9 +34,9 @@ public class LoginDataSource extends AppCompatActivity {
 
 
             if( checkCred.equals("true")) {
-               //will sey UID for logged in user
+                //will sey UID for logged in user
                 // handler.setLoggedInUser(username);
-                 LoggedInUser fakeUser =
+                LoggedInUser fakeUser =
                         new LoggedInUser(
                                 java.util.UUID.randomUUID().toString(),
                                 "Jane Doe");

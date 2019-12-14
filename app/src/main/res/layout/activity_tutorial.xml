@@ -26,26 +26,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="174dp"
-        tools:ignore="MissingConstraints" />
-        android:id="@+id/beinB"
-        android:layout_width="250dp"
-        android:layout_height="78dp"
-        android:layout_marginBottom="80dp"
-        android:text="Being A Buddy"
-        app:layout_constraintBottom_toTopOf="@+id/fndnR"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/fndnR"
-        android:layout_width="250dp"
-        android:layout_height="78dp"
-        android:layout_marginBottom="192dp"
-        android:text="Finding The Safe Route"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        tools:layout_editor_absoluteY="174dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

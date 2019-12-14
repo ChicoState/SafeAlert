@@ -1,8 +1,10 @@
-package com.example.buddii;
+package com.example.buddii.Map;
+
+import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
+import com.example.buddii.R;
 
 public class findingSafestRouteActivity extends AppCompatActivity {
 

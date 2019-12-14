@@ -16,14 +16,26 @@ import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
+
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 // SQLITE set up to handle DATABASE
 public class DatabaseHandler extends SQLiteOpenHelper {
@@ -59,9 +71,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private final Context context;
     // for hashing
     String shaPword = "";
-    String shaPword2 = "";
-   public static String shaPwordToCompare = "";
-   public static byte[] salt = null;
+
+    // Gobal variable
+    public static String shaPwordToCompare = "";
+    public static byte[] salt = null;
+
+    public static JSONObject usersObj ;
+    public static JSONArray arr1 = new JSONArray();
+    public static String loggedInUserUniqueID = " ";
+    public static String passwordStoredToCheck = "";
+    public static byte[] salt5 = null;
+    public static double tempcount = 0;
+    public static JSONObject jobjForGPS ;
+    public static JSONArray arrForGPS = new JSONArray();
+
 
 
 
@@ -70,14 +93,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Basically a concatination of SQL COMMANDS
 
     private String CREATE_TABLE = "CREATE TABLE " + NAME_OF_USERS_TABLE + "( Uid INTEGER primary key autoincrement," + USER_PHONE + " PlaceHolder," +
-            USER_NAME + " PlaceHolder," + USER_EMAIL + " PlaceHolder," + USER_PASSWORD + " PlaceHolder ," + USER_RATINGS+ "," + USER_SALT +  ")";
+            USER_NAME + " PlaceHolder," + USER_EMAIL + " PlaceHolder," + USER_PASSWORD + " PlaceHolder ," + USER_RATINGS+ "," + USER_SALT + ","+ USER_FLAG +  ")";
 
     private String CREATE_FRIENDS_TABLE = "CREATE TABLE " + NAME_OF_FRIENDS_TABLE + "( Uid INTEGER)";
     private String CREATE_ACTIVE_BUDDII_TABLE = "CREATE TABLE " + NAME_OF_ACTIVE_BUDDI_TABLE + "( Uid INTEGER)";
     private String CREATE_FLAG_TABLE = "CREATE TABLE " + NAME_OF_FLAG_TABLE + "( Uid INTEGER)";
 
 
-    private String CREATE_GPS_TABLE = "CREATE TABLE " + GPS_TABLE + "(" + LATITUDE + " PlaceHolder," +
+    private String CREATE_GPS_TABLE = "CREATE TABLE " + GPS_TABLE + "( Uid INTEGER primary key autoincrement," + LATITUDE + " PlaceHolder," +
             LONGITUTDE + " PlaceHolder"  + ")";
 
     //Will Replace table if exist ( replace USER)
@@ -98,12 +121,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase My_Database) {
+        String[] tempArr = new String[3];
+        tempArr=loadGPS("0");
+
         //execute prepared commands
         My_Database.execSQL(CREATE_TABLE);
         My_Database.execSQL(CREATE_GPS_TABLE);
         My_Database.execSQL(CREATE_FRIENDS_TABLE);
         My_Database.execSQL(CREATE_ACTIVE_BUDDII_TABLE);
-        My_Database.execSQL(CREATE_FLAG_TABLE);
+        // My_Database.execSQL(CREATE_FLAG_TABLE);
 
         // testing of dynamic colums
         My_Database.execSQL(INSERT_DYNAMIC_TABLE);
@@ -115,28 +141,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         My_Database.execSQL(DROP_TABLE);
         onCreate(My_Database);
     }
+
     // Values passed on from MainActivity,JAVA
     //values here will be placed into the USERS TABLE
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void addToDb(String userphone, String name, String email, String password)  {
-         salt = hashSha512.getSalt();
+    public void addToDb(String userphone, String name, String email, String password, String salt0 ,Boolean flag)  {
+        salt = hashSha512.getSalt();
+
+        // temp flag
+        String flagForUser = "none";
 
         SQLiteDatabase My_Database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        /*
-        String query = "SELECT user_name FROM USER_TABLE WHERE user_name = " + name;
-
-        Cursor  cursor = My_Database.rawQuery(query,null);
-
-        if (cursor != null) {
-            cursor.moveToFirst();
+        Cursor c = My_Database.rawQuery("SELECT * FROM USERS_TABLE where user_name = " + " '" + name + "'", null);
+        // set flag condition here so wont taoast so much
+        if(c.getCount()>0 )
+        {
+            // Toast.makeText(context, "USER ALREADY EXITS", Toast.LENGTH_LONG).show();
+            return;
         }
-
-
-         */
-
+        else
+        {   // on initial SYNC THIS KEEPS showinf UP
+            //  Toast.makeText(context, "WELCOME", Toast.LENGTH_LONG).show();
+        }
 
         values.put(DatabaseHandler.USER_PHONE, userphone);
         values.put(DatabaseHandler.USER_NAME, name);
@@ -144,9 +173,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //password will be sent to function and hashed
 
 
-         shaPword = hashSha512.hashPaswordSHA512(password,salt);
-         //prep for storing
-         shaPwordToCompare = shaPword.substring(0,128);
+        shaPword = hashSha512.hashPaswordSHA512(password,salt);
+        //prep for storing
+        shaPwordToCompare = shaPword.substring(0,128);
 
 
         values.put(DatabaseHandler.USER_PASSWORD, shaPword);
@@ -156,20 +185,229 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         String byteSaltToString = Base64.getEncoder().encodeToString(salt);
         values.put(DatabaseHandler.USER_SALT, byteSaltToString);
+        values.put(DatabaseHandler.USER_FLAG, flagForUser);
 
 
         long status = My_Database.insert(NAME_OF_USERS_TABLE, null, values);
 
+
+
         if (status <= 0) {
-            //TOAST ...ITS A CELEBRATION
-            Toast.makeText(context, "Insertion Unsuccessful", Toast.LENGTH_LONG).show();
+
+            Toast.makeText(context, "Insertion Unsuccessful", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(context, "Insertion Successful", Toast.LENGTH_LONG).show();
+            //         TOAST INSERTION KEEP POPING UP ON INITIAL DB SYNC
+            //  Toast.makeText(context, "Insertion Successful", Toast.LENGTH_LONG).show();
         }
 
-        My_Database.close();
+
+
+        // My_Database.close();
+        //  c.close();
+
+        // this flag will indicated that the function is being called from the register page
+        // and not from the initial sync from log in ( removes repetative inserts)
+        if (flag == false) {
+            setLocalDBToJSON();
+            String Jsonxx = mytempJSONreturnFunc();
+            //Log.d("xxx",Jsonxx);
+            // sending to ONLINE firebase DB
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+
+            Map<String, Object> jsonMap = new Gson().fromJson(Jsonxx, new TypeToken<HashMap<String, Object>>() {
+            }.getType());
+            Task<Void> myRef = database.getReference().child("usersdb").child("users").updateChildren(jsonMap);
+        }
+    }
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public String checkFireBaseDBForUsers(){
+        String jsonToSend = "nothing";
+        Log.d("xxxFromRTV", "InFRomCHKFireBase");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child("usersdb").child("users").child("data");
+
+        myRef.addChildEventListener(new ChildEventListener() {
+
+
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                String key = dataSnapshot.getKey();
+                //Log.d("xxxxkeyRTTTN",key);
+                String uID = dataSnapshot.child("uID").getValue(String.class);
+                //uID = key;
+                // Log.d("xxxUIDis",uID);
+
+                String email = dataSnapshot.child("user_email").getValue(String.class);
+                if (email == null) {
+                    //     Log.d("xxxxEMAIL","EMAILretuning");
+                    return;
+                }
+                ;
+                String namex = dataSnapshot.child("user_name").getValue(String.class);
+                String pass = dataSnapshot.child("user_pass").getValue(String.class);
+                String phone = dataSnapshot.child("user_phone").getValue(String.class);
+                String salt1 = dataSnapshot.child("user_salt").getValue(String.class);
+
+                Log.d("xxxtEmail", email);
+                //  Log.d("xxxPASSis",pass);
+                Log.d("xxxNAMEis", namex);
+                Log.d("xxxPHONEis", phone);
+                Log.d("xxxSALTis", salt1);
+
+                usersObj = new JSONObject();
+                try {
+
+                    usersObj.put("uID", uID);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    usersObj.put("user_phone", phone);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    usersObj.put("user_name", namex);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    usersObj.put("user_email", email);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    usersObj.put("user_pass", pass);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                /*
+                try {
+                    usersObj.put("user_ratings",);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                */
+
+                try {
+                    usersObj.put("user_salt", salt1);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                //Log.d("xxxUSEROBJ",usersObj.toString());
+                arr1.put(usersObj);
+
+            } //end of loop
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+        usersObj = new JSONObject();
+        try {
+            usersObj.put("data", arr1);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        jsonToSend = usersObj.toString();
+        usersObj=null;
+
+
+        dbSYNC(jsonToSend);
+        //   Log.d("xxNNNNNN",jsonToSend);
+        return jsonToSend;
+
 
     }
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void dbSYNC(String jsonString)  {
+        //  Log.d("xxxBBBBBB",jsonString);
+
+        try {
+            JSONObject jsnobject = new JSONObject(jsonString);
+            JSONArray jsonArray = jsnobject.getJSONArray("data");
+            String id ="";
+            String phone0 ="";
+            String name0 ="";
+            String email0 ="";
+            String pass0 ="";
+            String salt0 ="";
+            for (int i = 0; i < jsonArray.length(); ++i) {
+                JSONObject rec = jsonArray.getJSONObject(i);
+                id = rec.getString("uID");
+                phone0 = rec.getString("user_phone");
+                name0 = rec.getString("user_name");
+                email0 = rec.getString("user_email");
+                pass0 = rec.getString("user_pass");
+                salt0 = rec.getString("user_salt");
+
+    /*
+                Log.d("xxarrListID",id);
+                Log.d("xxarrLione",phone0);
+                Log.d("xxarrListda",name0);
+                Log.d("xxarrLisasd",email0);
+                Log.d("xxarrLssD",pass0);
+                Log.d("xxarrsaase",salt0);
+
+     */
+                // need to set UID correct and check to see if UID is already In DB, no DUplicates
+                addToDb(phone0,name0,email0,pass0,salt0,true);
+
+            } // for
+    /*
+            // if unique id is in DB then return
+            if(chechIfUniqueIdInSqlDB(id) == true){
+                return;
+            }
+            //otherwise send to SQLite DB
+            else {
+
+                addToDb(phone0,name0,email0,pass0,salt0,true);
+            }
+*/
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public boolean chechIfUniqueIdInSqlDB(String uID){
+        //sql query to search for UID
+        return false;
+
+    }
+
+
+
 
 
     // DELETE A USER BY PASSING THE USERS ID
@@ -219,7 +457,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             String name = cursor.getString(2);
             String email = cursor.getString(3);
             String password = cursor.getString(4);
-            String salt = cursor.getString(6);
+            String salt3 = cursor.getString(6);
 
             // for loop will place the order of string according to the order
             // the user request
@@ -241,7 +479,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     arrayOfIndecesHolder[i] = password;
                 }
                 if (requestHolderArray[i].equals("salt")) {
-                    arrayOfIndecesHolder[i] = salt;
+                    arrayOfIndecesHolder[i] = salt3;
                 }
             }
             for (int i = 0 ; i < numOfRequest; i++) {
@@ -275,7 +513,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         int totalrows= (int) tempTotalrows;
         return totalrows;
     }
-    /* --------------- FOR GPS DATABASE -----------   */
+    /* --------------- FOR ` DATABASE -----------   */
     /*  EXAMPLE OF FUNCTION CALL TO ADD TO GPS DATABASE FROM ANOTHER JAVA FILE (MapsActivity in this case) :
 
         double latitude = 11.12345;
@@ -286,49 +524,145 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
      */
 
-    public void addGPS (Double Alatitude ,Double Alongitude)
-    {
-        SQLiteDatabase My_Database = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DatabaseHandler.LONGITUTDE,Alongitude );
-        values.put(DatabaseHandler.LATITUDE, Alatitude);
+    public void addGPS (Double t_latitude ,Double t_longitude) throws JSONException {
+        Integer userID = 0;
 
-        long status = My_Database.insert(GPS_TABLE, null, values);
+        jobjForGPS  = new JSONObject();;
+        jobjForGPS.put("uID",userID);
+        jobjForGPS.put("latitude",t_latitude );
+        jobjForGPS.put("longitude",t_longitude );
+        arrForGPS.put(jobjForGPS);
 
-        if (status <= 0) {
-            //TOAST ...ITS A CELEBRATION
-            Toast.makeText(context, "Insertion Unsuccessful", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Insertion Successful", Toast.LENGTH_SHORT).show();
-        }
-        My_Database.close();
+        jobjForGPS = new JSONObject();
+        jobjForGPS.put("gpsdata", arrForGPS);
+
+        String stringGPSToSend = jobjForGPS.toString();
+
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        Map<String, Object> jsonMap = new Gson().fromJson(stringGPSToSend, new TypeToken<HashMap<String, Object>>() {
+        }.getType());
+        Task<Void> myRef = database.getReference().child("dbgps").updateChildren(jsonMap);
 
     }
+    /*
+        public static class LongLat {
 
-    public String loadGPS() {
+            public static String lat_tt;
+            public String Long_tt;
 
-        String result = "";
-        String SelectAll = "SELECT*FROM ";
-        String command = SelectAll + GPS_TABLE;
 
-        SQLiteDatabase My_Database = this.getWritableDatabase();
-        Cursor cursor = My_Database.rawQuery(command, null);
-        while (cursor.moveToNext()) {
-            String result0 = cursor.getString(0);
-            String results1 = cursor.getString(1);
-            // concat results
-            result += "Latitude: " + result0 + " Longitude: " + results1 + " " + "\n";
+            public LongLat() {
 
+            }
+
+            public LongLat(String long_tt, String lat_tt) {
+                this.Long_tt = Long_tt;
+                this.lat_tt = lat_tt;
+                Log.d("xxtttLONGtt", long_tt);
+            }
         }
-        System.getProperty("line.separator");
+            private ValueEventListener mPostListener;
 
-        cursor.close();
-        My_Database.close();
-        // if nothing was appended then TOAST this
-        if (result == "" ) {
-            Toast.makeText(context, "NO LONG OR LAT IN DB", Toast.LENGTH_SHORT).show();
-        }
-        return result;
+
+            public void tempGetGPS(){
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference().child("dbgps").child("gpsdata");
+                ValueEventListener postListener = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Get Post object and use the values to update the UI
+                        LongLat longlat = dataSnapshot.getValue(LongLat.class);
+
+                        LongLat longgg = dataSnapshot.getValue(LongLat.class);
+
+                    }
+
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Getting Post failed, log a message
+                        Log.w("loadPost:onCancelled", databaseError.toException());
+                        // [START_EXCLUDE]
+
+                        // [END_EXCLUDE]
+                    }
+                };
+              //  mPostReference.addValueEventListener(postListener);
+
+
+            }
+
+     */
+    public static  String[] posZeroLatPosOneLong = new String[3];
+
+
+
+    public String[] loadGPS(final String passedUID) {
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child("dbgps").child("gpsdata");
+
+        myRef.addChildEventListener(new ChildEventListener() {
+
+
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+
+                String key = dataSnapshot.getKey();
+                Integer uID = dataSnapshot.child("uID").getValue(Integer.class);
+                Double d1 = (Double) dataSnapshot.child("latitude").getValue();
+                Double d2 = (Double) dataSnapshot.child("longitude").getValue();
+
+                String converted_Lat =String.valueOf(d1);
+                String converted_Long = String.valueOf(d2);
+
+                String converted_UID = String.valueOf(uID);
+                Log.d("xx---LATB4",converted_Lat);
+                Log.d("xx---LONGB4",converted_Long);
+                // Log.d("xxx-----",key);
+                Log.d("xx:::::::::" ,  passedUID);
+                Log.d("xx:::" ,  converted_UID);
+                if(passedUID.equals(converted_UID)){
+                    //  Log.d("xx:::IN" , "WE IN");
+                    Log.d("xx---LATINN",converted_Lat);
+                    Log.d("xx---LONINN",converted_Long);
+                    posZeroLatPosOneLong[0]= converted_Lat;
+                    posZeroLatPosOneLong[1]= converted_Long;
+
+                }
+
+
+            } //end of loop
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+        // Log.d("xxLatAFTERxx",posZeroLatPosOneLong[0]);
+        // Log.d("xxLongAFTERxx", posZeroLatPosOneLong[1]);
+        return posZeroLatPosOneLong;
     }
 
     //
@@ -336,11 +670,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         if (fromThisDB == "userTable")
         {
-            String selectQuery = "Select * from "+NAME_OF_USERS_TABLE;
+
             SQLiteDatabase My_Database = this.getReadableDatabase();
+            String selectQuery = "Select * from "+NAME_OF_USERS_TABLE;
             Cursor cursor = My_Database.rawQuery(selectQuery, null);
-            cursor.close();
-            My_Database.close();
+            //   cursor.close();
+            //   My_Database.close();
             return cursor;
         }
         if (fromThisDB == "friendsTable")
@@ -349,7 +684,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             SQLiteDatabase My_Database = this.getReadableDatabase();
             Cursor cursor = My_Database.rawQuery(selectQuery, null);
             cursor.close();
-            My_Database.close();
+            //   My_Database.close();
             return cursor;
         }
         else {
@@ -362,7 +697,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     // this function will create a JSON file and prepare it to send to an online DB
-    public void sendtoOnlineDB()  {
+    public void setLocalDBToJSON()  {
 
 
         Cursor cursor = getAllData("userTable");  //cursor hold all your data
@@ -406,6 +741,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            try {
+                jobj.put("user_flag",cursor.getString(7));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             arr.put(jobj);
         }
 
@@ -426,42 +766,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     };
 
 
-    public String checkCredentials(String checkThisPassword,String pwordInDB){
 
-
-        String pwordToHash = checkThisPassword;
-
-
-       // String[] tpassword = loadUsers("user_pass");
-       // String tpassword= getPword();
-
-        //String pass = new String(tpassword[0]);
-
-        String shaPwordToCheck = "";
-
-        shaPwordToCheck = hashSha512.hashPaswordSHA512(pwordToHash, salt);
-
-
-        // for an UNKNOWN reason the strings have to be substrings in order for the
-        // comparisons to work
-        String t_pwordInDB =pwordInDB.substring(0,128);
-        String t_shaPwordToCheck = shaPwordToCheck.substring(0,128);
-
-      //  Log.d("xxxxCCCCCC",t_pwordInDB);
-      //  Log.d("xxxxDDDDDD",t_shaPwordToCheck);
-
-        if (t_pwordInDB.equals(t_shaPwordToCheck))
-        {
-
-            String good = "true";
-            return good;
-        }
-
-         else {
-             String noGood = "false";
-            return noGood;
-        }
-    }
 
     // function to populate ACTIVE BUDDI TABLE by adding the Logged in users UID
     //will be called when be a buddii button is pressed
@@ -471,7 +776,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String curActiveBuddiLoggedIn = "10";
         values.put(DatabaseHandler.USER_UID, curActiveBuddiLoggedIn);
         My_Database.insert(NAME_OF_ACTIVE_BUDDI_TABLE, null, values);
-       return "stuff";
+        return "stuff";
     };
 
     public void removeFromActiveBuddiTable() {
@@ -479,9 +784,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase My_Database = this.getWritableDatabase();
         // delete user record by phone
-         My_Database.delete(NAME_OF_ACTIVE_BUDDI_TABLE, USER_UID + " = ?",
+        My_Database.delete(NAME_OF_ACTIVE_BUDDI_TABLE, USER_UID + " = ?",
                 new String[]{String.valueOf(id)});
-          My_Database.close();
+        My_Database.close();
     }
 
 
@@ -492,7 +797,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         // do all the average calculations here
         String t_Rating =String.valueOf(rating);
-       Integer Uid = 2;
+        Integer Uid = 2;
         values.put("user_ratings",t_Rating);
         My_Database.update(NAME_OF_USERS_TABLE,values,"Uid ="+Uid, null);
         return "stuff";
@@ -501,57 +806,146 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public boolean chechIfAlreadyMemeber(String username)
     {
-
+        /*
         SQLiteDatabase My_Database = this.getWritableDatabase();
-         /*
+
         // delete user record by phone
         My_Database.(NAME_OF_ACTIVE_BUDDI_TABLE, USER_UID + " = ?",
                 new String[]{String.valueOf(username)});
         My_Database.close();
         */
-      return false;
+        return false;
     };
 
 
-                                // qwerty
-    public String getPword(String pwordFromLogIn) {
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public String getPword(String pwordFromLogIn, final String userNameFromLogIn) {
+
+
+
+        Log.d("xxxfffff","IN GETPWORD");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child("usersdb").child("users").child("data");
+
+        myRef.addChildEventListener(new ChildEventListener() {
+
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+
+                String key = dataSnapshot.getKey();
+
+                String uID = dataSnapshot.child("uID").getValue(String.class);
+                String email = dataSnapshot.child("user_email").getValue(String.class);
+                String namex = dataSnapshot.child("user_name").getValue(String.class);
+                String pass = dataSnapshot.child("user_pass").getValue(String.class);
+                String phone = dataSnapshot.child("user_phone").getValue(String.class);
+                String salt0 = dataSnapshot.child("user_salt").getValue(String.class);
+
+                Log.d("xxxN----", uID);
+                Log.d("xxxP-----",pass);
+                Log.d("xxxN----", namex);
+                Log.d("xxxCHKTHSNAM-", userNameFromLogIn);
+                String t_nameFromDB = namex.substring(0);
+
+
+                if (t_nameFromDB.equals(userNameFromLogIn)){
+                    Log.d("xxx-MATCHCC","THESE MATCH");
+
+                    passwordStoredToCheck = pass;
+                    Log.d("xxx-SLATFROMFIRE",salt0);
+                    salt5 = Base64.getDecoder().decode(salt0);
+                    //  salt5 = salt0.getBytes();
+                    String byteSaltToString = Base64.getEncoder().encodeToString(salt5);
+                    Log.d("xxxpSALT2CHECKd",byteSaltToString);
+
+
+                }
 
 
 
 
-        /*
-        SQLiteDatabase My_Database;
-        My_Database = this.getWritableDatabase();
+            } //end of loop
 
-        String result = "";
-        String SelectAll = "SELECT*FROM ";
-        String command = SelectAll + NAME_OF_USERS_TABLE;
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-        Cursor cursor = My_Database.rawQuery(command, null);
-        while (cursor.moveToNext()) {
+            }
 
-            String Uid = cursor.getString(0);
-            String phoneNumber = cursor.getString(1);
-            String name = cursor.getString(2);
-            String email = cursor.getString(3);
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+        Log.d("xxxfffff","IN AfetrPWORD");
 
 
-            String password = cursor.getString(4);
 
-            result= password;
-        }
-        System.getProperty("line.separator");
-        cursor.close();
-        My_Database.close();
+        String passwordStoredToCheck0 = shaPwordToCompare;
 
-        */
-        String password1 = shaPwordToCompare;
-        String checkCred = checkCredentials(pwordFromLogIn, password1);
+        //                                 INPUT PWORD        PWORDFROMFIREBASE  SLATFROMFIREBASE
+        String checkCred = checkCredentials(pwordFromLogIn, passwordStoredToCheck,  salt5);
 
         return checkCred;
     }
 
+    public void setLoggedInUser(String usernameFromLogIn){
+        /*
+        SQLiteDatabase My_Database = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
 
+        Cursor c = My_Database.rawQuery("SELECT Uid FROM USERS_TABLE where user_name = " + " '" + usernameFromLogIn + "'", null);
+        String Uid0 = c.getString(0);
+        Log.d("xxxUCURSORUID",Uid0);
+            */
+
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public String checkCredentials(String checkThisPassword, String pwordInDB, byte[] salt6){
+        if(salt6 == null){
+            Log.d("xxxNULLSALT","saltIsNULL");
+            return "false";
+        }
+
+        String pwordToHash = checkThisPassword;
+
+        String shaPwordToCheck = "";
+        shaPwordToCheck = hashSha512.hashPaswordSHA512(pwordToHash, salt6);
+
+        // for an UNKNOWN reason the strings have to be substrings in order for the
+        // comparisons to work
+        String t_pwordInDB =pwordInDB.substring(0,128);
+        String t_shaPwordToCheck = shaPwordToCheck.substring(0,128);
+
+        Log.d("xxxxCCCCCC",t_pwordInDB);
+        Log.d("xxxxDDDDDD",t_shaPwordToCheck);
+
+        if (t_pwordInDB.equals(t_shaPwordToCheck))
+        {
+
+            String good = "true";
+            return good;
+        }
+
+        else {
+            String noGood = "false";
+            return noGood;
+        }
+    }
 
 
 

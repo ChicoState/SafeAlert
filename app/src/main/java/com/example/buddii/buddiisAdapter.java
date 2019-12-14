@@ -1,6 +1,8 @@
 package com.example.buddii;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,13 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.net.Uri;
-import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.buddii.Map.BuddiiView.ScrollMapBuddii;
+import com.example.buddii.Map.UserView.ScrollMapUser;
 
 import java.util.ArrayList;
 
@@ -58,7 +58,7 @@ public class buddiisAdapter extends RecyclerView.Adapter<buddiisAdapter.ViewHold
         holder.parent.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, ScrollMapBuddii.class);
+                Intent intent = new Intent(mContext, ScrollMapUser.class);
                 //  intent.putExtra("buddiiImage",mbuddiiImages.get(position));
                 intent.putExtra("userBuddii",mbuddiiNames.get(position));
                 mContext.startActivity(intent);

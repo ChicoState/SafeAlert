@@ -17,7 +17,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.media.MediaRecorder;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -34,15 +33,16 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.buddii.DatabaseHandler;
 import com.example.buddii.Freakout;
 import com.example.buddii.Map.DirectionItem;
 import com.example.buddii.Map.DirectionsJSONParser;
 import com.example.buddii.Map.DirectionsRecyclerAdapter;
 import com.example.buddii.Map.GeofenceTransitionsIntentService;
+import com.example.buddii.Map.directionsAdapter;
 import com.example.buddii.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -63,23 +63,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import org.json.JSONObject;
+import org.json.JSONException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.view.View.GONE;
@@ -112,10 +104,10 @@ public class ScrollMapUser extends AppCompatActivity
 
 
     private static final List<PatternItem> PATTERN_POLYLINE_DOTTED = null;
-    private GoogleMap mMap;
+    private static GoogleMap mMap;
     private LatLng mOrigin;
     private LatLng mDestination;
-    private Polyline mPolyline;
+    private static Polyline mPolyline;
     ArrayList<LatLng> mMarkerPoints;
     LinkedList<Geofence> geofenceList = null;
     Location currentLocation;
@@ -123,7 +115,6 @@ public class ScrollMapUser extends AppCompatActivity
     public static Intent makeNotificationIntent(Context applicationContext, String msg) {
         Log.d(TAG, msg);
         return new Intent(applicationContext, ScrollMapUser.class);
-
     }
 
     @Override
@@ -151,28 +142,6 @@ public class ScrollMapUser extends AppCompatActivity
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
-
-    public class LonLat {
-        private double longitude;
-        private double latitude;
-
-        public void setLongitude(double lon) {
-            this.longitude = lon;
-        }
-
-        public void setLatitude(double lat) {
-            this.latitude = lat;
-        }
-
-        public double getLat() {
-            return this.latitude;
-        }
-
-        public double getLon() {
-            return this.longitude;
-        }
-    }
-
 
     private void makeDirections(LatLng pT, LatLng pTF, LatLng pTA) {
         double firstRise, secondRise, firstRun, secondRun;
@@ -214,22 +183,6 @@ public class ScrollMapUser extends AppCompatActivity
         }
     }
 
-    protected void requestMediaPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.RECORD_AUDIO
-        }, REQUEST_PERMISSION_CODE);
-
-    }
-
-    protected boolean checkMediaPermissions() {
-        Toast.makeText(ScrollMapUser.this, "FIRST TEST", Toast.LENGTH_SHORT).show();
-        int write_external_storage_result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        int record_audio_result = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
-        return write_external_storage_result == PackageManager.PERMISSION_DENIED && record_audio_result == PackageManager.PERMISSION_GRANTED;
-
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -241,28 +194,6 @@ public class ScrollMapUser extends AppCompatActivity
                 }
             }
             break;
-        }
-    }
-
-
-
-    private Vector<ScrollMapUser.LonLat> RetrieveLocations() {
-        //put all of the longitudes and latitudes from the database
-        //into a vector of type LonLat defined at the top
-        Vector<ScrollMapUser.LonLat> temp = new Vector<>();
-        return temp;
-    }
-
-    private void setWaypoints(Vector<ScrollMapUser.LonLat> x) {
-
-        for (int i = 0; i < x.size(); i++) {
-            ScrollMapUser.LonLat temp = x.get(i);
-            mMap.addCircle(new CircleOptions().center(new LatLng(temp.getLon(), temp.getLat()))
-                    .radius(20)
-                    .strokePattern(PATTERN_POLYLINE_DOTTED)
-                    .strokeColor(Color.RED)
-                    .fillColor(Color.YELLOW));
-            ;
         }
     }
 
@@ -330,10 +261,8 @@ public class ScrollMapUser extends AppCompatActivity
 
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(curr));
 
-                    //TextView textView = findViewById(R.id.locationUser);
-                    //textView.setText(location.toString());
                 } else {
-                    //Toast.makeText(ScrollMapUser.this, "FUCK YOU", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ScrollMapUser.this, "Location Unknown", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -391,8 +320,6 @@ public class ScrollMapUser extends AppCompatActivity
         mapFragment.getMapAsync((OnMapReadyCallback) this);
         mMarkerPoints = new ArrayList<>();
 
-       // startGeofence();
-
     }
 
     LocationListener locationListenerGPS = new LocationListener() {
@@ -426,11 +353,17 @@ public class ScrollMapUser extends AppCompatActivity
             }
             currLocMovingCircle = mMap.addCircle(circleOptions);
 
+            DatabaseHandler dbHandler = new DatabaseHandler(ScrollMapUser.this);
+            try {
+                dbHandler.addGPS(latitude,longitude);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            //Toast.makeText(ScrollMapUser.this, "onStatusChanged", Toast.LENGTH_SHORT).show();
             SensorManager.getRotationMatrixFromVector(
                     mRotationMatrix, event.values);
             float[] orientation = new float[3];
@@ -480,10 +413,6 @@ public class ScrollMapUser extends AppCompatActivity
 
     }
 
-    protected void onResume() {
-        super.onResume();
-        isLocationEnabled();
-    }
 
     private void isLocationEnabled() {
 
@@ -505,15 +434,161 @@ public class ScrollMapUser extends AppCompatActivity
             AlertDialog alert = alertDialog.create();
             alert.show();
         }
-
     }
 
-    private void setupMediaRecorder() {
-        mediaRecorder = new MediaRecorder();
-        mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-        mediaRecorder.setOutputFile(pathSave);
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) { // Im aware this shit makes no sense right now just bare with me
+
+                // Already two locations
+                if (mMarkerPoints.size() >= 3) {
+                    mMarkerPoints.clear();
+                    mMap.clear();
+                }
+
+                // Adding new item to the ArrayList
+                mMarkerPoints.add(latLng);
+
+                // Creating MarkerOptions
+                MarkerOptions options = new MarkerOptions();
+
+                // Setting the position of the marker
+                options.position(latLng);
+
+                /**
+                 * For the start location, the color of marker is GREEN and
+                 * for the end location, the color of marker is RED.
+                 */
+                if (mMarkerPoints.size() == 1) {
+                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                } else if (mMarkerPoints.size() == 2) {
+                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                } else if (mMarkerPoints.size() == 3) {
+                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
+                } else if (mMarkerPoints.size() >= 4) {
+                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+                }
+
+                // Add new marker to the Google Map Android API V2
+                mMap.addMarker(options);
+
+                // Checks, whether start and end locations are captured
+                if (mMarkerPoints.size() == 2) {
+                    mOrigin = mMarkerPoints.get(0);
+                    mDestination = mMarkerPoints.get(1);
+                    directionsAdapter.drawRoute(mOrigin, mDestination);
+                }
+                if (mMarkerPoints.size() == 3) {
+                    mOrigin = mMarkerPoints.get(1);
+                    mDestination = mMarkerPoints.get(2);
+                    directionsAdapter.drawRoute(mOrigin, mDestination);
+                }
+                if (mMarkerPoints.size() == 4) {
+                    mOrigin = mMarkerPoints.get(2);
+                    mDestination = mMarkerPoints.get(3);
+                    directionsAdapter.drawRoute(mOrigin, mDestination);
+                }
+                if (mMarkerPoints.size() >= 4) {
+                    mOrigin = mMarkerPoints.get(3);
+                    mDestination = mMarkerPoints.get(4);
+                    directionsAdapter.drawRoute(mOrigin, mDestination);
+                }
+
+            }
+
+        });
+
+        setBlueThings(); //Temporary place to put the addition of the blue things before we get a database for them
+
+        mMap.setTrafficEnabled(false);
+        mMap.setMapType(2);
+
+    }
+    public void onMapSearch(View view) {
+        EditText locationSearch = findViewById(R.id.RouteManual);
+        String location = locationSearch.getText().toString();
+        List<Address> addressList = null;
+
+        if (location != null || !location.equals("")) {
+            Geocoder geocoder = new Geocoder(this);
+            try {
+                addressList = geocoder.getFromLocationName(location, 2);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            assert addressList != null;
+            Address address = addressList.get(0);
+            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+
+            mOrigin = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+            mDestination = latLng;
+            directionsAdapter.drawRoute(mOrigin, mDestination);
+        }
+    }
+
+    public void onReport(View view) {
+        EditText locationReport = findViewById(R.id.reportTextUser);
+        String location = locationReport.getText().toString();
+        List<Address> addressList = null;
+
+        if (location != null || !location.equals("")) {
+            Geocoder geocoder = new Geocoder(this);
+            try {
+                addressList = geocoder.getFromLocationName(location, 2);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            assert addressList != null;
+            Address address = addressList.get(0);
+            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+            mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
+            mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+
+            mDestination = latLng;
+
+            if(false) {
+
+                numero++;
+                geofenceList.add(new Geofence.Builder()
+                        // Set the request ID of the geofence. This is a string to identify this
+                        .setRequestId(numero + "")
+
+                        .setCircularRegion(
+                                latLng.latitude,
+                                latLng.longitude,
+                                50
+                        )
+                        .setExpirationDuration(Geofence.NEVER_EXPIRE)
+                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
+                                Geofence.GEOFENCE_TRANSITION_EXIT)
+                        .build());
+
+
+                mGeofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // do something
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // do something
+                            }
+                        });
+            }
+        }
+
     }
 
     public void onHomeClick(View view) {
@@ -527,7 +602,6 @@ public class ScrollMapUser extends AppCompatActivity
         UserTabHome.setVisibility(VISIBLE);
         UserTabReport.setVisibility(GONE);
         UserTabRoute.setVisibility(GONE);
-        //startGeofence();
     }
 
     public void onInfoClick(View view) {
@@ -612,17 +686,6 @@ public class ScrollMapUser extends AppCompatActivity
         UserRoute.setVisibility(VISIBLE);
     }
 
-    public void onCurrLocClick(View view) {
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15));
-    }
-
-    public void onBigAlertEnergyClick(View view) {
-        //Toast.makeText(this, "Oh shit a rat", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(ScrollMapUser.this, Freakout.class);
-        startActivity(intent);
-
-    }
-
     public void onChatClick(View view) {
         UserTabInfo = findViewById(R.id.UserTabInfo);
         UserTabHome = findViewById(R.id.UserTabHome);
@@ -636,348 +699,21 @@ public class ScrollMapUser extends AppCompatActivity
         UserTabInfo.setVisibility(GONE);
     }
 
-    public void onMapSearch(View view) {
-        EditText locationSearch = findViewById(R.id.RouteManual);
-        String location = locationSearch.getText().toString();
-        List<Address> addressList = null;
-
-        if (location != null || !location.equals("")) {
-            Geocoder geocoder = new Geocoder(this);
-            try {
-                addressList = geocoder.getFromLocationName(location, 2);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            assert addressList != null;
-            Address address = addressList.get(0);
-            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
-            mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-
-            mOrigin = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-            mDestination = latLng;
-            drawRoute();
-        }
+    public void onCurrLocClick(View view) {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15));
     }
 
-    public void onReport(View view) {
-        EditText locationReport = findViewById(R.id.reportTextUser);
-        String location = locationReport.getText().toString();
-        List<Address> addressList = null;
+    public void onBigAlertEnergyClick(View view) {
 
-        if (location != null || !location.equals("")) {
-            Geocoder geocoder = new Geocoder(this);
-            try {
-                addressList = geocoder.getFromLocationName(location, 2);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            assert addressList != null;
-            Address address = addressList.get(0);
-            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
-            mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-
-           // mOrigin = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-            mDestination = latLng;
-            //markerForGeofence(latLng);
-
-            if(false) {
-
-                numero++;
-                geofenceList.add(new Geofence.Builder()
-                        // Set the request ID of the geofence. This is a string to identify this
-                        // geofence.
-                        .setRequestId(numero + "")
-
-                        .setCircularRegion(
-                                latLng.latitude,
-                                latLng.longitude,
-                                50
-                        )
-                        .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
-                                Geofence.GEOFENCE_TRANSITION_EXIT)
-                        .build());
-
-
-                mGeofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                // do something
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                // do something
-                            }
-                        });
-            }
-        }
-
-        //mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+        Intent intent = new Intent(ScrollMapUser.this, Freakout.class);
+        startActivity(intent);
     }
 
-
-    public void onCurrLocReport(View view) {
-        //Add location to database and add a geofence onto the map that is at this location;
-        //markerForGeofence(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
+    public static Polyline getPolyline(){
+        return mPolyline;
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        //Chico = new LatLng(39.7285, -121.8375);
-        //mMap.addMarker(new MarkerOptions().position(Chico).title("Marker in Chico"));
-        //mMap.animateCamera(CameraUpdateFactory.zoomTo(25));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(Chico));
-
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) { // Im aware this shit makes no sense right now just bare with me
-
-                // Already two locations
-                if (mMarkerPoints.size() >= 3) {
-                    mMarkerPoints.clear();
-                    mMap.clear();
-                }
-
-                // Adding new item to the ArrayList
-                mMarkerPoints.add(latLng);
-
-                // Creating MarkerOptions
-                MarkerOptions options = new MarkerOptions();
-
-                // Setting the position of the marker
-                options.position(latLng);
-
-                /**
-                 * For the start location, the color of marker is GREEN and
-                 * for the end location, the color of marker is RED.
-                 */
-                if (mMarkerPoints.size() == 1) {
-                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-                } else if (mMarkerPoints.size() == 2) {
-                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-                } else if (mMarkerPoints.size() == 3) {
-                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE));
-                } else if (mMarkerPoints.size() >= 4) {
-                    options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-                }
-
-                // Add new marker to the Google Map Android API V2
-                mMap.addMarker(options);
-
-                // Checks, whether start and end locations are captured
-                if (mMarkerPoints.size() == 2) {
-                    mOrigin = mMarkerPoints.get(0);
-                    mDestination = mMarkerPoints.get(1);
-                    drawRoute();
-                }
-                if (mMarkerPoints.size() == 3) {
-                    mOrigin = mMarkerPoints.get(1);
-                    mDestination = mMarkerPoints.get(2);
-                    drawRoute();
-                }
-                if (mMarkerPoints.size() == 4) {
-                    mOrigin = mMarkerPoints.get(2);
-                    mDestination = mMarkerPoints.get(3);
-                    drawRoute();
-                }
-                if (mMarkerPoints.size() >= 4) {
-                    mOrigin = mMarkerPoints.get(3);
-                    mDestination = mMarkerPoints.get(4);
-                    drawRoute();
-                }
-
-            }
-
-        });
-
-        setWaypoints(RetrieveLocations());
-        setBlueThings(); //Temporary place to put the addition of the blue things before we get a database for them
-
-        mMap.setTrafficEnabled(false);
-        mMap.setMapType(2);
-
+    public static GoogleMap getMap(){
+        return mMap;
     }
-
-    private void drawRoute() {
-
-        // Getting URL to the Google Directions API
-        String url = getDirectionsUrl(mOrigin, mDestination);
-
-        ScrollMapUser.DownloadTask downloadTask = new ScrollMapUser.DownloadTask();
-
-        // Start downloading json data from Google Directions API
-        downloadTask.execute(url);
-    }
-
-    private String getDirectionsUrl(LatLng origin, LatLng dest) {
-
-        String google_maps_key = "AIzaSyB-lVKAaaAgSpzcPmCLUgmbkiIiFzCjpoU";
-
-        // Origin of route
-        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-
-        // Destination of route
-        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-
-        // Key
-        String key = "key=" + google_maps_key;
-
-        // Building the parameters to the web service
-        String parameters = str_origin + "&" + str_dest + "&" + key;
-
-        // Output format
-        String output = "json";
-
-        // Building the url to the web service
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
-
-        return url;
-    }
-
-    private String downloadUrl(String strUrl) throws IOException {
-        String data = "";
-        InputStream iStream = null;
-        HttpURLConnection urlConnection = null;
-        try {
-            URL url = new URL(strUrl);
-
-            // Creating an http connection to communicate with url
-            urlConnection = (HttpURLConnection) url.openConnection();
-
-            // Connecting to url
-            urlConnection.connect();
-
-            // Reading data from url
-            iStream = urlConnection.getInputStream();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
-
-            StringBuffer sb = new StringBuffer();
-
-            String line = "";
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-            }
-
-            data = sb.toString();
-
-            br.close();
-
-        } catch (Exception e) {
-            Log.d("Exception on download", e.toString());
-        } finally {
-            iStream.close();
-            urlConnection.disconnect();
-        }
-        return data;
-    }
-
-    private class DownloadTask extends AsyncTask<String, Void, String> {
-
-        // Downloading data in non-ui thread
-        @Override
-        protected String doInBackground(String... url) {
-
-            // For storing data from web service
-            String data = "";
-
-            try {
-                // Fetching the data from web service
-                data = downloadUrl(url[0]);
-                Log.d("DownloadTask", "DownloadTask : " + data);
-            } catch (Exception e) {
-                Log.d("Background Task", e.toString());
-            }
-            return data;
-        }
-
-        // Executes in UI thread, after the execution of
-        // doInBackground()
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            ScrollMapUser.ParserTask parserTask = new ScrollMapUser.ParserTask();
-
-            // Invokes the thread for parsing the JSON data
-            parserTask.execute(result);
-        }
-    }
-
-    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
-
-        // Parsing the data in non-ui thread
-        @Override
-        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
-
-            JSONObject jObject;
-            List<List<HashMap<String, String>>> routes = null;
-
-            try {
-                jObject = new JSONObject(jsonData[0]);
-                DirectionsJSONParser parser = new DirectionsJSONParser();
-
-                // Starts parsing data
-                routes = parser.parse(jObject);
-                //initRecyclerView(parser.getPoints());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return routes;
-        }
-
-        // Executes in UI thread, after the parsing process
-        @Override
-        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
-            ArrayList<LatLng> points = null;
-            PolylineOptions lineOptions = null;
-
-            // Traversing through all the routes
-            for (int i = 0; i < result.size(); i++) {
-                points = new ArrayList<LatLng>();
-                lineOptions = new PolylineOptions();
-
-                // Fetching i-th route
-                List<HashMap<String, String>> path = result.get(i);
-
-                // Fetching all the points in i-th route
-                for (int j = 0; j < path.size(); j++) {
-                    HashMap<String, String> point = path.get(j);
-
-                    double lat = Double.parseDouble(point.get("lat"));
-                    double lng = Double.parseDouble(point.get("lng"));
-                    LatLng position = new LatLng(lat, lng);
-
-                    points.add(position);
-                }
-
-                // Adding all the points in the route to LineOptions
-                lineOptions.addAll(points);
-                lineOptions.width(8);
-                lineOptions.color(Color.RED);
-            }
-
-            // Drawing polyline in the Google Map for the i-th route
-            if (lineOptions != null) {
-                if (mPolyline != null) {
-                    mPolyline.remove();
-                }
-                mPolyline = mMap.addPolyline(lineOptions);
-
-            } else
-                Toast.makeText(getApplicationContext(), "No route is found", Toast.LENGTH_LONG).show();
-        }
-    }
-
-
 }

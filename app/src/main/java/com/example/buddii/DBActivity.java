@@ -2,7 +2,6 @@ package com.example.buddii;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,7 +25,7 @@ public class DBActivity extends AppCompatActivity {
         final DatabaseHandler dbHandler = new DatabaseHandler(this);
         dbHandler.checkFireBaseDBForUsers();
         int numOfBuddies = dbHandler.getNumOfUsers();
-        //If database is empty return , otherwise will crash app
+        //If database is empty return , othewise will crash app
         if (numOfBuddies == 0){
             // dbHandler.insertDefaultUser();
         }
@@ -56,8 +55,8 @@ public class DBActivity extends AppCompatActivity {
                 data4=input4.getText().toString();
                 //THEN PASS
                 DatabaseHandler handler=new DatabaseHandler(DBActivity.this);
-                 handler.addToDb(data1,data2,data3,data4,"" ,false);
-               //NEED TO CLEAR OUT THE TABLE AFTER SUBMIT WAS PRESSED
+                handler.addToDb(data1,data2,data3,data4,"" ,false);
+                //NEED TO CLEAR OUT THE TABLE AFTER SUBMIT WAS PRESSED
                 input1.setText("");
                 input2.setText("");
                 input3.setText("");
@@ -102,16 +101,16 @@ public class DBActivity extends AppCompatActivity {
 
         // TempTexViewVariable2.setText(dbHandler.loadGPS());
         // send to online and myTempson go together
-       // dbHandler.sendtoOnlineDB();
-       // TempTexViewVariable2.setText(dbHandler.mytempJSONreturnFunc());
+        // dbHandler.sendtoOnlineDB();
+        // TempTexViewVariable2.setText(dbHandler.mytempJSONreturnFunc());
 
         // temporary call to populate / remove ACTIVE_BUDDII_TABLE
         //dbHandler.addToActiveBuddiTable();
-       //dbHandler.removeFromActiveBuddiTable();
-       //dbHandler.addRating(3.0);
+        //dbHandler.removeFromActiveBuddiTable();
+        //dbHandler.addRating(3.0);
         //calling this function will compare hash from user DB to new hash
-       // String ppppp ="qwerty";
-    // TempTexViewVariable2.setText(dbHandler.checkCredentials(ppppp));
+        // String ppppp ="qwerty";
+        // TempTexViewVariable2.setText(dbHandler.checkCredentials(ppppp));
 
         /* GPS TABLE TESTING
         Double lat = 9.99;
@@ -119,7 +118,7 @@ public class DBActivity extends AppCompatActivity {
         dbHandler.addGPS(lat,longt);
                */
         // tests loading GPS table
-      // String xxxxxx = DatabaseHandler.LongLat.lat_tt;
+        // String xxxxxx = DatabaseHandler.LongLat.lat_tt;
 
 
 
@@ -129,7 +128,7 @@ public class DBActivity extends AppCompatActivity {
         String lat = posZeroLatPosOneLong[0];
         String longg = posZeroLatPosOneLong[1]; //for testing
         String resss = lat + "  " + longg; // for testing
-         TempTexViewVariable2.setText(resss);
+        TempTexViewVariable2.setText(resss);
     }
 
     public String getUserToDelete(){

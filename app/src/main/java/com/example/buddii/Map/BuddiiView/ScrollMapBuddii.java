@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.buddii.DatabaseHandler;
 import com.example.buddii.R;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
@@ -224,8 +225,9 @@ public class ScrollMapBuddii extends AppCompatActivity implements OnMapReadyCall
     }
 
     public void onUserLocClick(View view) {
-    //Go to location passed to the database
-
+        DatabaseHandler dbHandler = new DatabaseHandler(ScrollMapBuddii.this);
+        String location[]  = dbHandler.loadGPS("0");
+        mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(location[0]),Double.parseDouble(location[1]))));
     }
 
     private void alertView() {

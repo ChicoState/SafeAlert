@@ -18,17 +18,19 @@ import androidx.appcompat.app.AppCompatActivity;
  * Class that handles authentication w/ login credentials and retrieves user information.
  *
  */
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class LoginDataSource extends AppCompatActivity {
 
     DatabaseHandler handler=new DatabaseHandler(LoginDataSource.this);
-
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public Result<LoggedInUser> login(String username, String password){
 
 
-
+        // real function call
         String checkCred = handler.getPword(password,username);
+       // byte []salt = handler.getPword(password,username);
+
       //Log.d("xxxLogINpwordRTN", checkCred);
 
         try {

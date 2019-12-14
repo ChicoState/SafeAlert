@@ -86,7 +86,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static double tempcount = 0;
     public static JSONObject jobjForGPS ;
     public static JSONArray arrForGPS = new JSONArray();
-
+    public static JSONObject jobjForFlag ;
+    public static JSONArray arrForFlag = new JSONArray();
 
 
 
@@ -526,146 +527,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
      */
 
-    public void addGPS (Double t_latitude ,Double t_longitude) throws JSONException {
-        Integer userID = 0;
-
-        jobjForGPS  = new JSONObject();;
-        jobjForGPS.put("uID",userID);
-        jobjForGPS.put("latitude",t_latitude );
-        jobjForGPS.put("longitude",t_longitude );
-        arrForGPS.put(jobjForGPS);
-
-        jobjForGPS = new JSONObject();
-        jobjForGPS.put("gpsdata", arrForGPS);
-
-        String stringGPSToSend = jobjForGPS.toString();
-
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-            Map<String, Object> jsonMap = new Gson().fromJson(stringGPSToSend, new TypeToken<HashMap<String, Object>>() {
-            }.getType());
-            Task<Void> myRef = database.getReference().child("dbgps").updateChildren(jsonMap);
-
-    }
-/*
-    public static class LongLat {
-
-        public static String lat_tt;
-        public String Long_tt;
-
-
-        public LongLat() {
-
-        }
-
-        public LongLat(String long_tt, String lat_tt) {
-            this.Long_tt = Long_tt;
-            this.lat_tt = lat_tt;
-            Log.d("xxtttLONGtt", long_tt);
-        }
-    }
-        private ValueEventListener mPostListener;
-
-
-        public void tempGetGPS(){
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference myRef = database.getReference().child("dbgps").child("gpsdata");
-            ValueEventListener postListener = new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    // Get Post object and use the values to update the UI
-                    LongLat longlat = dataSnapshot.getValue(LongLat.class);
-
-                    LongLat longgg = dataSnapshot.getValue(LongLat.class);
-
-                }
-
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    // Getting Post failed, log a message
-                    Log.w("loadPost:onCancelled", databaseError.toException());
-                    // [START_EXCLUDE]
-
-                    // [END_EXCLUDE]
-                }
-            };
-          //  mPostReference.addValueEventListener(postListener);
-
-
-        }
-
- */
-public static  String[] posZeroLatPosOneLong = new String[3];
-
-
-
-    public String[] loadGPS(final String passedUID) {
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference().child("dbgps").child("gpsdata");
-
-        myRef.addChildEventListener(new ChildEventListener() {
-
-
-
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-
-                String key = dataSnapshot.getKey();
-                Integer uID = dataSnapshot.child("uID").getValue(Integer.class);
-                Double d1 = (Double) dataSnapshot.child("latitude").getValue();
-                Double d2 = (Double) dataSnapshot.child("longitude").getValue();
-
-                String converted_Lat =String.valueOf(d1);
-                String converted_Long = String.valueOf(d2);
-
-               String converted_UID = String.valueOf(uID);
-                Log.d("xx---LATB4",converted_Lat);
-                Log.d("xx---LONGB4",converted_Long);
-               // Log.d("xxx-----",key);
-                Log.d("xx:::::::::" ,  passedUID);
-                Log.d("xx:::" ,  converted_UID);
-                if(passedUID.equals(converted_UID)){
-                  //  Log.d("xx:::IN" , "WE IN");
-                    Log.d("xx---LATINN",converted_Lat);
-                    Log.d("xx---LONINN",converted_Long);
-                    posZeroLatPosOneLong[0]= converted_Lat;
-                    posZeroLatPosOneLong[1]= converted_Long;
-
-                }
-
-
-            } //end of loop
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-
-        });
-       // Log.d("xxLatAFTERxx",posZeroLatPosOneLong[0]);
-       // Log.d("xxLongAFTERxx", posZeroLatPosOneLong[1]);
-        return posZeroLatPosOneLong;
-    }
 
     //
     public Cursor getAllData(String fromThisDB) {
@@ -942,13 +803,166 @@ public static  String[] posZeroLatPosOneLong = new String[3];
             String good = "true";
             return good;
         }
-
         else {
             String noGood = "false";
             return noGood;
         }
     }
+    public void addGPS (Double t_latitude ,Double t_longitude) throws JSONException {
+        Integer userID = 0;
 
+        jobjForGPS  = new JSONObject();;
+        jobjForGPS.put("uID",userID);
+        jobjForGPS.put("latitude",t_latitude );
+        jobjForGPS.put("longitude",t_longitude );
+        arrForGPS.put(jobjForGPS);
+
+        jobjForGPS = new JSONObject();
+        jobjForGPS.put("gpsdata", arrForGPS);
+
+        String stringGPSToSend = jobjForGPS.toString();
+
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        Map<String, Object> jsonMap = new Gson().fromJson(stringGPSToSend, new TypeToken<HashMap<String, Object>>() {
+        }.getType());
+        Task<Void> myRef = database.getReference().child("dbgps").updateChildren(jsonMap);
+
+    }
+
+    public static  String[] posZeroLatPosOneLong = new String[3];
+    public String[] loadGPS(final String passedUID) {
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child("dbgps").child("gpsdata");
+
+        myRef.addChildEventListener(new ChildEventListener() {
+
+
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+
+                String key = dataSnapshot.getKey();
+                Integer uID = dataSnapshot.child("uID").getValue(Integer.class);
+                Double d1 = (Double) dataSnapshot.child("latitude").getValue();
+                Double d2 = (Double) dataSnapshot.child("longitude").getValue();
+
+                String converted_Lat =String.valueOf(d1);
+                String converted_Long = String.valueOf(d2);
+
+                String converted_UID = String.valueOf(uID);
+                Log.d("xx---LATB4",converted_Lat);
+                Log.d("xx---LONGB4",converted_Long);
+                // Log.d("xxx-----",key);
+                Log.d("xx:::::::::" ,  passedUID);
+                Log.d("xx:::" ,  converted_UID);
+                if(passedUID.equals(converted_UID)){
+                    //  Log.d("xx:::IN" , "WE IN");
+                    Log.d("xx---LATINN",converted_Lat);
+                    Log.d("xx---LONINN",converted_Long);
+                    posZeroLatPosOneLong[0]= converted_Lat;
+                    posZeroLatPosOneLong[1]= converted_Long;
+
+                }
+            } //end of loop
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+
+        return posZeroLatPosOneLong;
+    }
+
+
+    public void sendFlag(String userID,String thisFlag) throws JSONException {
+
+        jobjForFlag  = new JSONObject();;
+        jobjForFlag.put("UID",userID);
+        jobjForFlag.put("Flag",thisFlag );
+         arrForFlag.put(jobjForFlag);
+
+        jobjForFlag = new JSONObject();
+        jobjForFlag.put("flagdata", arrForFlag);
+
+        String stringFLAGToSend = jobjForFlag.toString();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        Map<String, Object> jsonMap = new Gson().fromJson(stringFLAGToSend, new TypeToken<HashMap<String, Object>>() {
+        }.getType());
+        Task<Void> myRef = database.getReference().child("dbflag").updateChildren(jsonMap);
+
+    }
+    public static String flagToRetun ="";
+    public String loadFlag(final String passedUID0){
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child("dbflag").child("flagdata");
+
+        myRef.addChildEventListener(new ChildEventListener() {
+
+
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+
+                String key = dataSnapshot.getKey();
+                String uID = dataSnapshot.child("UID").getValue(String.class);
+                String flag_ = dataSnapshot.child("Flag").getValue(String.class);
+
+                if(passedUID0.equals(uID)){
+                  flagToRetun = flag_;
+                }
+            } //end of loop
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+
+        return flagToRetun;
+
+    }
 
 
 

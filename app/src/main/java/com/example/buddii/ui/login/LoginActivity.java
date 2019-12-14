@@ -33,10 +33,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
 
-
-
-
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,7 +41,9 @@ public class LoginActivity extends AppCompatActivity {
         DatabaseHandler handler=new DatabaseHandler(LoginActivity.this);
         //initialize , first pass always returns NULL
         String[] posZeroLatPosOneLong = handler.loadGPS("0");
+        String intiFlagCall = handler.loadFlag("1");
 
+        //initialize
         String checkCred = handler.getPword("<>","<>");
         setContentView(R.layout.activity_login_buddii);
        // intialDBSYNC();
@@ -135,6 +133,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 loginViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());

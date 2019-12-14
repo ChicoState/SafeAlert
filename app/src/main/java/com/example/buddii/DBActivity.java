@@ -81,7 +81,7 @@ public class DBActivity extends AppCompatActivity {
         DatabaseHandler dbHandler = new DatabaseHandler(this);
         int numOfBuddies = dbHandler.getNumOfUsers();
         //If database is empty return , othewise will crash app
-        if (numOfBuddies == 0){
+        if (numOfBuddies == 0) {
             return;
         }
 
@@ -89,29 +89,28 @@ public class DBActivity extends AppCompatActivity {
         String results = "";
 
         // by default load these attributes
-        ArrayOfBuddies=(dbHandler.loadUsers("Uid,email,name,phoneNumber"));
+        ArrayOfBuddies = (dbHandler.loadUsers("Uid,email,name,phoneNumber"));
 
-        for (int i = 0 ; i < numOfBuddies; i++) {
+        for (int i = 0; i < numOfBuddies; i++) {
 
             results += ArrayOfBuddies[i] + " \n";
-            if (i == (numOfBuddies- 1))
-            {
+            if (i == (numOfBuddies - 1)) {
                 Tx1.setText(results);
             }
         }
 
         // TempTexViewVariable2.setText(dbHandler.loadGPS());
         // send to online and myTempson go together
-       // dbHandler.sendtoOnlineDB();
-       // TempTexViewVariable2.setText(dbHandler.mytempJSONreturnFunc());
+        // dbHandler.sendtoOnlineDB();
+        // TempTexViewVariable2.setText(dbHandler.mytempJSONreturnFunc());
 
         // temporary call to populate / remove ACTIVE_BUDDII_TABLE
         //dbHandler.addToActiveBuddiTable();
-       //dbHandler.removeFromActiveBuddiTable();
-       //dbHandler.addRating(3.0);
+        //dbHandler.removeFromActiveBuddiTable();
+        //dbHandler.addRating(3.0);
         //calling this function will compare hash from user DB to new hash
-       // String ppppp ="qwerty";
-    // TempTexViewVariable2.setText(dbHandler.checkCredentials(ppppp));
+        // String ppppp ="qwerty";
+        // TempTexViewVariable2.setText(dbHandler.checkCredentials(ppppp));
 
         /* GPS TABLE TESTING
         Double lat = 9.99;
@@ -119,23 +118,27 @@ public class DBActivity extends AppCompatActivity {
         dbHandler.addGPS(lat,longt);
                */
         // tests loading GPS table
-      // String xxxxxx = DatabaseHandler.LongLat.lat_tt;
-
+        // String xxxxxx = DatabaseHandler.LongLat.lat_tt;
 
 
         //dbHandler.tempGetGPS();
-
+        /*
         String[] posZeroLatPosOneLong = dbHandler.loadGPS("0");
         String lat = posZeroLatPosOneLong[0];
         String longg = posZeroLatPosOneLong[1]; //for testing
         String resss = lat + "  " + longg; // for testing
          TempTexViewVariable2.setText(resss);
-    }
+         */
 
+
+      //  dbHandler.sendFlag("1", "a");
+        String flagresults=dbHandler.loadFlag("1");
+        TempTexViewVariable2.setText(flagresults);
+    }
     public String getUserToDelete(){
         // will get user to delete
         return input1.getText().toString();
-    };
+    }
 
 
 

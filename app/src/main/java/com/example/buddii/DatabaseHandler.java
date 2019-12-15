@@ -914,8 +914,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public static String friendsUID ="";
-    public static   JSONObject jobjForFriends ;
-    public static JSONArray arrForFriends = new JSONArray();
+
 
     public void addToFriendsTable(final String phoneNumToget){
         SQLiteDatabase My_Database = this.getWritableDatabase();
@@ -1000,35 +999,36 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         long count = DatabaseUtils.queryNumEntries(db, NAME_OF_FRIENDS_TABLE);
         Integer numOfColms = (int)(long)count;
-          JSONObject jobjForFriends ;
+        JSONObject jobjForFriends ;
          JSONArray arrForFriends = new JSONArray();
+
         Cursor cursor = getAllData("friendsTable");  //cursor hold all your data
         while(cursor.moveToNext()) {
         jobjForFriends  = new JSONObject();
         try {
-                if(tempcount==1) {
+                if(tempcount==1 || 1 < tempcount ) {
                    if( (cursor.getString(0)) != null ){
                         jobjForFriends.put("uID", cursor.getString(0));
                    }
                 }
-                if(tempcount==2) {
+                if(tempcount==2 || 2 < tempcount) {
                     if((cursor.getString(1)) != "" ){
                         jobjForFriends.put("friends1", cursor.getString(1));
                     }
                 }
-                if(tempcount==3) {
+                if(tempcount==3 || 3 < tempcount) {
                     jobjForFriends.put("friends2", cursor.getString(2));
                 }
-                if(tempcount==4) {
+                if(tempcount==4 || 4 < tempcount) {
                     jobjForFriends.put("friends3", cursor.getString(3));
                 }
-                 if(tempcount==5) {
+                 if(tempcount==5 || 5 < tempcount) {
                 jobjForFriends.put("friends4", cursor.getString(4));
                  }
-                 if(tempcount==6) {
+                 if(tempcount==6 || 6 < tempcount) {
                      jobjForFriends.put("friends5", cursor.getString(5));
                  }
-                if(tempcount==7) {
+                if(tempcount==7 || 7 < tempcount) {
                     jobjForFriends.put("friends6", cursor.getString(6));
                 }
 

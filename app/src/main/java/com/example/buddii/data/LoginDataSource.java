@@ -26,7 +26,6 @@ public class LoginDataSource extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public Result<LoggedInUser> login(String username, String password){
 
-
         // real function call
         String checkCred = handler.getPword(password,username);
        // byte []salt = handler.getPword(password,username);

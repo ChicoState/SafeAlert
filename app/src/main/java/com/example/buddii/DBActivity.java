@@ -132,8 +132,9 @@ public class DBActivity extends AppCompatActivity {
 
 
       //  dbHandler.sendFlag("1", "a");
-        String flagresults=dbHandler.loadFlag("1");
-        TempTexViewVariable2.setText(flagresults);
+      //  String flagresults=dbHandler.loadFlag("1");
+       // TempTexViewVariable2.setText(flagresults);
+        dbHandler.addToFriendsTable("1234");
     }
     public String getUserToDelete(){
         // will get user to delete

@@ -50,7 +50,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String NAME_OF_USERS_TABLE = "USERS_TABLE";
     private static final  String NAME_OF_FRIENDS_TABLE= "FRIENDS_TABLE";
     private static final String NAME_OF_ACTIVE_BUDDI_TABLE = "ACTIVE_BUDDI_TABLE";
-    private static final String NAME_OF_FLAG_TABLE = "FLAG_TABLE";
 
     // Prepping Users Tables Column names
     private static final String USER_PHONE = "user_phone";
@@ -67,8 +66,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String LONGITUTDE = "longitude";
     private static final String GPS_TABLE = "GPS_TABLE";
     /* GPS DB */
-
-    // temp plz delete
     String jsonString2 ="";
     private final Context context;
     // for hashing
@@ -83,7 +80,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static String loggedInUserUniqueID = " ";
     public static String passwordStoredToCheck = "";
     public static byte[] salt5 = null;
-    public static double tempcount = 0;
+    public static Integer tempcount = 1;
     public static JSONObject jobjForGPS ;
     public static JSONArray arrForGPS = new JSONArray();
     public static JSONObject jobjForFlag ;
@@ -98,22 +95,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private String CREATE_TABLE = "CREATE TABLE " + NAME_OF_USERS_TABLE + "( Uid INTEGER primary key autoincrement," + USER_PHONE + " PlaceHolder," +
             USER_NAME + " PlaceHolder," + USER_EMAIL + " PlaceHolder," + USER_PASSWORD + " PlaceHolder ," + USER_RATINGS+ "," + USER_SALT + ","+ USER_FLAG +  ")";
 
-    private String CREATE_FRIENDS_TABLE = "CREATE TABLE " + NAME_OF_FRIENDS_TABLE + "( Uid INTEGER)";
+    private String CREATE_FRIENDS_TABLE = "CREATE TABLE " + NAME_OF_FRIENDS_TABLE + "( Uid TEXT)";
     private String CREATE_ACTIVE_BUDDII_TABLE = "CREATE TABLE " + NAME_OF_ACTIVE_BUDDI_TABLE + "( Uid INTEGER)";
-    private String CREATE_FLAG_TABLE = "CREATE TABLE " + NAME_OF_FLAG_TABLE + "( Uid INTEGER)";
-
-
-    private String CREATE_GPS_TABLE = "CREATE TABLE " + GPS_TABLE + "( Uid INTEGER primary key autoincrement," + LATITUDE + " PlaceHolder," +
+      private String CREATE_GPS_TABLE = "CREATE TABLE " + GPS_TABLE + "( Uid INTEGER primary key autoincrement," + LATITUDE + " PlaceHolder," +
             LONGITUTDE + " PlaceHolder"  + ")";
 
     //Will Replace table if exist ( replace USER)
     private String DROP_TABLE = "DROP TABLE IF EXISTS " + NAME_OF_USERS_TABLE;
-
-    //testing of insert to dynamic colum
-    String friend_col = "friend1";
-    String friend_col2 = "friend2";
-    private String INSERT_DYNAMIC_TABLE = "ALTER TABLE " + NAME_OF_FRIENDS_TABLE + " ADD COLUMN "+ friend_col +" INT";
-    private String INSERT_DYNAMIC_TABLE2 = "ALTER TABLE " + NAME_OF_FRIENDS_TABLE + " ADD COLUMN "+ friend_col2 +" INT";
 
 
     // Need a Databse HANDLER required
@@ -132,11 +120,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         My_Database.execSQL(CREATE_GPS_TABLE);
         My_Database.execSQL(CREATE_FRIENDS_TABLE);
         My_Database.execSQL(CREATE_ACTIVE_BUDDII_TABLE);
-       // My_Database.execSQL(CREATE_FLAG_TABLE);
 
-        // testing of dynamic colums
-        My_Database.execSQL(INSERT_DYNAMIC_TABLE);
-        My_Database.execSQL(INSERT_DYNAMIC_TABLE2);
     }
 
     @Override
@@ -189,12 +173,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String byteSaltToString = Base64.getEncoder().encodeToString(salt);
         values.put(DatabaseHandler.USER_SALT, byteSaltToString);
         values.put(DatabaseHandler.USER_FLAG, flagForUser);
-
-
         long status = My_Database.insert(NAME_OF_USERS_TABLE, null, values);
-
-
-
         if (status <= 0) {
 
            Toast.makeText(context, "Insertion Unsuccessful", Toast.LENGTH_SHORT).show();
@@ -202,8 +181,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             //         TOAST INSERTION KEEP POPING UP ON INITIAL DB SYNC
           //  Toast.makeText(context, "Insertion Successful", Toast.LENGTH_LONG).show();
         }
-
-
 
        // My_Database.close();
       //  c.close();
@@ -371,30 +348,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                  pass0 = rec.getString("user_pass");
                  salt0 = rec.getString("user_salt");
 
-    /*
-                Log.d("xxarrListID",id);
-                Log.d("xxarrLione",phone0);
-                Log.d("xxarrListda",name0);
-                Log.d("xxarrLisasd",email0);
-                Log.d("xxarrLssD",pass0);
-                Log.d("xxarrsaase",salt0);
-
-     */
                 // need to set UID correct and check to see if UID is already In DB, no DUplicates
                 addToDb(phone0,name0,email0,pass0,salt0,true);
 
             } // for
-    /*
-            // if unique id is in DB then return
-            if(chechIfUniqueIdInSqlDB(id) == true){
-                return;
-            }
-            //otherwise send to SQLite DB
-            else {
 
-                addToDb(phone0,name0,email0,pass0,salt0,true);
-            }
-*/
 
 
         } catch (JSONException e) {
@@ -402,15 +360,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
     }
-
-    public boolean chechIfUniqueIdInSqlDB(String uID){
-    //sql query to search for UID
-        return false;
-
-    }
-
-
-
 
 
     // DELETE A USER BY PASSING THE USERS ID
@@ -717,7 +666,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
                 if (t_nameFromDB.equals(userNameFromLogIn)){
                     Log.d("xxx-MATCHCC","THESE MATCH");
-
+                    loggedInUserUniqueID = uID;
                     passwordStoredToCheck = pass;
                     Log.d("xxx-SLATFROMFIRE",salt0);
                      salt5 = Base64.getDecoder().decode(salt0);
@@ -963,7 +912,81 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return flagToRetun;
 
     }
+    //testing of insert to dynamic colum
+    String friend_col = "friend1";
+    String friend_col2 = "friend2";
+    private String INSERT_DYNAMIC_TABLE = "ALTER TABLE " + NAME_OF_FRIENDS_TABLE + " ADD COLUMN "+ friend_col +" INT";
+    private String INSERT_DYNAMIC_TABLE2 = "ALTER TABLE " + NAME_OF_FRIENDS_TABLE + " ADD COLUMN "+ friend_col2 +" INT";
+    public static String friendsUID ="";
 
+    public void addToFriendsTable(final String phoneNumToget){
+        SQLiteDatabase My_Database = this.getWritableDatabase();
+            String addInitalUsersUIDToFriendsTable = "INSERT INTO " + NAME_OF_FRIENDS_TABLE + "(Uid) VALUES ( " + "'" + loggedInUserUniqueID + "'" + ")";
+            My_Database.execSQL(addInitalUsersUIDToFriendsTable);
+    ///// find UID From FIREBASE
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child("usersdb").child("users").child("data");
+
+        myRef.addChildEventListener(new ChildEventListener() {
+
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+
+                String key = dataSnapshot.getKey();
+                String uID = dataSnapshot.child("uID").getValue(String.class);
+                String email = dataSnapshot.child("user_email").getValue(String.class);
+                String namex = dataSnapshot.child("user_name").getValue(String.class);
+                String pass = dataSnapshot.child("user_pass").getValue(String.class);
+                String phone = dataSnapshot.child("user_phone").getValue(String.class);
+                String salt0 = dataSnapshot.child("user_salt").getValue(String.class);
+
+                Log.d("xxxN----", uID);
+                Log.d("xxxP-----",pass);
+                Log.d("xxxN----", namex);
+
+                String t_nameFromDB = namex.substring(0);
+
+
+                if (phoneNumToget.equals(phone)){
+                    Log.d("xxx-PHOEMATCHCC","THESE MATCH");
+                    friendsUID = uID;
+                }
+
+
+
+
+            } //end of loop
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+    Log.d("xxFRINDIS",friendsUID);
+        String columtoadd =String.valueOf(tempcount);
+        String INSERT_FRIEND_TO_TABLE = "ALTER TABLE " + NAME_OF_FRIENDS_TABLE + " ADD COLUMN "+ columtoadd  +" " +friendsUID ;
+       // My_Database.execSQL(INSERT_FRIEND_TO_TABLE);
+        tempcount++;
+    }
 
 
 

@@ -495,7 +495,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             String selectQuery = "Select * from "+NAME_OF_FRIENDS_TABLE;
             SQLiteDatabase My_Database = this.getReadableDatabase();
             Cursor cursor = My_Database.rawQuery(selectQuery, null);
-            cursor.close();
+           // cursor.close();
          //   My_Database.close();
             return cursor;
         }
@@ -912,12 +912,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return flagToRetun;
 
     }
-    //testing of insert to dynamic colum
-    String friend_col = "friend1";
-    String friend_col2 = "friend2";
-    private String INSERT_DYNAMIC_TABLE = "ALTER TABLE " + NAME_OF_FRIENDS_TABLE + " ADD COLUMN "+ friend_col +" INT";
-    private String INSERT_DYNAMIC_TABLE2 = "ALTER TABLE " + NAME_OF_FRIENDS_TABLE + " ADD COLUMN "+ friend_col2 +" INT";
+
     public static String friendsUID ="";
+    public static   JSONObject jobjForFriends ;
+    public static JSONArray arrForFriends = new JSONArray();
 
     public void addToFriendsTable(final String phoneNumToget){
         SQLiteDatabase My_Database = this.getWritableDatabase();
@@ -981,12 +979,75 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             }
 
         });
+        // add to local Database
     Log.d("xxFRINDIS",friendsUID);
-        String columtoadd =String.valueOf(tempcount);
-        String INSERT_FRIEND_TO_TABLE = "ALTER TABLE " + NAME_OF_FRIENDS_TABLE + " ADD COLUMN "+ columtoadd  +" " +friendsUID ;
-       // My_Database.execSQL(INSERT_FRIEND_TO_TABLE);
-        tempcount++;
+    if (loggedInUserUniqueID == " ")
+    {
+        return;
     }
+        String temp_num =String.valueOf(tempcount);
+        String columtoadd = "friends" + temp_num;
+        String CREATE_FRIEND_COLUM = "ALTER TABLE " + NAME_OF_FRIENDS_TABLE + " ADD COLUMN "+ columtoadd  +" TEXT" ;
+        My_Database.execSQL(CREATE_FRIEND_COLUM);
+        String ADD_FRIENDUID_TO_COLUM = "UPDATE OR REPLACE `FRIENDS_TABLE` SET `" + columtoadd + "`  = '" + friendsUID + "' WHERE `Uid` = " + loggedInUserUniqueID  ;
+        My_Database.execSQL(ADD_FRIENDUID_TO_COLUM);
+
+
+    //get local Database and filter
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        long count = DatabaseUtils.queryNumEntries(db, NAME_OF_FRIENDS_TABLE);
+        Integer numOfColms = (int)(long)count;
+
+
+        Cursor cursor = getAllData("friendsTable");  //cursor hold all your data
+
+        while(cursor.moveToNext()) {
+
+        jobjForFriends  = new JSONObject();
+        try {
+                if(tempcount==1) {
+                    jobjForFriends.put("uID", cursor.getString(0));
+                }
+                if(tempcount==2) {
+                    jobjForFriends.put("friends1", cursor.getString(1));
+                }
+                if(tempcount==3) {
+                    jobjForFriends.put("friends2", cursor.getString(2));
+                }
+                if(tempcount==4) {
+                    jobjForFriends.put("friends3", cursor.getString(3));
+                }
+                 if(tempcount==5) {
+                jobjForFriends.put("friends4", cursor.getString(4));
+                 }
+                 if(tempcount==6) {
+                     jobjForFriends.put("friends5", cursor.getString(5));
+                 }
+                if(tempcount==7) {
+                    jobjForFriends.put("friends6", cursor.getString(6));
+                }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        arrForFriends.put(jobjForFriends);
+    }
+
+    jobjForFriends = new JSONObject();
+        try {
+        jobjForFriends.put("data", arrForFriends);
+    } catch (JSONException e) {
+        e.printStackTrace();
+    }
+
+    jsonString2 = jobjForFriends.toString();
+        Log.d("xxToFBFRNDS", jsonString2);
+        tempcount++;
+
+    }
+
 
 
 

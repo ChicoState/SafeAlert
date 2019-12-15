@@ -7,19 +7,23 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.marshallers.ByteBufferToBinaryMarshaller;
 import com.example.buddii.Map.BuddiiView.ScrollMapBuddii;
 import com.example.buddii.Map.UserView.ScrollMapUser;
 
 public class chooseRoute extends AppCompatActivity {
-    private Button btnYes;
+    private Button btnBuddiis;
+    private Button btnFriends;
     private Button btnNo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_route);
-        btnYes = findViewById(R.id.yesBuddii);
+        btnBuddiis = findViewById(R.id.yesBuddii);
+        btnFriends = findViewById(R.id.yesFriends);
         btnNo = findViewById(R.id.noBuddii);
-        btnYes.setOnClickListener(new View.OnClickListener()
+
+        btnBuddiis.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -27,6 +31,16 @@ public class chooseRoute extends AppCompatActivity {
                 moveToSelectBuddii();
             }
         });
+
+        btnFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                moveToSelectFriend();
+
+            }
+        });
+
         btnNo.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -42,6 +56,11 @@ public class chooseRoute extends AppCompatActivity {
     }
     private void moveToSelectBuddii() {
         Intent intent = new Intent(chooseRoute.this, select_bud.class);
+        startActivity(intent);
+    }
+
+    private void moveToSelectFriend(){
+        Intent intent = new Intent(chooseRoute.this, select_friends.class);
         startActivity(intent);
     }
 

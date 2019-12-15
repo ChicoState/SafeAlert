@@ -10,35 +10,48 @@
         android:id="@+id/noBuddii"
         android:layout_width="166dp"
         android:layout_height="88dp"
-        android:text="NO"
+        android:layout_marginBottom="128dp"
+        android:text="GO TO ROUTE"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.893"
+        app:layout_constraintHorizontal_bias="0.546"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.552" />
+        app:layout_constraintTop_toBottomOf="@+id/yesBuddii"
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/nabTxt"
         android:layout_width="275dp"
         android:layout_height="92dp"
-        android:layout_marginBottom="204dp"
-        android:text="          Need A Buddy?"
+        android:layout_marginTop="84dp"
+        android:text="CHOOSE FROM YOUR FRIENDS, A BUDDII ONLINE, OR NO BUDDII."
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toTopOf="@+id/yesBuddii"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/yesBuddii"
         android:layout_width="142dp"
         android:layout_height="88dp"
-        android:text="Yes "
+        android:layout_marginBottom="320dp"
+        android:text="BUDDII "
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.13"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.552" />
+        app:layout_constraintTop_toBottomOf="@+id/yesFriends" />
+
+    <Button
+        android:id="@+id/yesFriends"
+        android:layout_width="142dp"
+        android:layout_height="88dp"
+        android:text="Friends "
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nabTxt"
+        app:layout_constraintVertical_bias="0.156" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,20 +15,18 @@ import java.io.IOException;
  * Class that handles authentication w/ login credentials and retrieves user information.
  *
  */
-@RequiresApi(api = Build.VERSION_CODES.O)
 public class LoginDataSource extends AppCompatActivity {
 
     DatabaseHandler handler=new DatabaseHandler(LoginDataSource.this);
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public Result<LoggedInUser> login(String username, String password){
 
 
-        // real function call
-        String checkCred = handler.getPword(password,username);
-       // byte []salt = handler.getPword(password,username);
 
-      //Log.d("xxxLogINpwordRTN", checkCred);
+        String checkCred = handler.getPword(password,username);
+        //Log.d("xxxLogINpwordRTN", checkCred);
 
         try {
 
@@ -36,9 +34,9 @@ public class LoginDataSource extends AppCompatActivity {
 
 
             if( checkCred.equals("true")) {
-               //will sey UID for logged in user
+                //will sey UID for logged in user
                 // handler.setLoggedInUser(username);
-                 LoggedInUser fakeUser =
+                LoggedInUser fakeUser =
                         new LoggedInUser(
                                 java.util.UUID.randomUUID().toString(),
                                 "Jane Doe");

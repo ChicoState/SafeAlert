@@ -51,6 +51,7 @@
         <activity android:name=".TutorialActivity" />
         <activity android:name=".beABuddy" />
         <activity android:name=".select_friends"/>
+        <activity android:name=".addFriend"/>
         <activity
             android:name=".PreferencesActivity"
             android:label="@string/title_activity_preferences" />

@@ -1031,6 +1031,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 if(tempcount==7 || 7 < tempcount) {
                     jobjForFriends.put("friends6", cursor.getString(6));
                 }
+            if(tempcount==8 || 8 < tempcount) {
+                jobjForFriends.put("friends6", cursor.getString(7));
+            }
+            if(tempcount==9 || 9 < tempcount) {
+                jobjForFriends.put("friends6", cursor.getString(8));
+            }
+            if(tempcount==10 || 10 < tempcount) {
+                jobjForFriends.put("friends6", cursor.getString(9));
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1054,7 +1063,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Map<String, Object> jsonMap = new Gson().fromJson(stringFriendsToSend, new TypeToken<HashMap<String, Object>>() {
         }.getType());
         Task<Void> myRef2 = database.getReference().child("dbfriends").updateChildren(jsonMap);
-
 
     }
 

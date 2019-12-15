@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.buddii.Map.BuddiiView.ScrollMapBuddii;
+import com.example.buddii.Map.UserView.ScrollMapUser;
+
 public class chooseRoute extends AppCompatActivity {
     private Button btnYes;
     private Button btnNo;
@@ -34,7 +37,7 @@ public class chooseRoute extends AppCompatActivity {
         });
     }
     private void moveToRoute() {
-        Intent intent = new Intent(chooseRoute.this, MapsActivity.class);
+        Intent intent = new Intent(chooseRoute.this, ScrollMapUser.class);
         startActivity(intent);
     }
     private void moveToSelectBuddii() {

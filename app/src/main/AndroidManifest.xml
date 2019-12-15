@@ -8,9 +8,25 @@
          location permissions for the 'MyLocation' functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.REQUEST_COMPANION_USE_DATA_IN_BACKGROUND" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
 
     <application
         android:allowBackup="true"
@@ -20,14 +36,23 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".findingSafestRouteActivity"/>
+        <activity android:name=".Freakout"></activity>
+        <activity
+            android:name=".Map.UserView.ScrollMapUser"
+            android:label="@string/title_activity_scroll_map_user"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Map.BuddiiView.ScrollMapBuddii"
+            android:label="@string/title_activity_scroll_map"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Map.findingSafestRouteActivity" />
         <activity android:name=".beingABuddyActivity" />
         <activity android:name=".AboutUsActivity" />
         <activity android:name=".TutorialActivity" />
         <activity android:name=".beABuddy" />
         <activity
             android:name=".PreferencesActivity"
-            android:label="@string/title_activity_preferences"/>
+            android:label="@string/title_activity_preferences" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -40,17 +65,16 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".MapsActivity"
-            android:label="@string/activity_maps" />
         <activity android:name=".chooseRoute" />
         <activity android:name=".select_bud" />
         <activity android:name=".DBActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".ui.login.LoginActivity"
-                  android:label="@string/title_activity_login_buddii">
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:label="@string/title_activity_login_buddii">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

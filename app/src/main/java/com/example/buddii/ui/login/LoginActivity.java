@@ -2,9 +2,11 @@ package com.example.buddii.ui.login;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -30,10 +33,23 @@ public class LoginActivity extends AppCompatActivity {
     private LoginViewModel loginViewModel;
 
 
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        DatabaseHandler handler=new DatabaseHandler(LoginActivity.this);
+        //initialize , first pass always returns NULL
+        String[] posZeroLatPosOneLong = handler.loadGPS("0");
+
+        String checkCred = handler.getPword("<>","<>");
         setContentView(R.layout.activity_login_buddii);
+        // intialDBSYNC();
+
+
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
@@ -62,22 +78,21 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
             @Override
             public void onChanged(@Nullable LoginResult loginResult) {
+
                 if (loginResult == null) {
                     return;
                 }
                 loadingProgressBar.setVisibility(View.GONE);
                 if (loginResult.getError() != null) {
                     showLoginFailed(loginResult.getError());
-                    //setResult(Activity.RESULT_OK);
                 }
                 if (loginResult.getSuccess() != null) {
                     updateUiWithUser(loginResult.getSuccess());
-                   Intent intent = new Intent (LoginActivity.this, MainActivity.class);
-                   startActivity(intent);
+                    Intent intent = new Intent (LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 setResult(Activity.RESULT_OK);
-
-
 
                 //Complete and destroy login activity once successful
                 //finish();
@@ -130,9 +145,24 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent (LoginActivity.this, DBActivity.class);
+                //   intialDBSYNC();
                 startActivity(intent);
             }
         });
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void intialDBSYNC(){
+        String isEmptyJSON = "{\"data\":[]}";
+
+        DatabaseHandler handler=new DatabaseHandler(LoginActivity.this);
+
+        // check if Firebase DB has users
+        handler.checkFireBaseDBForUsers();
+        //If YES then SYNC ,add to sqlDB (no repeats)
+
+        Log.d("xxxFRMLOGIN", "inLogIn");
+
+
     }
 
     private void updateUiWithUser(LoggedInUserView model)
@@ -151,5 +181,10 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
 
 
+    }
+
+    public void moveToHome(View view) {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 }

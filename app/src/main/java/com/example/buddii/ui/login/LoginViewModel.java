@@ -1,15 +1,17 @@
 package com.example.buddii.ui.login;
 
+import android.os.Build;
+import android.util.Patterns;
+
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import android.util.Patterns;
-
+import com.example.buddii.R;
 import com.example.buddii.data.LoginRepository;
 import com.example.buddii.data.Result;
 import com.example.buddii.data.model.LoggedInUser;
-import com.example.buddii.R;
 
 public class LoginViewModel extends ViewModel {
 
@@ -29,6 +31,7 @@ public class LoginViewModel extends ViewModel {
         return loginResult;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void login(String username, String password) {
         // can be launched in a separate asynchronous job
         Result<LoggedInUser> result = loginRepository.login(username, password);
@@ -41,8 +44,7 @@ public class LoginViewModel extends ViewModel {
         }
     }
 
-    public void loginDataChanged(String username, String password)
-    {
+    public void loginDataChanged(String username, String password) {
         if (!isUserNameValid(username)) {
             loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));
         } else if (!isPasswordValid(password)) {
@@ -53,14 +55,11 @@ public class LoginViewModel extends ViewModel {
     }
 
     // A placeholder username validation check
-    private boolean isUserNameValid(String username)
-    {
-        if (username == null)
-        {
+    private boolean isUserNameValid(String username) {
+        if (username == null) {
             return false;
         }
-        if (username.contains("@"))
-        {
+        if (username.contains("@")) {
             return Patterns.EMAIL_ADDRESS.matcher(username).matches();
         } else {
             return !username.trim().isEmpty();
@@ -68,8 +67,7 @@ public class LoginViewModel extends ViewModel {
     }
 
     // A placeholder password validation check
-    private boolean isPasswordValid(String password)
-    {
+    private boolean isPasswordValid(String password) {
         return password != null && password.trim().length() > 5;
     }
 }

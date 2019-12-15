@@ -38,7 +38,7 @@
             app:backgroundTint="@color/primaryColor" />
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/refreshButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="right"
@@ -47,14 +47,16 @@
             android:layout_weight=".33"
             android:background="#00FFFFFF"
             android:clickable="true"
-            android:onClick="onChatClick"
-            app:srcCompat="@android:drawable/sym_action_chat" />
+            android:onClick="onRefreshClick"
+            app:srcCompat="@android:drawable/ic_popup_sync" />
 
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/buddiiScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#FFFFFF"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".ScrollingActivity"
         tools:showIn="@layout/activity_scroll_map">
@@ -71,6 +73,7 @@
                 android:orientation="vertical">
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/alertRecycler"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -94,18 +97,6 @@
                     android:layout_height="wrap_content"
                     android:text="Drop Buddii" />
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/BuddiiTabChat"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
             </LinearLayout>
 
         </LinearLayout>

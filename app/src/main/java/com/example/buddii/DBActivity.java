@@ -2,6 +2,7 @@ package com.example.buddii;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -55,8 +56,8 @@ public class DBActivity extends AppCompatActivity {
                 data4=input4.getText().toString();
                 //THEN PASS
                 DatabaseHandler handler=new DatabaseHandler(DBActivity.this);
-                handler.addToDb(data1,data2,data3,data4,"" ,false);
-                //NEED TO CLEAR OUT THE TABLE AFTER SUBMIT WAS PRESSED
+                 handler.addToDb(data1,data2,data3,data4,"" ,false);
+               //NEED TO CLEAR OUT THE TABLE AFTER SUBMIT WAS PRESSED
                 input1.setText("");
                 input2.setText("");
                 input3.setText("");
@@ -80,7 +81,7 @@ public class DBActivity extends AppCompatActivity {
         DatabaseHandler dbHandler = new DatabaseHandler(this);
         int numOfBuddies = dbHandler.getNumOfUsers();
         //If database is empty return , othewise will crash app
-        if (numOfBuddies == 0){
+        if (numOfBuddies == 0) {
             return;
         }
 
@@ -88,13 +89,12 @@ public class DBActivity extends AppCompatActivity {
         String results = "";
 
         // by default load these attributes
-        ArrayOfBuddies=(dbHandler.loadUsers("Uid,email,name,phoneNumber"));
+        ArrayOfBuddies = (dbHandler.loadUsers("Uid,email,name,phoneNumber"));
 
-        for (int i = 0 ; i < numOfBuddies; i++) {
+        for (int i = 0; i < numOfBuddies; i++) {
 
             results += ArrayOfBuddies[i] + " \n";
-            if (i == (numOfBuddies- 1))
-            {
+            if (i == (numOfBuddies - 1)) {
                 Tx1.setText(results);
             }
         }
@@ -121,20 +121,24 @@ public class DBActivity extends AppCompatActivity {
         // String xxxxxx = DatabaseHandler.LongLat.lat_tt;
 
 
-
         //dbHandler.tempGetGPS();
-
+        /*
         String[] posZeroLatPosOneLong = dbHandler.loadGPS("0");
         String lat = posZeroLatPosOneLong[0];
         String longg = posZeroLatPosOneLong[1]; //for testing
         String resss = lat + "  " + longg; // for testing
-        TempTexViewVariable2.setText(resss);
-    }
+         TempTexViewVariable2.setText(resss);
+         */
 
+
+      //  dbHandler.sendFlag("1", "a");
+        String flagresults=dbHandler.loadFlag("1");
+        TempTexViewVariable2.setText(flagresults);
+    }
     public String getUserToDelete(){
         // will get user to delete
         return input1.getText().toString();
-    };
+    }
 
 
 

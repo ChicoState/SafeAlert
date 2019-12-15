@@ -60,16 +60,6 @@
             app:backgroundTint="@color/primaryColor"
             tools:ignore="ButtonStyle" />
 
-        <ImageButton
-            android:id="@+id/fabUser"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="#00FFFFFF"
-            android:onClick="onChatClick"
-            app:layout_anchor="@id/app_bar"
-            app:layout_anchorGravity="bottom|right"
-            app:srcCompat="@android:drawable/sym_action_chat" />
-
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -101,6 +91,7 @@
                     android:id="@+id/userDropButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:onClick="onDropBuddiiClick"
                     android:text="Drop Buddii" />
 
             </LinearLayout>
@@ -199,27 +190,6 @@
                     android:onClick="onAcceptRouteClick"
                     android:text="Accept Route"
                     android:visibility="visible" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/UserTabChat"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:visibility="gone"
-                tools:visibility="gone">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-                <TextView
-                    android:id="@+id/directionsTester"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="TextView" />
-
 
             </LinearLayout>
 

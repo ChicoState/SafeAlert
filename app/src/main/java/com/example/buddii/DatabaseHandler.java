@@ -84,7 +84,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static double tempcount = 0;
     public static JSONObject jobjForGPS ;
     public static JSONArray arrForGPS = new JSONArray();
-
+    public static JSONObject jobjForFlag ;
+    public static JSONArray arrForFlag = new JSONArray();
 
 
 
@@ -121,7 +122,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase My_Database) {
-        String[] tempArr = new String[3];
+         String[] tempArr = new String[3];
         tempArr=loadGPS("0");
 
         //execute prepared commands
@@ -129,7 +130,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         My_Database.execSQL(CREATE_GPS_TABLE);
         My_Database.execSQL(CREATE_FRIENDS_TABLE);
         My_Database.execSQL(CREATE_ACTIVE_BUDDII_TABLE);
-        // My_Database.execSQL(CREATE_FLAG_TABLE);
+       // My_Database.execSQL(CREATE_FLAG_TABLE);
 
         // testing of dynamic colums
         My_Database.execSQL(INSERT_DYNAMIC_TABLE);
@@ -147,24 +148,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void addToDb(String userphone, String name, String email, String password, String salt0 ,Boolean flag)  {
-        salt = hashSha512.getSalt();
+         salt = hashSha512.getSalt();
 
-        // temp flag
+         // temp flag
         String flagForUser = "none";
 
         SQLiteDatabase My_Database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         Cursor c = My_Database.rawQuery("SELECT * FROM USERS_TABLE where user_name = " + " '" + name + "'", null);
-        // set flag condition here so wont taoast so much
+    // set flag condition here so wont taoast so much
         if(c.getCount()>0 )
         {
-            // Toast.makeText(context, "USER ALREADY EXITS", Toast.LENGTH_LONG).show();
+           // Toast.makeText(context, "USER ALREADY EXITS", Toast.LENGTH_LONG).show();
             return;
         }
         else
         {   // on initial SYNC THIS KEEPS showinf UP
-            //  Toast.makeText(context, "WELCOME", Toast.LENGTH_LONG).show();
+          //  Toast.makeText(context, "WELCOME", Toast.LENGTH_LONG).show();
         }
 
         values.put(DatabaseHandler.USER_PHONE, userphone);
@@ -173,9 +174,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         //password will be sent to function and hashed
 
 
-        shaPword = hashSha512.hashPaswordSHA512(password,salt);
-        //prep for storing
-        shaPwordToCompare = shaPword.substring(0,128);
+         shaPword = hashSha512.hashPaswordSHA512(password,salt);
+         //prep for storing
+         shaPwordToCompare = shaPword.substring(0,128);
 
 
         values.put(DatabaseHandler.USER_PASSWORD, shaPword);
@@ -194,16 +195,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         if (status <= 0) {
 
-            Toast.makeText(context, "Insertion Unsuccessful", Toast.LENGTH_SHORT).show();
+           Toast.makeText(context, "Insertion Unsuccessful", Toast.LENGTH_SHORT).show();
         } else {
             //         TOAST INSERTION KEEP POPING UP ON INITIAL DB SYNC
-            //  Toast.makeText(context, "Insertion Successful", Toast.LENGTH_LONG).show();
+          //  Toast.makeText(context, "Insertion Successful", Toast.LENGTH_LONG).show();
         }
 
 
 
-        // My_Database.close();
-        //  c.close();
+       // My_Database.close();
+      //  c.close();
 
         // this flag will indicated that the function is being called from the register page
         // and not from the initial sync from log in ( removes repetative inserts)
@@ -225,67 +226,67 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public String checkFireBaseDBForUsers(){
-        String jsonToSend = "nothing";
-        Log.d("xxxFromRTV", "InFRomCHKFireBase");
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference().child("usersdb").child("users").child("data");
+           String jsonToSend = "nothing";
+            Log.d("xxxFromRTV", "InFRomCHKFireBase");
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference().child("usersdb").child("users").child("data");
 
-        myRef.addChildEventListener(new ChildEventListener() {
+            myRef.addChildEventListener(new ChildEventListener() {
 
 
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                String key = dataSnapshot.getKey();
-                //Log.d("xxxxkeyRTTTN",key);
-                String uID = dataSnapshot.child("uID").getValue(String.class);
-                //uID = key;
-                // Log.d("xxxUIDis",uID);
+                    String key = dataSnapshot.getKey();
+                    //Log.d("xxxxkeyRTTTN",key);
+                    String uID = dataSnapshot.child("uID").getValue(String.class);
+                    //uID = key;
+                    // Log.d("xxxUIDis",uID);
 
-                String email = dataSnapshot.child("user_email").getValue(String.class);
-                if (email == null) {
-                    //     Log.d("xxxxEMAIL","EMAILretuning");
-                    return;
-                }
-                ;
-                String namex = dataSnapshot.child("user_name").getValue(String.class);
-                String pass = dataSnapshot.child("user_pass").getValue(String.class);
-                String phone = dataSnapshot.child("user_phone").getValue(String.class);
-                String salt1 = dataSnapshot.child("user_salt").getValue(String.class);
+                    String email = dataSnapshot.child("user_email").getValue(String.class);
+                    if (email == null) {
+                        //     Log.d("xxxxEMAIL","EMAILretuning");
+                        return;
+                    }
+                    ;
+                    String namex = dataSnapshot.child("user_name").getValue(String.class);
+                    String pass = dataSnapshot.child("user_pass").getValue(String.class);
+                    String phone = dataSnapshot.child("user_phone").getValue(String.class);
+                    String salt1 = dataSnapshot.child("user_salt").getValue(String.class);
 
-                Log.d("xxxtEmail", email);
-                //  Log.d("xxxPASSis",pass);
-                Log.d("xxxNAMEis", namex);
-                Log.d("xxxPHONEis", phone);
-                Log.d("xxxSALTis", salt1);
+                    Log.d("xxxtEmail", email);
+                    //  Log.d("xxxPASSis",pass);
+                    Log.d("xxxNAMEis", namex);
+                    Log.d("xxxPHONEis", phone);
+                    Log.d("xxxSALTis", salt1);
 
-                usersObj = new JSONObject();
-                try {
+                    usersObj = new JSONObject();
+                    try {
 
-                    usersObj.put("uID", uID);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    usersObj.put("user_phone", phone);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    usersObj.put("user_name", namex);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    usersObj.put("user_email", email);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    usersObj.put("user_pass", pass);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                        usersObj.put("uID", uID);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        usersObj.put("user_phone", phone);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        usersObj.put("user_name", namex);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        usersObj.put("user_email", email);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        usersObj.put("user_pass", pass);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 /*
                 try {
                     usersObj.put("user_ratings",);
@@ -294,52 +295,52 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 }
                 */
 
-                try {
-                    usersObj.put("user_salt", salt1);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    try {
+                        usersObj.put("user_salt", salt1);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    //Log.d("xxxUSEROBJ",usersObj.toString());
+                    arr1.put(usersObj);
+
+                } //end of loop
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
                 }
-                //Log.d("xxxUSEROBJ",usersObj.toString());
-                arr1.put(usersObj);
 
-            } //end of loop
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                }
 
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+
+            });
+            usersObj = new JSONObject();
+            try {
+                usersObj.put("data", arr1);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-
-        });
-        usersObj = new JSONObject();
-        try {
-            usersObj.put("data", arr1);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+            jsonToSend = usersObj.toString();
+            usersObj=null;
 
 
-        jsonToSend = usersObj.toString();
-        usersObj=null;
-
-
-        dbSYNC(jsonToSend);
-        //   Log.d("xxNNNNNN",jsonToSend);
-        return jsonToSend;
+            dbSYNC(jsonToSend);
+         //   Log.d("xxNNNNNN",jsonToSend);
+            return jsonToSend;
 
 
     }
@@ -348,7 +349,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void dbSYNC(String jsonString)  {
-        //  Log.d("xxxBBBBBB",jsonString);
+      //  Log.d("xxxBBBBBB",jsonString);
 
         try {
             JSONObject jsnobject = new JSONObject(jsonString);
@@ -361,12 +362,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             String salt0 ="";
             for (int i = 0; i < jsonArray.length(); ++i) {
                 JSONObject rec = jsonArray.getJSONObject(i);
-                id = rec.getString("uID");
-                phone0 = rec.getString("user_phone");
-                name0 = rec.getString("user_name");
-                email0 = rec.getString("user_email");
-                pass0 = rec.getString("user_pass");
-                salt0 = rec.getString("user_salt");
+                 id = rec.getString("uID");
+                 phone0 = rec.getString("user_phone");
+                 name0 = rec.getString("user_name");
+                 email0 = rec.getString("user_email");
+                 pass0 = rec.getString("user_pass");
+                 salt0 = rec.getString("user_salt");
 
     /*
                 Log.d("xxarrListID",id);
@@ -401,7 +402,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public boolean chechIfUniqueIdInSqlDB(String uID){
-        //sql query to search for UID
+    //sql query to search for UID
         return false;
 
     }
@@ -524,146 +525,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
      */
 
-    public void addGPS (Double t_latitude ,Double t_longitude) throws JSONException {
-        Integer userID = 0;
-
-        jobjForGPS  = new JSONObject();;
-        jobjForGPS.put("uID",userID);
-        jobjForGPS.put("latitude",t_latitude );
-        jobjForGPS.put("longitude",t_longitude );
-        arrForGPS.put(jobjForGPS);
-
-        jobjForGPS = new JSONObject();
-        jobjForGPS.put("gpsdata", arrForGPS);
-
-        String stringGPSToSend = jobjForGPS.toString();
-
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-        Map<String, Object> jsonMap = new Gson().fromJson(stringGPSToSend, new TypeToken<HashMap<String, Object>>() {
-        }.getType());
-        Task<Void> myRef = database.getReference().child("dbgps").updateChildren(jsonMap);
-
-    }
-    /*
-        public static class LongLat {
-
-            public static String lat_tt;
-            public String Long_tt;
-
-
-            public LongLat() {
-
-            }
-
-            public LongLat(String long_tt, String lat_tt) {
-                this.Long_tt = Long_tt;
-                this.lat_tt = lat_tt;
-                Log.d("xxtttLONGtt", long_tt);
-            }
-        }
-            private ValueEventListener mPostListener;
-
-
-            public void tempGetGPS(){
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference().child("dbgps").child("gpsdata");
-                ValueEventListener postListener = new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        // Get Post object and use the values to update the UI
-                        LongLat longlat = dataSnapshot.getValue(LongLat.class);
-
-                        LongLat longgg = dataSnapshot.getValue(LongLat.class);
-
-                    }
-
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        // Getting Post failed, log a message
-                        Log.w("loadPost:onCancelled", databaseError.toException());
-                        // [START_EXCLUDE]
-
-                        // [END_EXCLUDE]
-                    }
-                };
-              //  mPostReference.addValueEventListener(postListener);
-
-
-            }
-
-     */
-    public static  String[] posZeroLatPosOneLong = new String[3];
-
-
-
-    public String[] loadGPS(final String passedUID) {
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference().child("dbgps").child("gpsdata");
-
-        myRef.addChildEventListener(new ChildEventListener() {
-
-
-
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-
-                String key = dataSnapshot.getKey();
-                Integer uID = dataSnapshot.child("uID").getValue(Integer.class);
-                Double d1 = (Double) dataSnapshot.child("latitude").getValue();
-                Double d2 = (Double) dataSnapshot.child("longitude").getValue();
-
-                String converted_Lat =String.valueOf(d1);
-                String converted_Long = String.valueOf(d2);
-
-                String converted_UID = String.valueOf(uID);
-                Log.d("xx---LATB4",converted_Lat);
-                Log.d("xx---LONGB4",converted_Long);
-                // Log.d("xxx-----",key);
-                Log.d("xx:::::::::" ,  passedUID);
-                Log.d("xx:::" ,  converted_UID);
-                if(passedUID.equals(converted_UID)){
-                    //  Log.d("xx:::IN" , "WE IN");
-                    Log.d("xx---LATINN",converted_Lat);
-                    Log.d("xx---LONINN",converted_Long);
-                    posZeroLatPosOneLong[0]= converted_Lat;
-                    posZeroLatPosOneLong[1]= converted_Long;
-
-                }
-
-
-            } //end of loop
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-
-        });
-        // Log.d("xxLatAFTERxx",posZeroLatPosOneLong[0]);
-        // Log.d("xxLongAFTERxx", posZeroLatPosOneLong[1]);
-        return posZeroLatPosOneLong;
-    }
 
     //
     public Cursor getAllData(String fromThisDB) {
@@ -674,8 +535,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             SQLiteDatabase My_Database = this.getReadableDatabase();
             String selectQuery = "Select * from "+NAME_OF_USERS_TABLE;
             Cursor cursor = My_Database.rawQuery(selectQuery, null);
-            //   cursor.close();
-            //   My_Database.close();
+         //   cursor.close();
+         //   My_Database.close();
             return cursor;
         }
         if (fromThisDB == "friendsTable")
@@ -684,7 +545,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             SQLiteDatabase My_Database = this.getReadableDatabase();
             Cursor cursor = My_Database.rawQuery(selectQuery, null);
             cursor.close();
-            //   My_Database.close();
+         //   My_Database.close();
             return cursor;
         }
         else {
@@ -776,7 +637,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String curActiveBuddiLoggedIn = "10";
         values.put(DatabaseHandler.USER_UID, curActiveBuddiLoggedIn);
         My_Database.insert(NAME_OF_ACTIVE_BUDDI_TABLE, null, values);
-        return "stuff";
+       return "stuff";
     };
 
     public void removeFromActiveBuddiTable() {
@@ -784,9 +645,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase My_Database = this.getWritableDatabase();
         // delete user record by phone
-        My_Database.delete(NAME_OF_ACTIVE_BUDDI_TABLE, USER_UID + " = ?",
+         My_Database.delete(NAME_OF_ACTIVE_BUDDI_TABLE, USER_UID + " = ?",
                 new String[]{String.valueOf(id)});
-        My_Database.close();
+          My_Database.close();
     }
 
 
@@ -797,7 +658,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         // do all the average calculations here
         String t_Rating =String.valueOf(rating);
-        Integer Uid = 2;
+       Integer Uid = 2;
         values.put("user_ratings",t_Rating);
         My_Database.update(NAME_OF_USERS_TABLE,values,"Uid ="+Uid, null);
         return "stuff";
@@ -814,7 +675,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[]{String.valueOf(username)});
         My_Database.close();
         */
-        return false;
+      return false;
     };
 
 
@@ -857,13 +718,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
                     passwordStoredToCheck = pass;
                     Log.d("xxx-SLATFROMFIRE",salt0);
-                    salt5 = Base64.getDecoder().decode(salt0);
-                    //  salt5 = salt0.getBytes();
+                     salt5 = Base64.getDecoder().decode(salt0);
+               //  salt5 = salt0.getBytes();
                     String byteSaltToString = Base64.getEncoder().encodeToString(salt5);
                     Log.d("xxxpSALT2CHECKd",byteSaltToString);
 
 
-                }
+              }
 
 
 
@@ -940,13 +801,166 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             String good = "true";
             return good;
         }
-
         else {
             String noGood = "false";
             return noGood;
         }
     }
+    public void addGPS (Double t_latitude ,Double t_longitude) throws JSONException {
+        Integer userID = 0;
 
+        jobjForGPS  = new JSONObject();;
+        jobjForGPS.put("uID",userID);
+        jobjForGPS.put("latitude",t_latitude );
+        jobjForGPS.put("longitude",t_longitude );
+        arrForGPS.put(jobjForGPS);
+
+        jobjForGPS = new JSONObject();
+        jobjForGPS.put("gpsdata", arrForGPS);
+
+        String stringGPSToSend = jobjForGPS.toString();
+
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        Map<String, Object> jsonMap = new Gson().fromJson(stringGPSToSend, new TypeToken<HashMap<String, Object>>() {
+        }.getType());
+        Task<Void> myRef = database.getReference().child("dbgps").updateChildren(jsonMap);
+
+    }
+
+    public static  String[] posZeroLatPosOneLong = new String[3];
+    public String[] loadGPS(final String passedUID) {
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child("dbgps").child("gpsdata");
+
+        myRef.addChildEventListener(new ChildEventListener() {
+
+
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+
+                String key = dataSnapshot.getKey();
+                Integer uID = dataSnapshot.child("uID").getValue(Integer.class);
+                Double d1 = (Double) dataSnapshot.child("latitude").getValue();
+                Double d2 = (Double) dataSnapshot.child("longitude").getValue();
+
+                String converted_Lat =String.valueOf(d1);
+                String converted_Long = String.valueOf(d2);
+
+                String converted_UID = String.valueOf(uID);
+                Log.d("xx---LATB4",converted_Lat);
+                Log.d("xx---LONGB4",converted_Long);
+                // Log.d("xxx-----",key);
+                Log.d("xx:::::::::" ,  passedUID);
+                Log.d("xx:::" ,  converted_UID);
+                if(passedUID.equals(converted_UID)){
+                    //  Log.d("xx:::IN" , "WE IN");
+                    Log.d("xx---LATINN",converted_Lat);
+                    Log.d("xx---LONINN",converted_Long);
+                    posZeroLatPosOneLong[0]= converted_Lat;
+                    posZeroLatPosOneLong[1]= converted_Long;
+
+                }
+            } //end of loop
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+
+        return posZeroLatPosOneLong;
+    }
+
+
+    public void sendFlag(String userID,String thisFlag) throws JSONException {
+
+        jobjForFlag  = new JSONObject();;
+        jobjForFlag.put("UID",userID);
+        jobjForFlag.put("Flag",thisFlag );
+         arrForFlag.put(jobjForFlag);
+
+        jobjForFlag = new JSONObject();
+        jobjForFlag.put("flagdata", arrForFlag);
+
+        String stringFLAGToSend = jobjForFlag.toString();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+        Map<String, Object> jsonMap = new Gson().fromJson(stringFLAGToSend, new TypeToken<HashMap<String, Object>>() {
+        }.getType());
+        Task<Void> myRef = database.getReference().child("dbflag").updateChildren(jsonMap);
+
+    }
+    public static String flagToRetun ="";
+    public String loadFlag(final String passedUID0){
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference().child("dbflag").child("flagdata");
+
+        myRef.addChildEventListener(new ChildEventListener() {
+
+
+
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+
+                String key = dataSnapshot.getKey();
+                String uID = dataSnapshot.child("UID").getValue(String.class);
+                String flag_ = dataSnapshot.child("Flag").getValue(String.class);
+
+                if(passedUID0.equals(uID)){
+                  flagToRetun = flag_;
+                }
+            } //end of loop
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+
+        return flagToRetun;
+
+    }
 
 
 

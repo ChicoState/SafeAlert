@@ -13,12 +13,16 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.buddii.DatabaseHandler;
+import com.example.buddii.Map.AlertItem;
+import com.example.buddii.Map.AlertRecyclerAdapter;
 import com.example.buddii.R;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -29,13 +33,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.Polyline;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import static android.view.View.GONE;
 
@@ -58,6 +59,10 @@ public class ScrollMapBuddii extends AppCompatActivity implements OnMapReadyCall
     private Polyline mPolyline;
     ArrayList<LatLng> mMarkerPoints;
     LinkedList<Geofence> geofenceList = null;
+    private RecyclerView mRecyclerView;
+    RecyclerView.LayoutManager mLayoutManager;
+    AlertRecyclerAdapter mAdapter;
+    ArrayList<AlertItem> alertList = new ArrayList<>();
 
 
     private int mLocationPermissionGranted = 0;
@@ -65,47 +70,6 @@ public class ScrollMapBuddii extends AppCompatActivity implements OnMapReadyCall
 
     private Button reportButton;
     private Button searchButton;
-
-    public class LonLat {
-        private double longitude;
-        private double latitude;
-
-        public void setLongitude(double lon) {
-            this.longitude = lon;
-        }
-
-        public void setLatitude(double lat) {
-            this.latitude = lat;
-        }
-
-        public double getLat() {
-            return this.latitude;
-        }
-
-        public double getLon() {
-            return this.longitude;
-        }
-    }
-
-    private Vector<ScrollMapBuddii.LonLat> RetrieveLocations() {
-        //put all of the longitudes and latitudes from the database
-        //into a vector of type LonLat defined at the top
-        Vector<ScrollMapBuddii.LonLat> temp = new Vector<>();
-        return temp;
-    }
-
-    private void setWaypoints(Vector<ScrollMapBuddii.LonLat> x) {
-
-        for (int i = 0; i < x.size(); i++) {
-            ScrollMapBuddii.LonLat temp = x.get(i);
-            mMap.addCircle(new CircleOptions().center(new LatLng(temp.getLon(), temp.getLat()))
-                    .radius(20)
-                    .strokePattern(PATTERN_POLYLINE_DOTTED)
-                    .strokeColor(Color.RED)
-                    .fillColor(Color.YELLOW));
-            ;
-        }
-    }
 
     private void setBlueThings() { //THIS IS TEMPORARY YOU SONS OF BITCHES
 
@@ -160,8 +124,50 @@ public class ScrollMapBuddii extends AppCompatActivity implements OnMapReadyCall
             Don't need to send destinationArrived to Buddii because you could add a geofence at the locaiton and send it to Buddii with the listener
             Don't
              */
-        Toast.makeText(this, "5 SECOND TEST", Toast.LENGTH_SHORT).show();
-        alertView();
+        DatabaseHandler dbHandlerAlert = new DatabaseHandler(ScrollMapBuddii.this);
+
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            LocalTime time = LocalTime.now();
+            //Toast.makeText(this, "Test at: "+time, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, ">>>"+dbHandlerAlert.loadFlag("0")+"<<<", Toast.LENGTH_SHORT).show();
+                if (dbHandlerAlert.loadFlag("0").equals("R") || dbHandlerAlert.loadFlag("0").equals("R")) {
+                    alertList.add(new AlertItem(R.drawable.left, "User Has Selected Route", "" + time));
+                } else if (dbHandlerAlert.loadFlag("0").equals("A")) {
+                    alertList.add(new AlertItem(R.drawable.left, "USER HAS HIT THE ALERT BUTTON", "" + time));
+                    NestedScrollView red = findViewById(R.id.buddiiScrollView);
+                    red.setBackgroundColor(Color.RED);
+                    DatabaseHandler dbHandler = new DatabaseHandler(ScrollMapBuddii.this);
+                    String location[] = dbHandler.loadGPS("0");
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(location[0]), Double.parseDouble(location[1]))));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(location[0]), Double.parseDouble(location[1])), 15));
+                } else if (dbHandlerAlert.loadFlag("0").equals("L")) {
+                    alertList.add(new AlertItem(R.drawable.left, "User has reported and unsafe location", "" + time));
+                } else if (dbHandlerAlert.loadFlag("0").equals("B")) {
+                    alertList.add(new AlertItem(R.drawable.left, "User has dropped you", "" + time));
+                } else if (dbHandlerAlert.loadFlag("0").equals("U")) {
+                    alertList.add(new AlertItem(R.drawable.left, "User has entered an Unsafe Area", "" + time));
+                    DatabaseHandler dbHandler = new DatabaseHandler(ScrollMapBuddii.this);
+                    String location[] = dbHandler.loadGPS("0");
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(location[0]), Double.parseDouble(location[1])), 15));
+                } else if (dbHandlerAlert.loadFlag("0").equals("D")) {
+                    alertList.add(new AlertItem(R.drawable.left, "User has dropped their route", "" + time));
+                } else {
+                    //Toast.makeText(this, "Dint work", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+        }
+
+        mRecyclerView = findViewById(R.id.alertRecycler);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mAdapter = new AlertRecyclerAdapter(alertList);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+
+        //Toast.makeText(this, "5 SECOND TEST", Toast.LENGTH_SHORT).show();
+        //alertView();
         //update map to user's location
 
     }
@@ -175,7 +181,6 @@ public class ScrollMapBuddii extends AppCompatActivity implements OnMapReadyCall
         setSupportActionBar(toolbar);
 
         // tabListener();
-
         //Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS_MODE, Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
         //Settings.System.putInt(context.getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, 254);
 
@@ -185,25 +190,14 @@ public class ScrollMapBuddii extends AppCompatActivity implements OnMapReadyCall
         mMarkerPoints = new ArrayList<>();
 
         Toast.makeText(this, "AAAAAAAAA", Toast.LENGTH_SHORT).show();
-
-        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-        executorService.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(ScrollMapBuddii.this, "SCHEDULER", Toast.LENGTH_SHORT).show();
-                dataLoop();
-            }
-        }, 5, 5, TimeUnit.SECONDS);
-
     }
+
 
     public void onHomeClick(View view) {
         BuddiiTabUser = findViewById(R.id.BuddiiTabUser);
         BuddiiTabUser.setVisibility(View.GONE);
         BuddiiTabHome = findViewById(R.id.BuddiiTabHome);
         BuddiiTabHome.setVisibility(View.VISIBLE);
-        BuddiiTabChat = findViewById(R.id.BuddiiTabChat);
-        BuddiiTabChat.setVisibility(View.GONE);
     }
 
     public void onUserClick(View view) {
@@ -211,56 +205,18 @@ public class ScrollMapBuddii extends AppCompatActivity implements OnMapReadyCall
         BuddiiTabUser.setVisibility(View.VISIBLE);
         BuddiiTabHome = findViewById(R.id.BuddiiTabHome);
         BuddiiTabHome.setVisibility(GONE);
-        BuddiiTabChat = findViewById(R.id.BuddiiTabChat);
-        BuddiiTabChat.setVisibility(View.GONE);
-    }
-
-    public void onChatClick(View view) {
-        BuddiiTabUser = findViewById(R.id.BuddiiTabUser);
-        BuddiiTabUser.setVisibility(View.GONE);
-        BuddiiTabHome = findViewById(R.id.BuddiiTabHome);
-        BuddiiTabHome.setVisibility(GONE);
-        BuddiiTabChat = findViewById(R.id.BuddiiTabChat);
-        BuddiiTabChat.setVisibility(View.VISIBLE);
     }
 
     public void onUserLocClick(View view) {
         DatabaseHandler dbHandler = new DatabaseHandler(ScrollMapBuddii.this);
-        String location[]  = dbHandler.loadGPS("0");
-        mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(location[0]),Double.parseDouble(location[1]))));
-    }
-
-    private void alertView() {
-        /*
-        if(flag attribute has changed){
-            if(attribute == started route){
-
-            }else if(attribute == userEmergency){
-                add picture (emergency)
-                add text(user + "has declared and emergency. Their current locaiton is " + userLocation);
-                turnBackgroundRed
-                centerCameraOnUserLocation
-            }else if(attribute == enteredDangerousZone){
-                add picture (enter_dangerous_zone);
-                add text(user + "has entered a dangerous zone");
-
-            }else if(attribute == exitedDangerousZone){
-
-            }else if(attribute == leftRoute){
-
-            }else if(attribute == userDroppedBuddii){
-
-            }else if(attribute == finishedRoute){
-
-            }
-        }
-         */
+        String location[] = dbHandler.loadGPS("0");
+        mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(location[0]), Double.parseDouble(location[1]))));
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        geofencingClient = LocationServices.getGeofencingClient(this);
+        //geofencingClient = LocationServices.getGeofencingClient(this);
 
 
         // Add a marker in Sydney and move the camera
@@ -282,7 +238,7 @@ public class ScrollMapBuddii extends AppCompatActivity implements OnMapReadyCall
 
         });
 
-        setWaypoints(RetrieveLocations());
+        //setWaypoints(RetrieveLocations());
         setBlueThings(); //Temporary place to put the addition of the blue things before we get a database for them
 
         mMap.setTrafficEnabled(true);
@@ -290,4 +246,10 @@ public class ScrollMapBuddii extends AppCompatActivity implements OnMapReadyCall
 
     }
 
+    public void onRefreshClick(View view) {
+        dataLoop();
+        DatabaseHandler dbHandler = new DatabaseHandler(ScrollMapBuddii.this);
+        String location[] = dbHandler.loadGPS("0");
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(location[0]), Double.parseDouble(location[1])), 15));
+    }
 }

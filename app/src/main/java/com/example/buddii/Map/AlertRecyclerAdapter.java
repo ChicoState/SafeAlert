@@ -1,5 +1,6 @@
 package com.example.buddii.Map;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -10,22 +11,36 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.buddii.R;
 
+import java.util.ArrayList;
+
 public class AlertRecyclerAdapter extends RecyclerView.Adapter<AlertRecyclerAdapter.AlertViewHolder> {
+    private ArrayList<AlertItem> mAlertList;
+
+
     @NonNull
     @Override
     public AlertViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.alert_card, parent, false);
+        AlertViewHolder evh = new AlertViewHolder(v);
+        return evh;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AlertRecyclerAdapter.AlertViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AlertViewHolder holder, int position) {
+        AlertItem currentItem = mAlertList.get(position);
+
+//        holder.mImageView.setImageResource(currentItem.getImageResource());
+        holder.mTextView1.setText(currentItem.getText1());
+        holder.mTextView2.setText(currentItem.getmText2());
 
     }
 
     @Override
     public int getItemCount() {
+        return mAlertList.size();
+    }
 
-        public static class AlertViewHolder extends RecyclerView.ViewHolder{
+    public static class AlertViewHolder extends RecyclerView.ViewHolder{
 
             public ImageView mImageView;
             public TextView mTextView1;
@@ -35,11 +50,13 @@ public class AlertRecyclerAdapter extends RecyclerView.Adapter<AlertRecyclerAdap
             public AlertViewHolder(@NonNull View itemView) {
                 super(itemView);
                 mImageView = itemView.findViewById(R.id.imageView);
-                mTextView1 = itemView.findViewById(R.id.directionCardText);
-                mTextView2 = itemView.findViewById(R.id.directionCardText2);
+                mTextView1 = itemView.findViewById(R.id.alertCardText);
+                mTextView2 = itemView.findViewById(R.id.alertCardText2);
             }
-        }
-
-        return 0;
     }
+
+    public AlertRecyclerAdapter(ArrayList<AlertItem> alertList){
+        mAlertList = alertList;
+    }
+
 }

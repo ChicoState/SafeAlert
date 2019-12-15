@@ -1,17 +1,17 @@
 package com.example.buddii.ui.login;
 
+import android.os.Build;
+import android.util.Patterns;
+
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import android.os.Build;
-import android.util.Patterns;
-
+import com.example.buddii.R;
 import com.example.buddii.data.LoginRepository;
 import com.example.buddii.data.Result;
 import com.example.buddii.data.model.LoggedInUser;
-import com.example.buddii.R;
 
 public class LoginViewModel extends ViewModel {
 

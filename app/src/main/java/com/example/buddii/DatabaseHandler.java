@@ -457,6 +457,81 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return ArrayOfresult;
     }
 
+    //get friends from specific user
+
+    public String[] loadFriends(String requestCall) {
+        SQLiteDatabase My_Database = this.getWritableDatabase();
+        /* get number of rows */
+
+        String[] requestHolderArray = requestCall.split(",");
+        int numOfRequest = requestHolderArray.length;
+        int count =0;
+        // array of Indeces to hold format of strings
+        String[] arrayOfIndecesHolder =new String[5];
+
+        int numOfUsers = getNumOfUsers();
+        String ArrayOfresult[] = new String[numOfUsers];
+
+
+        String result = "";
+        String SelectAll = "SELECT*FROM ";
+        String command = SelectAll + NAME_OF_FRIENDS_TABLE;
+
+        Cursor cursor = My_Database.rawQuery(command, null);
+        while (cursor.moveToNext()) {
+            String Uid = cursor.getString(0);
+            String phoneNumber = cursor.getString(1);
+            String name = cursor.getString(2);
+            String email = cursor.getString(3);
+            String password = cursor.getString(4);
+            String salt3 = cursor.getString(6);
+
+            // for loop will place the order of string according to the order
+            // the user request
+
+            for (int i = 0 ; i < numOfRequest; i++) {
+                if (requestHolderArray[i].equals("name")) {
+                    arrayOfIndecesHolder[i] = name;
+                }
+                if (requestHolderArray[i].equals("phoneNumber")) {
+                    arrayOfIndecesHolder[i] = phoneNumber;
+                }
+                if (requestHolderArray[i].equals("email")) {
+                    arrayOfIndecesHolder[i] = email;
+                }
+                if (requestHolderArray[i].equals("Uid")) {
+                    arrayOfIndecesHolder[i] = Uid;
+                }
+                if (requestHolderArray[i].equals("user_pass")) {
+                    arrayOfIndecesHolder[i] = password;
+                }
+                if (requestHolderArray[i].equals("salt")) {
+                    arrayOfIndecesHolder[i] = salt3;
+                }
+            }
+            for (int i = 0 ; i < numOfRequest; i++) {
+
+                result += arrayOfIndecesHolder[i] + " ";
+                if (i == (numOfRequest- 1))
+                {
+                    ArrayOfresult[count] = result;
+                }
+            }
+            result="";
+            count++;
+
+        }
+        System.getProperty("line.separator");
+        cursor.close();
+        My_Database.close();
+        // if nothing was appended then TOAST this
+        if (ArrayOfresult[0] == null ) {
+            Toast.makeText(context, "YOU HAVE NO FRIENDS", Toast.LENGTH_SHORT).show();
+        }
+
+        return ArrayOfresult;
+    }
+
     // this function returns the number of users in the database
     public int getNumOfUsers(){
         SQLiteDatabase My_Database = this.getWritableDatabase();

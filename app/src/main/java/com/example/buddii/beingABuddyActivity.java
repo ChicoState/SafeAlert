@@ -1,13 +1,12 @@
 package com.example.buddii;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import android.widget.MediaController;
 import android.widget.VideoView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class beingABuddyActivity extends AppCompatActivity {
 
@@ -16,7 +15,7 @@ public class beingABuddyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_being_abuddy);
 
-        Button playTutorialVideo = (Button)findViewById(R.id.playButton);
+       // Button playTutorialVideo = (Button)findViewById(R.id.playButton);
 
         getWindow().setFormat(PixelFormat.UNKNOWN);
 
@@ -26,6 +25,12 @@ public class beingABuddyActivity extends AppCompatActivity {
         Uri uri2 = Uri.parse(uriPath2);
         mVideoView2.setVideoURI(uri2);
         mVideoView2.requestFocus();
+        mVideoView2.start();
+
+        MediaController controller = new MediaController(this);
+        controller.setMediaPlayer(mVideoView2);
+        mVideoView2.setMediaController(controller);
+
         mVideoView2.start();
 
         /*

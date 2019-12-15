@@ -27,7 +27,6 @@ import com.example.buddii.DBActivity;
 import com.example.buddii.DatabaseHandler;
 import com.example.buddii.MainActivity;
 import com.example.buddii.R;
-import com.example.buddii.data.LoginDataSource;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -48,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         //initialize
         String checkCred = handler.getPword("<>","<>");
         setContentView(R.layout.activity_login_buddii);
-       // intialDBSYNC();
+        // intialDBSYNC();
 
 
         loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
@@ -147,7 +146,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent (LoginActivity.this, DBActivity.class);
-             //   intialDBSYNC();
+                //   intialDBSYNC();
                 startActivity(intent);
             }
         });
@@ -183,5 +182,10 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
 
 
+    }
+
+    public void moveToHome(View view) {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 }

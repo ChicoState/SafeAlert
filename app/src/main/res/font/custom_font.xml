@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<font-family xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<!-- regular -->
+<font
+    android:font="@font/objectsans_regular"
+    android:fontStyle="normal"
+    android:fontWeight="400"
+
+    app:font="@font/objectsans_regular"
+    app:fontStyle="normal"
+    app:fontWeight="400" />
+
+<!-- italic -->
+<font
+    android:font="@font/objectsans_slanted"
+    android:fontStyle="italic"
+    android:fontWeight="400"
+
+    app:font="@font/objectsans_slanted"
+    app:fontStyle="italic"
+    app:fontWeight="400" />
+
+<!-- bold -->
+<font
+    android:font="@font/objectsans_heavy"
+    android:fontStyle="normal"
+    android:fontWeight="700" />
+
+<!-- bold italic -->
+<font
+    android:font="@font/objectsans_heavyslanted"
+    android:fontStyle="normal"
+    android:fontWeight="700" />
+</font-family>

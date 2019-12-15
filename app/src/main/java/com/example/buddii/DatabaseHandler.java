@@ -988,7 +988,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
-    public static String friendsUID ="";
+    public static String friendsNameForTable ="";
 
 
     public void addToFriendsTable(final String phoneNumToget){
@@ -1026,7 +1026,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
                 if (phoneNumToget.equals(phone)){
                     Log.d("xxx-PHOEMATCHCC","THESE MATCH");
-                    friendsUID = uID;
+                    friendsNameForTable = namex;
                 }
 
 
@@ -1056,7 +1056,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         });
         // add to local Database
-    Log.d("xxFRINDIS",friendsUID);
+   // Log.d("xxFRINDIS",friendsUID);
     if (loggedInUserUniqueID == null)
     {
         return;
@@ -1065,7 +1065,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String columtoadd = "friends" + temp_num;
         String CREATE_FRIEND_COLUM = "ALTER TABLE " + NAME_OF_FRIENDS_TABLE + " ADD COLUMN "+ columtoadd  +" TEXT" ;
         My_Database.execSQL(CREATE_FRIEND_COLUM);
-        String ADD_FRIENDUID_TO_COLUM = "UPDATE OR REPLACE `FRIENDS_TABLE` SET `" + columtoadd + "`  = '" + friendsUID + "' WHERE `Uid` = " + loggedInUserUniqueID  ;
+        String ADD_FRIENDUID_TO_COLUM = "UPDATE OR REPLACE `FRIENDS_TABLE` SET `" + columtoadd + "`  = '" + friendsNameForTable + "' WHERE `Uid` = " + loggedInUserUniqueID  ;
         My_Database.execSQL(ADD_FRIENDUID_TO_COLUM);
 
 

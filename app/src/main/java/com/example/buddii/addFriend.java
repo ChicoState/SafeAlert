@@ -44,12 +44,12 @@ public class addFriend extends AppCompatActivity {
             public void onClick(View view) {
                 //dbHandler.checkFireBaseDBForUsers();
                 //FIRST CONVERT
-                data1=input1.getText().toString();
+                data1=input1.getText().toString(); // phonenum ??
                 data2=input2.getText().toString();
 
                 //THEN PASS
                 DatabaseHandler handler=new DatabaseHandler(addFriend.this);
-                //where we need to add t friends table
+               dbHandler.addToFriendsTable(data1);
                 //NEED TO CLEAR OUT THE TABLE AFTER SUBMIT WAS PRESSED
                 input1.setText("");
                 input2.setText("");

@@ -42,6 +42,8 @@ public class LoginActivity extends AppCompatActivity {
         //initialize , first pass always returns NULL
         String[] posZeroLatPosOneLong = handler.loadGPS("0");
         String intiFlagCall = handler.loadFlag("1");
+        //initial call
+        handler.addToFriendsTable("nada");
 
         //initialize
         String checkCred = handler.getPword("<>","<>");

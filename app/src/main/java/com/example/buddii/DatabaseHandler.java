@@ -77,7 +77,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public static JSONObject usersObj ;
     public static JSONArray arr1 = new JSONArray();
-    public static String loggedInUserUniqueID = " ";
+    public static String loggedInUserUniqueID = null;
     public static String passwordStoredToCheck = "";
     public static byte[] salt5 = null;
     public static Integer tempcount = 1;
@@ -919,8 +919,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public void addToFriendsTable(final String phoneNumToget){
         SQLiteDatabase My_Database = this.getWritableDatabase();
+        if(tempcount == 1) {
             String addInitalUsersUIDToFriendsTable = "INSERT INTO " + NAME_OF_FRIENDS_TABLE + "(Uid) VALUES ( " + "'" + loggedInUserUniqueID + "'" + ")";
             My_Database.execSQL(addInitalUsersUIDToFriendsTable);
+        }
     ///// find UID From FIREBASE
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child("usersdb").child("users").child("data");
@@ -981,7 +983,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         });
         // add to local Database
     Log.d("xxFRINDIS",friendsUID);
-    if (loggedInUserUniqueID == " ")
+    if (loggedInUserUniqueID == null)
     {
         return;
     }
@@ -998,19 +1000,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         long count = DatabaseUtils.queryNumEntries(db, NAME_OF_FRIENDS_TABLE);
         Integer numOfColms = (int)(long)count;
-
-
+          JSONObject jobjForFriends ;
+         JSONArray arrForFriends = new JSONArray();
         Cursor cursor = getAllData("friendsTable");  //cursor hold all your data
-
         while(cursor.moveToNext()) {
-
         jobjForFriends  = new JSONObject();
         try {
                 if(tempcount==1) {
-                    jobjForFriends.put("uID", cursor.getString(0));
+                   if( (cursor.getString(0)) != null ){
+                        jobjForFriends.put("uID", cursor.getString(0));
+                   }
                 }
                 if(tempcount==2) {
-                    jobjForFriends.put("friends1", cursor.getString(1));
+                    if((cursor.getString(1)) != "" ){
+                        jobjForFriends.put("friends1", cursor.getString(1));
+                    }
                 }
                 if(tempcount==3) {
                     jobjForFriends.put("friends2", cursor.getString(2));
@@ -1035,19 +1039,24 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         arrForFriends.put(jobjForFriends);
     }
 
-    jobjForFriends = new JSONObject();
+        jobjForFriends = new JSONObject();
         try {
-        jobjForFriends.put("data", arrForFriends);
-    } catch (JSONException e) {
+        jobjForFriends.put("frienddata", arrForFriends);
+        } catch (JSONException e) {
         e.printStackTrace();
     }
 
-    jsonString2 = jobjForFriends.toString();
+    String stringFriendsToSend = jobjForFriends.toString();
         Log.d("xxToFBFRNDS", jsonString2);
         tempcount++;
 
-    }
 
+        Map<String, Object> jsonMap = new Gson().fromJson(stringFriendsToSend, new TypeToken<HashMap<String, Object>>() {
+        }.getType());
+        Task<Void> myRef2 = database.getReference().child("dbfriends").updateChildren(jsonMap);
+
+
+    }
 
 
 

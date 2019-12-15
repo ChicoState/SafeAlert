@@ -2,15 +2,16 @@
 
 
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<adroid.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fadingEdge="horizontal|vertical"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@android:color/holo_green_dark">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/buttonField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,7 +35,7 @@
             android:layout_weight="2"
             android:text="REPORT" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
     <LinearLayout
@@ -43,9 +44,10 @@
         android:layout_height="wrap_content"
 
         android:layout_margin="10dp"
-        android:layout_weight=".5"
+        android:layout_weight=".2"
         android:background="@android:drawable/btn_default"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        tools:ignore="ExtraText">
         android:visibility="visibility"
 
 
@@ -78,18 +80,19 @@
         android:layout_height="wrap_content"
 
         android:layout_margin="10dp"
-        android:layout_weight=".5"
+        android:layout_weight=".2"
         android:background="@android:drawable/btn_default"
         android:orientation="horizontal"
         android:visibility="gone">
 
         <EditText
-            android:id="@+id/reportText"
+            android:id="@+id/reportTextUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="3.75"
             android:background="@color/common_google_signin_btn_text_dark_default"
-            android:hint="Report Location" />
+            android:hint="Report Location"
+            android:autofillHints="" />
 
 
         <Button
@@ -103,8 +106,14 @@
 
     </LinearLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/directionsView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight=".15" />
+
     <fragment
-        android:id="@+id/map"
+        android:id="@+id/mapBuddii"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -119,7 +128,11 @@
         android:fadingEdge="horizontal|vertical"
         android:text="Get Directions" />
 
+    <android.support.design.widget.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:id="@+id/nv" />
 
-
-</LinearLayout>
+</adroid.support.v4.widget.DrawerLayout>
 

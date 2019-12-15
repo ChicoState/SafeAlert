@@ -1,5 +1,9 @@
 package com.example.buddii.data;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import com.example.buddii.data.model.LoggedInUser;
 
 /**
@@ -43,6 +47,7 @@ public class LoginRepository {
         // @see https://developer.android.com/training/articles/keystore
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public Result<LoggedInUser> login(String username, String password) {
         // handle login
         Result<LoggedInUser> result = dataSource.login(username, password);

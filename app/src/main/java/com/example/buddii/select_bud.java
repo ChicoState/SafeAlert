@@ -1,15 +1,8 @@
 package com.example.buddii;
 
-
 import android.app.Activity;
-
 import android.os.Bundle;
-import android.view.View;
-import androidx.appcompat.app.AppCompatActivity;
-import java.util.ArrayList;
-
-
-import android.widget.TextView;
+import android.widget.Button;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +11,7 @@ import java.util.ArrayList;
 
 public class select_bud extends Activity
 {
+    Button buddiiist, friendList;
     private ArrayList<String> mbuddiiNames = new ArrayList<>();
     private ArrayList<String> mbuddiiImages = new ArrayList<>();
 

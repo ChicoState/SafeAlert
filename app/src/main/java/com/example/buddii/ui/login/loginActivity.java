@@ -153,4 +153,9 @@ public class loginActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
 
     }
+
+    public void moveToHome(View view) {
+        Intent intent = new Intent (loginActivity.this, mainActivity.class);
+        startActivity(intent);
+    }
 }

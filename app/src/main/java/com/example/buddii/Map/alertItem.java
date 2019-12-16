@@ -2,6 +2,7 @@ package com.example.buddii.Map;
 
 public class alertItem {
 
+
     private String mText1;
     private String mText2;
 

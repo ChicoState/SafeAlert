@@ -33,13 +33,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.buddii.databaseHandler;
-import com.example.buddii.freakout;
 import com.example.buddii.Map.directionItem;
+import com.example.buddii.Map.directionsAdapter;
 import com.example.buddii.Map.directionsJSONParser;
 import com.example.buddii.Map.directionsRecyclerAdapter;
-import com.example.buddii.Map.directionsAdapter;
 import com.example.buddii.R;
+import com.example.buddii.databaseHandler;
+import com.example.buddii.freakout;
+import com.example.buddii.selectBud;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -126,7 +127,7 @@ public class ScrollMapUser extends AppCompatActivity
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
 
-    private void makeDirections(LatLng pT, LatLng pTF, LatLng pTA) {
+    private void makeDirections(LatLng pT, LatLng pTF, LatLng pTA) { //add the direcitons to the recycler view using three points and comparing their rise/run
         double firstRise, secondRise, firstRun, secondRun;
 
         firstRise = pTF.latitude - pTA.latitude;
@@ -160,7 +161,7 @@ public class ScrollMapUser extends AppCompatActivity
 
     }
 
-    private void makeDirectionsAdapter() {
+    private void makeDirectionsAdapter() { //cycles through the turns that need to be displayed on the directions view
         for (int i = 0; i < directionsJSONParser.pointsTurn.size() - 1; i += 2) {
             makeDirections(new LatLng((Double) directionsJSONParser.pointsTurn.elementAt(i), (Double) directionsJSONParser.pointsTurn.elementAt(i + 1)), new LatLng((Double) directionsJSONParser.pointsTurnFrom.elementAt(i), (Double) directionsJSONParser.pointsTurnFrom.elementAt(i + 1)), new LatLng((Double) directionsJSONParser.pointsTurnAfter.elementAt(i), (Double) directionsJSONParser.pointsTurnAfter.elementAt(i + 1)));
         }
@@ -180,7 +181,7 @@ public class ScrollMapUser extends AppCompatActivity
         }
     }
 
-    private void setBlueThings() { //THIS IS TEMPORARY YOU SONS OF BITCHES
+    private void setBlueThings() { //temporary place to keep the emergency beacons on campus
 
         mMap.addCircle(new CircleOptions().center(new LatLng(39.726408, -121.847657))
                 .radius(10)
@@ -224,7 +225,7 @@ public class ScrollMapUser extends AppCompatActivity
                 .fillColor(Color.CYAN));
     }
 
-    private void getCurrLocation() {
+    private void getCurrLocation() { //retrieves the current locaiton using android api
         client = LocationServices.getFusedLocationProviderClient(this);
 
         if (ActivityCompat.checkSelfPermission(ScrollMapUser.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -251,11 +252,11 @@ public class ScrollMapUser extends AppCompatActivity
         });
     }
 
-    private void requestPermissions() {
+    private void requestPermissions() { //requests permission for location
         ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION}, 1);
     }
 
-    private void createGoogleApi() {
+    private void createGoogleApi() { //google api for locaiton services
         Log.d(TAG, "createGoogleApi()");
         if (googleApiClient == null) {
             googleApiClient = new GoogleApiClient.Builder(this)
@@ -276,10 +277,9 @@ public class ScrollMapUser extends AppCompatActivity
         setSupportActionBar(toolbarUser);
         createGoogleApi();
         requestPermissions();
-
         getCurrLocation();
 
-
+        //initializa recycler view
         mRecyclerView = findViewById(R.id.directionsRecycler);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
@@ -305,6 +305,7 @@ public class ScrollMapUser extends AppCompatActivity
 
     }
 
+    //Watches for change in current location so that it can be used by the User and the Buddii
     final LocationListener locationListenerGPS = new LocationListener() {
         private float[] mRotationMatrix = new float[16];
         float mDeclination;
@@ -373,6 +374,8 @@ public class ScrollMapUser extends AppCompatActivity
         }
     };
 
+
+    //Checks if location is able to be used by the User
     private void isLocationEnabled() {
 
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -400,9 +403,11 @@ public class ScrollMapUser extends AppCompatActivity
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+
+        //Function to allow the user to find directions by clicking on different points on the map
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
-            public void onMapClick(LatLng latLng) { // Im aware this shit makes no sense right now just bare with me
+            public void onMapClick(LatLng latLng) {
 
                 // Already two locations
                 if (mMarkerPoints.size() >= 3) {
@@ -468,6 +473,8 @@ public class ScrollMapUser extends AppCompatActivity
         mMap.setMapType(2);
 
     }
+
+    //beginning of the process that makes directions between current location and the location chosen by the user
     public void onMapSearch(View view) {
         EditText locationSearch = findViewById(R.id.RouteManual);
         String location = locationSearch.getText().toString();
@@ -493,6 +500,7 @@ public class ScrollMapUser extends AppCompatActivity
         }
     }
 
+    //when the user reports a location the camera moves to it and marks its location for the geofencer (currently not working)
     public void onReport(View view) {
         EditText locationReport = findViewById(R.id.reportTextUser);
         String location = locationReport.getText().toString();
@@ -524,6 +532,7 @@ public class ScrollMapUser extends AppCompatActivity
 
     }
 
+    //Change to home tab when the Home button is clicked
     public void onHomeClick(View view) {
         UserTabInfo = findViewById(R.id.UserTabInfo);
         UserTabHome = findViewById(R.id.UserTabHome);
@@ -535,6 +544,7 @@ public class ScrollMapUser extends AppCompatActivity
         UserTabRoute.setVisibility(GONE);
     }
 
+    //Change to info tab when the Info button is clicked
     public void onInfoClick(View view) {
         UserTabInfo = findViewById(R.id.UserTabInfo);
         UserTabHome = findViewById(R.id.UserTabHome);
@@ -546,6 +556,7 @@ public class ScrollMapUser extends AppCompatActivity
         UserTabReport.setVisibility(GONE);
     }
 
+    //Change to route tab when the route button is clicked
     public void onRouteClick(View view) {
         UserTabInfo = findViewById(R.id.UserTabInfo);
         UserTabHome = findViewById(R.id.UserTabHome);
@@ -557,6 +568,7 @@ public class ScrollMapUser extends AppCompatActivity
         UserTabReport.setVisibility(GONE);
     }
 
+    //Change to the report tab when the Report tab is clicked
     public void onReportClick(View view) {
         UserTabInfo = findViewById(R.id.UserTabInfo);
         UserTabHome = findViewById(R.id.UserTabHome);
@@ -568,6 +580,7 @@ public class ScrollMapUser extends AppCompatActivity
         UserTabInfo.setVisibility(GONE);
     }
 
+    //Change to Directions view and send route info to the Buddii through firebase
     public void onAcceptRouteClick(View view) {
         UserTabInfo = findViewById(R.id.UserTabInfo);
         UserTabHome = findViewById(R.id.UserTabHome);
@@ -594,6 +607,7 @@ public class ScrollMapUser extends AppCompatActivity
 
     }
 
+    //Drops route and changes to screen where user can pick route. also sends route drop info to the Buddii
     public void onDropRoute(View view) {
         UserTabInfo = findViewById(R.id.UserTabInfo);
         UserTabHome = findViewById(R.id.UserTabHome);
@@ -617,7 +631,11 @@ public class ScrollMapUser extends AppCompatActivity
         UserRoute.setVisibility(VISIBLE);
     }
 
+    //Drops buddii and sends that flag to the buddii
     public void onDropBuddiiClick(View view) {
+
+        Intent intent  = new Intent(ScrollMapUser.this, selectBud.class);
+        startActivity(intent);
 
         try {
             dbHandler.sendFlag("0", "B");
@@ -626,10 +644,12 @@ public class ScrollMapUser extends AppCompatActivity
         }
     }
 
+    //Moves the map to the current location of the User
     public void onCurrLocClick(View view) {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15));
     }
 
+    //Notifies the Buddii of the Alert and changes the User's view to the Freakout function
     public void onBigAlertEnergyClick(View view) {
 
         Intent intent = new Intent(ScrollMapUser.this, freakout.class);
@@ -642,10 +662,12 @@ public class ScrollMapUser extends AppCompatActivity
         }
     }
 
+    //allows use of mPolyline to directionsAdapter
     public static Polyline getPolyline(){
         return mPolyline;
     }
 
+    //allows user of the map from directionsAdapter
     public static GoogleMap getMap(){
         return mMap;
     }

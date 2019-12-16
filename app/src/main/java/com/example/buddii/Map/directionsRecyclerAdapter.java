@@ -13,6 +13,7 @@ import com.example.buddii.R;
 
 import java.util.ArrayList;
 
+//Adapter for the recycler view to use directionItems
 public class directionsRecyclerAdapter extends RecyclerView.Adapter<directionsRecyclerAdapter.DirectionsViewHolder> {
     private ArrayList<directionItem> mDirectionList;
 

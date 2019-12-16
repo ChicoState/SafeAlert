@@ -19,14 +19,14 @@ public class alertRecyclerAdapter extends RecyclerView.Adapter<alertRecyclerAdap
 
     @NonNull
     @Override
-    public AlertViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AlertViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) { //Viewholder for AlertItem
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.alert_card, parent, false);
         AlertViewHolder evh = new AlertViewHolder(v);
         return evh;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AlertViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AlertViewHolder holder, int position) { //
         alertItem currentItem = mAlertList.get(position);
         holder.mTextView1.setText(currentItem.getText1());
         holder.mTextView2.setText(currentItem.getmText2());
@@ -36,7 +36,7 @@ public class alertRecyclerAdapter extends RecyclerView.Adapter<alertRecyclerAdap
     @Override
     public int getItemCount() {
         return mAlertList.size();
-    }
+    } //gets the amount of AlertItems
 
     public static class AlertViewHolder extends RecyclerView.ViewHolder{
 

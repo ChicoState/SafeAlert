@@ -5,7 +5,7 @@ public class directionItem {
     private String mText1;
     private String mText2;
 
-    public directionItem(int imageResource, String text1, String text2){
+    public directionItem(int imageResource, String text1, String text2){ //Initialize directionItem
         mImageResource = imageResource;
         mText1 = text1;
         mText2 = text2;

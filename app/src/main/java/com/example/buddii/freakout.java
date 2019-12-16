@@ -8,6 +8,7 @@ import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+//Class that plays an obnoxious video to alert others to the presence of someone in danger
 public class freakout extends AppCompatActivity {
 
     @Override

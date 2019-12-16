@@ -23,7 +23,7 @@ public class beBuddiiActivity extends AppCompatActivity {
         Uri uri2 = Uri.parse(uriPath2);
         mVideoView2.setVideoURI(uri2);
         mVideoView2.requestFocus();
-        mVideoView2.start();
+        mVideoView2.start(); //Plays the tutorial video
 
         MediaController controller = new MediaController(this);
         controller.setMediaPlayer(mVideoView2);

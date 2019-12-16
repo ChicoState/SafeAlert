@@ -8,7 +8,7 @@ public class loggedInUser {
     private String userId;
     private String displayName;
 
-    public loggedInUser(String userId, String displayName) {
+    public loggedInUser(String userId, String displayName) { //intizialize logged in user
         this.userId = userId;
         this.displayName = displayName;
     }

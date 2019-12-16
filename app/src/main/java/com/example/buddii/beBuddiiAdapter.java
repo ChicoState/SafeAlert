@@ -18,6 +18,8 @@ import com.example.buddii.Map.BuddiiView.scrollMapBuddii;
 
 import java.util.ArrayList;
 
+
+//Class used to display the users that can be chosen
 public class beBuddiiAdapter extends RecyclerView.Adapter<beBuddiiAdapter.ViewHolder> {
 
     private static final String TAG = "buddiiAdapter";

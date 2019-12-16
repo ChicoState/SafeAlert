@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,21 +13,15 @@ public class mainActivity extends AppCompatActivity {
     private Button btnTut;
     private Button btnFriend;
 
-    private Button btnTst;
-    TextView UserTexViewVariable;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //getLocationPermission();
-
         btnFSR = findViewById(R.id.findRoute);
         btnBab = findViewById(R.id.beABuddii);
         btnTut = findViewById(R.id.Tutorial);
         btnFriend = findViewById(R.id.addBuddiiFriend);
-       // btnTst = findViewById(R.id.testdb);
         btnFSR.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -50,9 +43,6 @@ public class mainActivity extends AppCompatActivity {
                 moveToAddFriend();
             }
         });
-
-
-       // UserTexViewVariable=(TextView)findViewById(R.id.bud2);
 
         btnTut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,11 +67,6 @@ public class mainActivity extends AppCompatActivity {
 
     private void moveToTut(){
         Intent intent = new Intent(mainActivity.this, tutorialActivity.class);
-        startActivity(intent);
-    }
-
-    private void moveToDb(){
-        Intent intent = new Intent(mainActivity.this, dbActivity.class);
         startActivity(intent);
     }
 

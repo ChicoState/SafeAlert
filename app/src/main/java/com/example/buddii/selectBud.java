@@ -36,7 +36,6 @@ public class selectBud extends Activity
         }
         String ArrayOfBuddies[];
         ArrayOfBuddies=(dbHandler.loadUsers("name"));
-        // mbuddiiNames.add("TESTING");
 
         // for loop will irretiate the index of ArrayOfBuddies and will
         // populate them into mBuddiNames ArrayList
@@ -48,6 +47,7 @@ public class selectBud extends Activity
         initRecyclerView();
 
     }
+
     private void initRecyclerView(){
         RecyclerView recyclerView = findViewById(R.id.findBudsList);
         buddiiAdapter adapter = new buddiiAdapter(this, mbuddiiImages, mbuddiiNames);

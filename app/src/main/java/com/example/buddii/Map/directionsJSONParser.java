@@ -75,6 +75,7 @@ public class directionsJSONParser {
         return routes;
     }
 
+    //decodes the direction polylines
     private List<LatLng> decodePoly(String encoded) {
 
         List<LatLng> poly = new ArrayList<LatLng>();

@@ -37,7 +37,7 @@ public class directionsAdapter {
         downloadTask.execute(url);
     }
 
-    public static String getDirectionsUrl(LatLng origin, LatLng dest) {
+    public static String getDirectionsUrl(LatLng origin, LatLng dest) { //Creates the URL to be searched for the directions
 
         String google_maps_key = "AIzaSyB-lVKAaaAgSpzcPmCLUgmbkiIiFzCjpoU";
 

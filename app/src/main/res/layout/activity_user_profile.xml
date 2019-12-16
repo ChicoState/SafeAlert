@@ -24,7 +24,7 @@
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
-            android:layout_height="110dp "
+            android:layout_height="110dp"
             android:layout_gravity="center"
             android:adjustViewBounds="false"
             android:contentDescription="TODO"
@@ -51,6 +51,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/message"
+            app:backgroundTint="#1B71DE"
+            app:cornerRadius="20dp"
+            app:iconPadding="10dp" />
+
+        <Button
+            android:id="@+id/add_friend_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Add Friend"
             app:backgroundTint="#1B71DE"
             app:cornerRadius="20dp"
             app:iconPadding="10dp" />

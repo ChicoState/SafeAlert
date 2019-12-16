@@ -8,10 +8,13 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
+
 public class MainActivity extends AppCompatActivity {
     private Button btnFSR;
     private Button btnBab;
     private Button btnTut;
+    private Button btnFriend;
 
     private Button btnTst;
     TextView UserTexViewVariable;
@@ -26,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         btnFSR = findViewById(R.id.findRoute);
         btnBab = findViewById(R.id.beABuddii);
         btnTut = findViewById(R.id.Tutorial);
+        btnFriend = findViewById(R.id.addBuddiiFriend);
        // btnTst = findViewById(R.id.testdb);
         btnFSR.setOnClickListener(new View.OnClickListener()
         {
@@ -39,6 +43,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 moveToBaB();
+            }
+        });
+
+        btnFriend.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                moveToAddFriend();
             }
         });
 
@@ -56,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void moveToBaB()
     {
-        Intent intent = new Intent (MainActivity.this, select_bud.class);
+        Intent intent = new Intent (MainActivity.this, beABuddy.class);
         startActivity(intent);
     }
 
@@ -74,7 +85,11 @@ public class MainActivity extends AppCompatActivity {
     private void moveToDb(){
         Intent intent = new Intent(MainActivity.this, DBActivity.class);
         startActivity(intent);
-        }
+    }
 
+    private void moveToAddFriend(){
+        Intent intent = new Intent(MainActivity.this, addFriend.class);
+        startActivity(intent);
+    }
 
 }

@@ -24,7 +24,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,6 +43,7 @@ import com.example.buddii.Map.DirectionsRecyclerAdapter;
 import com.example.buddii.Map.GeofenceTransitionsIntentService;
 import com.example.buddii.Map.directionsAdapter;
 import com.example.buddii.R;
+import com.example.buddii.select_bud;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -101,6 +101,7 @@ public class ScrollMapUser extends AppCompatActivity
     GeofencingClient mGeofencingClient;
     PendingIntent mGeofencePendingIntent;
     int numero = 0;
+    DatabaseHandler dbHandler;
 
 
     private static final List<PatternItem> PATTERN_POLYLINE_DOTTED = null;
@@ -322,7 +323,7 @@ public class ScrollMapUser extends AppCompatActivity
 
     }
 
-    LocationListener locationListenerGPS = new LocationListener() {
+    final LocationListener locationListenerGPS = new LocationListener() {
         private float[] mRotationMatrix = new float[16];
         float mDeclination;
         SensorEvent event;
@@ -353,9 +354,9 @@ public class ScrollMapUser extends AppCompatActivity
             }
             currLocMovingCircle = mMap.addCircle(circleOptions);
 
-            DatabaseHandler dbHandler = new DatabaseHandler(ScrollMapUser.this);
+            dbHandler = new DatabaseHandler(ScrollMapUser.this);
             try {
-                dbHandler.addGPS(latitude,longitude);
+                dbHandler.addGPS(latitude, longitude);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -555,6 +556,12 @@ public class ScrollMapUser extends AppCompatActivity
 
             mDestination = latLng;
 
+            try {
+                dbHandler.sendFlag("0", "L");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
             if(false) {
 
                 numero++;
@@ -596,8 +603,6 @@ public class ScrollMapUser extends AppCompatActivity
         UserTabHome = findViewById(R.id.UserTabHome);
         UserTabReport = findViewById(R.id.UserTabReport);
         UserTabRoute = findViewById(R.id.UserTabRoute);
-        UserTabChat = findViewById(R.id.UserTabChat);
-        UserTabChat.setVisibility(GONE);
         UserTabInfo.setVisibility(View.GONE);
         UserTabHome.setVisibility(VISIBLE);
         UserTabReport.setVisibility(GONE);
@@ -609,8 +614,6 @@ public class ScrollMapUser extends AppCompatActivity
         UserTabHome = findViewById(R.id.UserTabHome);
         UserTabReport = findViewById(R.id.UserTabReport);
         UserTabRoute = findViewById(R.id.UserTabRoute);
-        UserTabChat = findViewById(R.id.UserTabChat);
-        UserTabChat.setVisibility(GONE);
         UserTabInfo.setVisibility(VISIBLE);
         UserTabHome.setVisibility(GONE);
         UserTabRoute.setVisibility(GONE);
@@ -622,8 +625,6 @@ public class ScrollMapUser extends AppCompatActivity
         UserTabHome = findViewById(R.id.UserTabHome);
         UserTabReport = findViewById(R.id.UserTabReport);
         UserTabRoute = findViewById(R.id.UserTabRoute);
-        UserTabChat = findViewById(R.id.UserTabChat);
-        UserTabChat.setVisibility(GONE);
         UserTabRoute.setVisibility(VISIBLE);
         UserTabHome.setVisibility(GONE);
         UserTabInfo.setVisibility(GONE);
@@ -635,8 +636,6 @@ public class ScrollMapUser extends AppCompatActivity
         UserTabHome = findViewById(R.id.UserTabHome);
         UserTabReport = findViewById(R.id.UserTabReport);
         UserTabRoute = findViewById(R.id.UserTabRoute);
-        UserTabChat = findViewById(R.id.UserTabChat);
-        UserTabChat.setVisibility(GONE);
         UserTabReport.setVisibility(VISIBLE);
         UserTabHome.setVisibility(GONE);
         UserTabRoute.setVisibility(GONE);
@@ -650,8 +649,6 @@ public class ScrollMapUser extends AppCompatActivity
         UserTabRoute = findViewById(R.id.UserTabRoute);
         UserHome = findViewById(R.id.UserHome);
         UserRoute = findViewById(R.id.UserRoute);
-        UserTabChat = findViewById(R.id.UserTabChat);
-        UserTabChat.setVisibility(GONE);
         UserTabRoute.setVisibility(GONE);
         UserTabHome.setVisibility(VISIBLE);
         UserTabInfo.setVisibility(GONE);
@@ -659,11 +656,14 @@ public class ScrollMapUser extends AppCompatActivity
         UserHome.setVisibility(VISIBLE);
         UserRoute.setVisibility(GONE);
 
+        dbHandler = new DatabaseHandler(ScrollMapUser.this);
+        try {
+            dbHandler.sendFlag("0", "R");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         makeDirectionsAdapter();
-
-        TextView textView = findViewById(R.id.directionsTester);
-        textView.setText(directionTestString);
-
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), 15));
 
     }
@@ -673,8 +673,6 @@ public class ScrollMapUser extends AppCompatActivity
         UserTabHome = findViewById(R.id.UserTabHome);
         UserTabReport = findViewById(R.id.UserTabReport);
         UserTabRoute = findViewById(R.id.UserTabRoute);
-        UserTabChat = findViewById(R.id.UserTabChat);
-        UserTabChat.setVisibility(GONE);
         UserTabInfo.setVisibility(View.GONE);
         UserTabHome.setVisibility(GONE);
         UserTabReport.setVisibility(GONE);
@@ -682,6 +680,13 @@ public class ScrollMapUser extends AppCompatActivity
         for (int i = 0; i < directionList.size(); i++) {
             directionList.remove(i);
         }
+
+        try {
+            dbHandler.sendFlag("0", "D");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         UserHome.setVisibility(GONE);
         UserRoute.setVisibility(VISIBLE);
     }
@@ -691,12 +696,22 @@ public class ScrollMapUser extends AppCompatActivity
         UserTabHome = findViewById(R.id.UserTabHome);
         UserTabReport = findViewById(R.id.UserTabReport);
         UserTabRoute = findViewById(R.id.UserTabRoute);
-        UserTabChat = findViewById(R.id.UserTabChat);
-        UserTabChat.setVisibility(VISIBLE);
         UserTabReport.setVisibility(GONE);
         UserTabHome.setVisibility(GONE);
         UserTabRoute.setVisibility(GONE);
         UserTabInfo.setVisibility(GONE);
+    }
+
+    public void onDropBuddiiClick(View view) {
+
+        try {
+            dbHandler.sendFlag("0", "B");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Intent intent = new Intent(ScrollMapUser.this, select_bud.class);
+
     }
 
     public void onCurrLocClick(View view) {
@@ -707,6 +722,12 @@ public class ScrollMapUser extends AppCompatActivity
 
         Intent intent = new Intent(ScrollMapUser.this, Freakout.class);
         startActivity(intent);
+        dbHandler = new DatabaseHandler(ScrollMapUser.this);
+        try {
+            dbHandler.sendFlag("0", "A");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public static Polyline getPolyline(){
@@ -716,4 +737,5 @@ public class ScrollMapUser extends AppCompatActivity
     public static GoogleMap getMap(){
         return mMap;
     }
+
 }

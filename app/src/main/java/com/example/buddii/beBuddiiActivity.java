@@ -8,18 +8,18 @@ import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class Freakout extends AppCompatActivity {
+public class beBuddiiActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_freakout);
+        setContentView(R.layout.activity_being_abuddy);
 
         getWindow().setFormat(PixelFormat.UNKNOWN);
 
-        VideoView mVideoView2 = (VideoView)findViewById(R.id.blueandred);
+        VideoView mVideoView2 = (VideoView)findViewById(R.id.tutorialVideo);
 
-        String uriPath2 = "android.resource://"+getPackageName()+"/"+R.raw.blueandred;
+        String uriPath2 = "android.resource://"+getPackageName()+"/"+R.raw.movie;
         Uri uri2 = Uri.parse(uriPath2);
         mVideoView2.setVideoURI(uri2);
         mVideoView2.requestFocus();
@@ -30,6 +30,5 @@ public class Freakout extends AppCompatActivity {
         mVideoView2.setMediaController(controller);
 
         mVideoView2.start();
-        }
-
+    }
 }

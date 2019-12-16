@@ -3,12 +3,6 @@ package com.example.buddii.Map;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.buddii.Map.UserView.ScrollMapUser;
 import com.google.android.gms.maps.GoogleMap;
@@ -31,18 +25,6 @@ import java.util.List;
 public class directionsAdapter {
 
     private static final String TAG = "com.example.buddii.Map.directionsAdapter";
-
-    public class ViewHolder extends RecyclerView.ViewHolder{
-
-        //DirectionImageView image;
-        TextView imageName;
-        RelativeLayout parentLayout;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            //image = itemView.findViewBy
-        }
-    }
 
     public static void drawRoute(LatLng mOrigin, LatLng mDestination) {
 
@@ -161,11 +143,10 @@ public class directionsAdapter {
 
             try {
                 jObject = new JSONObject(jsonData[0]);
-                DirectionsJSONParser parser = new DirectionsJSONParser();
+                directionsJSONParser parser = new directionsJSONParser();
 
                 // Starts parsing data
                 routes = parser.parse(jObject);
-                //initRecyclerView(parser.getPoints());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -210,10 +191,8 @@ public class directionsAdapter {
                     mPolyline.remove();
                 }
                 GoogleMap mMap = ScrollMapUser.getMap();
-                mPolyline = mMap.addPolyline(lineOptions);
 
             }
-                //Toast.makeText(getApplicationContext(), "No route is found", Toast.LENGTH_LONG).show();
         }
     }
 }

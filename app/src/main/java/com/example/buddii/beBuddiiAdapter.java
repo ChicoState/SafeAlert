@@ -14,13 +14,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.buddii.Map.BuddiiView.ScrollMapBuddii;
+import com.example.buddii.Map.BuddiiView.scrollMapBuddii;
 
 import java.util.ArrayList;
 
 public class beBuddiiAdapter extends RecyclerView.Adapter<beBuddiiAdapter.ViewHolder> {
 
-    private static final String TAG = "buddiisAdapter";
+    private static final String TAG = "buddiiAdapter";
 
     private ArrayList<String> mbuddiiImages = new ArrayList<>();
     private ArrayList<String> mbuddiiNames = new ArrayList<>();
@@ -56,8 +56,7 @@ public class beBuddiiAdapter extends RecyclerView.Adapter<beBuddiiAdapter.ViewHo
         holder.parent.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, ScrollMapBuddii.class);
-                //  intent.putExtra("buddiiImage",mbuddiiImages.get(position));
+                Intent intent = new Intent(mContext, scrollMapBuddii.class);
                 intent.putExtra("userBuddii",mbuddiiNames.get(position));
                 mContext.startActivity(intent);
             }

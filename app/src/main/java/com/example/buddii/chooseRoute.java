@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.marshallers.ByteBufferToBinaryMarshaller;
-import com.example.buddii.Map.BuddiiView.ScrollMapBuddii;
 import com.example.buddii.Map.UserView.ScrollMapUser;
 
 public class chooseRoute extends AppCompatActivity {
@@ -55,12 +53,12 @@ public class chooseRoute extends AppCompatActivity {
         startActivity(intent);
     }
     private void moveToSelectBuddii() {
-        Intent intent = new Intent(chooseRoute.this, select_bud.class);
+        Intent intent = new Intent(chooseRoute.this, selectBud.class);
         startActivity(intent);
     }
 
     private void moveToSelectFriend(){
-        Intent intent = new Intent(chooseRoute.this, select_friends.class);
+        Intent intent = new Intent(chooseRoute.this, selectFriends.class);
         startActivity(intent);
     }
 

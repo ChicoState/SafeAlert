@@ -2,14 +2,13 @@ package com.example.buddii;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.widget.Button;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class select_friends extends Activity
+public class selectFriends extends Activity
 {
     private ArrayList<String> fbuddiiNames = new ArrayList<>();
     private ArrayList<String> fbuddiiImages = new ArrayList<>();
@@ -27,7 +26,7 @@ public class select_friends extends Activity
     private void addUsers(){
 
 
-        DatabaseHandler dbHandler = new DatabaseHandler(this);
+        databaseHandler dbHandler = new databaseHandler(this);
         int numOfBuddies = dbHandler.getNumOfUsers();
         //If database is empty return , othewise will crash app
         if (numOfBuddies == 0){
@@ -49,7 +48,7 @@ public class select_friends extends Activity
     }
     private void initRecyclerView(){
         RecyclerView recyclerView = findViewById(R.id.findFriendsList);
-        buddiisAdapter adapter = new buddiisAdapter(this, fbuddiiImages, fbuddiiNames);
+        buddiiAdapter adapter = new buddiiAdapter(this, fbuddiiImages, fbuddiiNames);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }

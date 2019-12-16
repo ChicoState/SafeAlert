@@ -18,16 +18,16 @@ import com.example.buddii.Map.UserView.ScrollMapUser;
 
 import java.util.ArrayList;
 
-public class buddiisAdapter extends RecyclerView.Adapter<buddiisAdapter.ViewHolder>{
+public class buddiiAdapter extends RecyclerView.Adapter<buddiiAdapter.ViewHolder>{
 
-    private static final String TAG = "buddiisAdapter";
+    private static final String TAG = "buddiiAdapter";
 
     private ArrayList<String> mbuddiiImages = new ArrayList<>();
     private ArrayList<String> mbuddiiNames = new ArrayList<>();
     private Context mContext;
 
 
-    public buddiisAdapter(Context context, ArrayList<String> buddiiImages, ArrayList<String> buddiiNames) {
+    public buddiiAdapter(Context context, ArrayList<String> buddiiImages, ArrayList<String> buddiiNames) {
 
         mbuddiiImages = buddiiImages;
         mbuddiiNames = buddiiNames;
@@ -51,7 +51,7 @@ public class buddiisAdapter extends RecyclerView.Adapter<buddiisAdapter.ViewHold
             holder.buddiiImage.setImageURI(imageUri);
         }catch(Exception e)
         {
-            //TODO: fix diaper pattern (anti-pattern)
+            e.printStackTrace();
         }
 
 
@@ -59,7 +59,6 @@ public class buddiisAdapter extends RecyclerView.Adapter<buddiisAdapter.ViewHold
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, ScrollMapUser.class);
-                //  intent.putExtra("buddiiImage",mbuddiiImages.get(position));
                 intent.putExtra("userBuddii",mbuddiiNames.get(position));
                 mContext.startActivity(intent);
             }

@@ -1,11 +1,11 @@
 package com.example.buddii.Map;
 
-public class DirectionItem {
+public class directionItem {
     private int mImageResource;
     private String mText1;
     private String mText2;
 
-    public DirectionItem(int imageResource, String text1, String text2){
+    public directionItem(int imageResource, String text1, String text2){
         mImageResource = imageResource;
         mText1 = text1;
         mText2 = text2;

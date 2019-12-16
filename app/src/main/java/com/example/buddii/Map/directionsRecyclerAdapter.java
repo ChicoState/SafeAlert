@@ -13,8 +13,8 @@ import com.example.buddii.R;
 
 import java.util.ArrayList;
 
-public class DirectionsRecyclerAdapter extends RecyclerView.Adapter<DirectionsRecyclerAdapter.DirectionsViewHolder> {
-    private ArrayList<DirectionItem> mDirectionList;
+public class directionsRecyclerAdapter extends RecyclerView.Adapter<directionsRecyclerAdapter.DirectionsViewHolder> {
+    private ArrayList<directionItem> mDirectionList;
 
 
     @NonNull
@@ -27,7 +27,7 @@ public class DirectionsRecyclerAdapter extends RecyclerView.Adapter<DirectionsRe
 
     @Override
     public void onBindViewHolder(@NonNull DirectionsViewHolder holder, int position) {
-        DirectionItem currentItem = mDirectionList.get(position);
+        directionItem currentItem = mDirectionList.get(position);
 
         holder.mImageView.setImageResource(currentItem.getImageResource());
         holder.mTextView1.setText(currentItem.getText1());
@@ -55,7 +55,7 @@ public class DirectionsRecyclerAdapter extends RecyclerView.Adapter<DirectionsRe
         }
     }
 
-    public DirectionsRecyclerAdapter(ArrayList<DirectionItem> directionList){
+    public directionsRecyclerAdapter(ArrayList<directionItem> directionList){
         mDirectionList = directionList;
     }
 

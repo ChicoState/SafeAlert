@@ -8,9 +8,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
-
-public class MainActivity extends AppCompatActivity {
+public class mainActivity extends AppCompatActivity {
     private Button btnFSR;
     private Button btnBab;
     private Button btnTut;
@@ -67,28 +65,28 @@ public class MainActivity extends AppCompatActivity {
 
     private void moveToBaB()
     {
-        Intent intent = new Intent (MainActivity.this, beABuddy.class);
+        Intent intent = new Intent (mainActivity.this, beABuddy.class);
         startActivity(intent);
     }
 
     private void moveToChooseRoute()
     {
-        Intent intent = new Intent(MainActivity.this, chooseRoute.class);
+        Intent intent = new Intent(mainActivity.this, chooseRoute.class);
         startActivity(intent);
     }
 
     private void moveToTut(){
-        Intent intent = new Intent(MainActivity.this, TutorialActivity.class);
+        Intent intent = new Intent(mainActivity.this, tutorialActivity.class);
         startActivity(intent);
     }
 
     private void moveToDb(){
-        Intent intent = new Intent(MainActivity.this, DBActivity.class);
+        Intent intent = new Intent(mainActivity.this, dbActivity.class);
         startActivity(intent);
     }
 
     private void moveToAddFriend(){
-        Intent intent = new Intent(MainActivity.this, addFriend.class);
+        Intent intent = new Intent(mainActivity.this, addFriend.class);
         startActivity(intent);
     }
 

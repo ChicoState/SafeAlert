@@ -1,14 +1,14 @@
 package com.example.buddii.data.model;
 
 /**
- * Data class that captures user information for logged in users retrieved from LoginRepository
+ * Data class that captures user information for logged in users retrieved from loginRepository
  */
-public class LoggedInUser {
+public class loggedInUser {
 
     private String userId;
     private String displayName;
 
-    public LoggedInUser(String userId, String displayName) {
+    public loggedInUser(String userId, String displayName) {
         this.userId = userId;
         this.displayName = displayName;
     }

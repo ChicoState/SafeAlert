@@ -36,21 +36,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Freakout"></activity>
+        <activity android:name=".freakout"></activity>
         <activity
             android:name=".Map.UserView.ScrollMapUser"
             android:label="@string/title_activity_scroll_map_user"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Map.BuddiiView.ScrollMapBuddii"
+            android:name=".Map.BuddiiView.scrollMapBuddii"
             android:label="@string/title_activity_scroll_map"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Map.findingSafestRouteActivity" />
-        <activity android:name=".beingABuddyActivity" />
-        <activity android:name=".AboutUsActivity" />
-        <activity android:name=".TutorialActivity" />
+        <activity android:name=".beBuddiiActivity" />
+        <activity android:name=".aboutUsActivity" />
+        <activity android:name=".tutorialActivity" />
         <activity android:name=".beABuddy" />
-        <activity android:name=".select_friends"/>
+        <activity android:name=".selectFriends"/>
         <activity android:name=".addFriend"/>
         <activity
             android:name=".PreferencesActivity"
@@ -68,11 +68,11 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".chooseRoute" />
-        <activity android:name=".select_bud" />
-        <activity android:name=".DBActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".selectBud" />
+        <activity android:name=".dbActivity" />
+        <activity android:name=".mainActivity" />
         <activity
-            android:name=".ui.login.LoginActivity"
+            android:name=".ui.login.loginActivity"
             android:label="@string/title_activity_login_buddii">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

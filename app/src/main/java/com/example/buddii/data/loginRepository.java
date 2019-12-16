@@ -4,30 +4,30 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
-import com.example.buddii.data.model.LoggedInUser;
+import com.example.buddii.data.model.loggedInUser;
 
 /**
  * Class that requests authentication and user information from the remote data source and
  * maintains an in-memory cache of login status and user credentials information.
  */
-public class LoginRepository {
+public class loginRepository {
 
-    private static volatile LoginRepository instance;
+    private static volatile loginRepository instance;
 
-    private LoginDataSource dataSource;
+    private loginDataSource dataSource;
 
     // If user credentials will be cached in local storage, it is recommended it be encrypted
     // @see https://developer.android.com/training/articles/keystore
-    private LoggedInUser user = null;
+    private loggedInUser user = null;
 
     // private constructor : singleton access
-    private LoginRepository(LoginDataSource dataSource) {
+    private loginRepository(loginDataSource dataSource) {
         this.dataSource = dataSource;
     }
 
-    public static LoginRepository getInstance(LoginDataSource dataSource) {
+    public static loginRepository getInstance(loginDataSource dataSource) {
         if (instance == null) {
-            instance = new LoginRepository(dataSource);
+            instance = new loginRepository(dataSource);
         }
         return instance;
     }
@@ -42,7 +42,7 @@ public class LoginRepository {
         dataSource.logout();
     }
 
-    private void setLoggedInUser(LoggedInUser user) {
+    private void setLoggedInUser(loggedInUser user) {
 
         this.user = user;
         // If user credentials will be cached in local storage, it is recommended it be encrypted
@@ -50,11 +50,11 @@ public class LoginRepository {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public Result<LoggedInUser> login(String username, String password) {
+    public result<loggedInUser> login(String username, String password) {
         // handle login
-        Result<LoggedInUser> result = dataSource.login(username, password);
-        if (result instanceof Result.Success) {
-            setLoggedInUser(((Result.Success<LoggedInUser>) result).getData());
+        result<loggedInUser> result = dataSource.login(username, password);
+        if (result instanceof com.example.buddii.data.result.Success) {
+            setLoggedInUser(((com.example.buddii.data.result.Success<loggedInUser>) result).getData());
         }
         return result;
     }

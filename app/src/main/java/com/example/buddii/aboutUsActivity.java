@@ -1,25 +1,17 @@
 package com.example.buddii;
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Environment;
 //import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import android.os.Bundle;
 
-public class AboutUsActivity extends AppCompatActivity {
+public class aboutUsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +22,7 @@ public class AboutUsActivity extends AppCompatActivity {
     }
 
     private String readFile() {
-        File fileEvents = new File(AboutUsActivity.this.getFilesDir()+"/text/aboutUs");
+        File fileEvents = new File(aboutUsActivity.this.getFilesDir()+"/text/aboutUs");
         StringBuilder text = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(fileEvents));

@@ -6,8 +6,8 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.buddii.DatabaseHandler;
-import com.example.buddii.data.model.LoggedInUser;
+import com.example.buddii.databaseHandler;
+import com.example.buddii.data.model.loggedInUser;
 
 import java.io.IOException;
 
@@ -16,19 +16,16 @@ import java.io.IOException;
  *
  */
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class LoginDataSource extends AppCompatActivity {
+public class loginDataSource extends AppCompatActivity {
 
-    DatabaseHandler handler=new DatabaseHandler(LoginDataSource.this);
+    databaseHandler handler=new databaseHandler(loginDataSource.this);
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public Result<LoggedInUser> login(String username, String password){
+    public result<loggedInUser> login(String username, String password){
 
 
         // real function call
         String checkCred = handler.getPword(password,username);
-       // byte []salt = handler.getPword(password,username);
-
-      //Log.d("xxxLogINpwordRTN", checkCred);
 
         try {
 
@@ -37,19 +34,18 @@ public class LoginDataSource extends AppCompatActivity {
 
             if( checkCred.equals("true")) {
                //will sey UID for logged in user
-                // handler.setLoggedInUser(username);
-                 LoggedInUser fakeUser =
-                        new LoggedInUser(
+                 loggedInUser fakeUser =
+                        new loggedInUser(
                                 java.util.UUID.randomUUID().toString(),
                                 "Jane Doe");
                 Log.w(null, "success");
-                return new Result.Success<>(fakeUser);
+                return new result.Success<>(fakeUser);
 
             }
         }catch(Exception e) {
-            return new Result.Error(new IOException("Error logging in", e));
+            return new result.Error(new IOException("Error logging in", e));
         }
-        return new Result.Error(new IOException("error with attempt", null));
+        return new result.Error(new IOException("error with attempt", null));
     }
 
     public void logout() {

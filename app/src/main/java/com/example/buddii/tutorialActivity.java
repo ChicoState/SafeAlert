@@ -7,7 +7,7 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class TutorialActivity extends AppCompatActivity {
+public class tutorialActivity extends AppCompatActivity {
     private Button btnabt;
     private Button btntutorial;
 
@@ -38,12 +38,12 @@ public class TutorialActivity extends AppCompatActivity {
     }
 
     private void moveToAbout(){
-        Intent intent = new Intent (TutorialActivity.this, AboutUsActivity.class);
+        Intent intent = new Intent (tutorialActivity.this, aboutUsActivity.class);
         startActivity(intent);
     }
 
     private void moveToTutorial(){
-        Intent intent = new Intent (TutorialActivity.this, beingABuddyActivity.class);
+        Intent intent = new Intent (tutorialActivity.this, beBuddiiActivity.class);
         startActivity(intent);
     }
 

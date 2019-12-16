@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
-public class DirectionsJSONParser {
+public class directionsJSONParser {
     /** Receives a JSONObject and returns a list of lists containing latitude and longitude */
     public static Vector pointsA = new Vector();
     public static Vector pointsTurn = new Vector();

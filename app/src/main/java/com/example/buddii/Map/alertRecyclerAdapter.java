@@ -13,8 +13,8 @@ import com.example.buddii.R;
 
 import java.util.ArrayList;
 
-public class AlertRecyclerAdapter extends RecyclerView.Adapter<AlertRecyclerAdapter.AlertViewHolder> {
-    private ArrayList<AlertItem> mAlertList;
+public class alertRecyclerAdapter extends RecyclerView.Adapter<alertRecyclerAdapter.AlertViewHolder> {
+    private ArrayList<alertItem> mAlertList;
 
 
     @NonNull
@@ -27,7 +27,7 @@ public class AlertRecyclerAdapter extends RecyclerView.Adapter<AlertRecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull AlertViewHolder holder, int position) {
-        AlertItem currentItem = mAlertList.get(position);
+        alertItem currentItem = mAlertList.get(position);
 
 //        holder.mImageView.setImageResource(currentItem.getImageResource());
         holder.mTextView1.setText(currentItem.getText1());
@@ -55,7 +55,7 @@ public class AlertRecyclerAdapter extends RecyclerView.Adapter<AlertRecyclerAdap
             }
     }
 
-    public AlertRecyclerAdapter(ArrayList<AlertItem> alertList){
+    public alertRecyclerAdapter(ArrayList<alertItem> alertList){
         mAlertList = alertList;
     }
 

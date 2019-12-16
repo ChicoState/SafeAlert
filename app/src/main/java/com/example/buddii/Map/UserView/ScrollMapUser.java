@@ -2,7 +2,6 @@ package com.example.buddii.Map.UserView;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,7 +15,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -35,21 +33,17 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.buddii.DatabaseHandler;
-import com.example.buddii.Freakout;
-import com.example.buddii.Map.DirectionItem;
-import com.example.buddii.Map.DirectionsJSONParser;
-import com.example.buddii.Map.DirectionsRecyclerAdapter;
-import com.example.buddii.Map.GeofenceTransitionsIntentService;
+import com.example.buddii.databaseHandler;
+import com.example.buddii.freakout;
+import com.example.buddii.Map.directionItem;
+import com.example.buddii.Map.directionsJSONParser;
+import com.example.buddii.Map.directionsRecyclerAdapter;
 import com.example.buddii.Map.directionsAdapter;
 import com.example.buddii.R;
-import com.example.buddii.select_bud;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
-import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -63,14 +57,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -83,25 +75,20 @@ public class ScrollMapUser extends AppCompatActivity
         OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     final int REQUEST_PERMISSION_CODE = 1000;
-    MediaRecorder mediaRecorder;
-    String pathSave;
     Context mContext;
-    LinearLayout UserTabInfo, UserTabHome, UserTabReport, UserTabRoute, UserTabChat;
+    LinearLayout UserTabInfo, UserTabHome, UserTabReport, UserTabRoute;
     Button UserHome, UserRoute;
     private FusedLocationProviderClient client;
     LocationManager locationManager;
     private GoogleApiClient googleApiClient;
     private static final String TAG = ScrollMapUser.class.getSimpleName();
     String directionTestString;
-    ArrayList<DirectionItem> directionList = new ArrayList<>();
+    ArrayList<directionItem> directionList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Circle currLocMovingCircle;
-    GeofencingClient mGeofencingClient;
-    PendingIntent mGeofencePendingIntent;
-    int numero = 0;
-    DatabaseHandler dbHandler;
+    databaseHandler dbHandler;
 
 
     private static final List<PatternItem> PATTERN_POLYLINE_DOTTED = null;
@@ -110,13 +97,8 @@ public class ScrollMapUser extends AppCompatActivity
     private LatLng mDestination;
     private static Polyline mPolyline;
     ArrayList<LatLng> mMarkerPoints;
-    LinkedList<Geofence> geofenceList = null;
     Location currentLocation;
 
-    public static Intent makeNotificationIntent(Context applicationContext, String msg) {
-        Log.d(TAG, msg);
-        return new Intent(applicationContext, ScrollMapUser.class);
-    }
 
     @Override
     protected void onStart() {
@@ -160,18 +142,18 @@ public class ScrollMapUser extends AppCompatActivity
 
         if (firstRun < secondRun) {
             if (firstRise >= secondRise) {
-                directionList.add(new DirectionItem(R.drawable.right, "Right", String.format("%.2f", distanceTo) + " miles"));
+                directionList.add(new directionItem(R.drawable.right, "Right", String.format("%.2f", distanceTo) + " miles"));
                 directionTestString += " right,";
             } else {
-                directionList.add(new DirectionItem(R.drawable.left, "Left", String.format("%.2f", distanceTo) + " miles"));
+                directionList.add(new directionItem(R.drawable.left, "Left", String.format("%.2f", distanceTo) + " miles"));
                 directionTestString += " left,";
             }
         } else {
             if (firstRise >= secondRise) {
-                directionList.add(new DirectionItem(R.drawable.left, "Left", String.format("%.2f", distanceTo) + " miles"));
+                directionList.add(new directionItem(R.drawable.left, "Left", String.format("%.2f", distanceTo) + " miles"));
                 directionTestString += " left,";
             } else {
-                directionList.add(new DirectionItem(R.drawable.right, "Right", String.format("%.2f", distanceTo) + " miles"));
+                directionList.add(new directionItem(R.drawable.right, "Right", String.format("%.2f", distanceTo) + " miles"));
                 directionTestString += " right,";
             }
         }
@@ -179,8 +161,8 @@ public class ScrollMapUser extends AppCompatActivity
     }
 
     private void makeDirectionsAdapter() {
-        for (int i = 0; i < DirectionsJSONParser.pointsTurn.size() - 1; i += 2) {
-            makeDirections(new LatLng((Double) DirectionsJSONParser.pointsTurn.elementAt(i), (Double) DirectionsJSONParser.pointsTurn.elementAt(i + 1)), new LatLng((Double) DirectionsJSONParser.pointsTurnFrom.elementAt(i), (Double) DirectionsJSONParser.pointsTurnFrom.elementAt(i + 1)), new LatLng((Double) DirectionsJSONParser.pointsTurnAfter.elementAt(i), (Double) DirectionsJSONParser.pointsTurnAfter.elementAt(i + 1)));
+        for (int i = 0; i < directionsJSONParser.pointsTurn.size() - 1; i += 2) {
+            makeDirections(new LatLng((Double) directionsJSONParser.pointsTurn.elementAt(i), (Double) directionsJSONParser.pointsTurn.elementAt(i + 1)), new LatLng((Double) directionsJSONParser.pointsTurnFrom.elementAt(i), (Double) directionsJSONParser.pointsTurnFrom.elementAt(i + 1)), new LatLng((Double) directionsJSONParser.pointsTurnAfter.elementAt(i), (Double) directionsJSONParser.pointsTurnAfter.elementAt(i + 1)));
         }
     }
 
@@ -301,7 +283,7 @@ public class ScrollMapUser extends AppCompatActivity
         mRecyclerView = findViewById(R.id.directionsRecycler);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
-        mAdapter = new DirectionsRecyclerAdapter(directionList);
+        mAdapter = new directionsRecyclerAdapter(directionList);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
@@ -354,7 +336,7 @@ public class ScrollMapUser extends AppCompatActivity
             }
             currLocMovingCircle = mMap.addCircle(circleOptions);
 
-            dbHandler = new DatabaseHandler(ScrollMapUser.this);
+            dbHandler = new databaseHandler(ScrollMapUser.this);
             try {
                 dbHandler.addGPS(latitude, longitude);
             } catch (JSONException e) {
@@ -390,30 +372,6 @@ public class ScrollMapUser extends AppCompatActivity
 
         }
     };
-
-    private GeofencingRequest getGeofencingRequest() {
-        GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
-        builder.addGeofences(geofenceList);
-        return builder.build();
-
-    }
-
-
-    private PendingIntent getGeofencePendingIntent() {
-        // Reuse the PendingIntent if we already have it.
-        if (mGeofencePendingIntent != null) {
-            return mGeofencePendingIntent;
-        }
-        Intent intent = new Intent(this, GeofenceTransitionsIntentService.class);
-        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
-        // calling addGeofences() and removeGeofences().
-        mGeofencePendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.
-                FLAG_UPDATE_CURRENT);
-        return mGeofencePendingIntent;
-
-    }
-
 
     private void isLocationEnabled() {
 
@@ -562,38 +520,6 @@ public class ScrollMapUser extends AppCompatActivity
                 e.printStackTrace();
             }
 
-            if(false) {
-
-                numero++;
-                geofenceList.add(new Geofence.Builder()
-                        // Set the request ID of the geofence. This is a string to identify this
-                        .setRequestId(numero + "")
-
-                        .setCircularRegion(
-                                latLng.latitude,
-                                latLng.longitude,
-                                50
-                        )
-                        .setExpirationDuration(Geofence.NEVER_EXPIRE)
-                        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER |
-                                Geofence.GEOFENCE_TRANSITION_EXIT)
-                        .build());
-
-
-                mGeofencingClient.addGeofences(getGeofencingRequest(), getGeofencePendingIntent())
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                // do something
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                // do something
-                            }
-                        });
-            }
         }
 
     }
@@ -656,7 +582,7 @@ public class ScrollMapUser extends AppCompatActivity
         UserHome.setVisibility(VISIBLE);
         UserRoute.setVisibility(GONE);
 
-        dbHandler = new DatabaseHandler(ScrollMapUser.this);
+        dbHandler = new databaseHandler(ScrollMapUser.this);
         try {
             dbHandler.sendFlag("0", "R");
         } catch (JSONException e) {
@@ -691,17 +617,6 @@ public class ScrollMapUser extends AppCompatActivity
         UserRoute.setVisibility(VISIBLE);
     }
 
-    public void onChatClick(View view) {
-        UserTabInfo = findViewById(R.id.UserTabInfo);
-        UserTabHome = findViewById(R.id.UserTabHome);
-        UserTabReport = findViewById(R.id.UserTabReport);
-        UserTabRoute = findViewById(R.id.UserTabRoute);
-        UserTabReport.setVisibility(GONE);
-        UserTabHome.setVisibility(GONE);
-        UserTabRoute.setVisibility(GONE);
-        UserTabInfo.setVisibility(GONE);
-    }
-
     public void onDropBuddiiClick(View view) {
 
         try {
@@ -709,9 +624,6 @@ public class ScrollMapUser extends AppCompatActivity
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        Intent intent = new Intent(ScrollMapUser.this, select_bud.class);
-
     }
 
     public void onCurrLocClick(View view) {
@@ -720,9 +632,9 @@ public class ScrollMapUser extends AppCompatActivity
 
     public void onBigAlertEnergyClick(View view) {
 
-        Intent intent = new Intent(ScrollMapUser.this, Freakout.class);
+        Intent intent = new Intent(ScrollMapUser.this, freakout.class);
         startActivity(intent);
-        dbHandler = new DatabaseHandler(ScrollMapUser.this);
+        dbHandler = new databaseHandler(ScrollMapUser.this);
         try {
             dbHandler.sendFlag("0", "A");
         } catch (JSONException e) {

@@ -2,7 +2,6 @@ package com.example.buddii;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,8 +9,6 @@ import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-
-import org.json.JSONException;
 
 public class addFriend extends AppCompatActivity {
     EditText input1,input2;
@@ -23,7 +20,7 @@ public class addFriend extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final DatabaseHandler dbHandler = new DatabaseHandler(this);
+        final databaseHandler dbHandler = new databaseHandler(this);
         int numOfBuddies = dbHandler.getNumOfUsers();
         //If database is empty return , othewise will crash app
 
@@ -48,7 +45,7 @@ public class addFriend extends AppCompatActivity {
                 data2=input2.getText().toString();
 
                 //THEN PASS
-                DatabaseHandler handler=new DatabaseHandler(addFriend.this);
+                databaseHandler handler=new databaseHandler(addFriend.this);
                 //where we need to add t friends table
                 //NEED TO CLEAR OUT THE TABLE AFTER SUBMIT WAS PRESSED
                 input1.setText("");

@@ -9,48 +9,47 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.buddii.R;
-import com.example.buddii.data.LoginRepository;
-import com.example.buddii.data.Result;
-import com.example.buddii.data.model.LoggedInUser;
+import com.example.buddii.data.result;
+import com.example.buddii.data.model.loggedInUser;
 
-public class LoginViewModel extends ViewModel {
+public class loginViewModel extends ViewModel {
 
-    private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
-    private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
-    private LoginRepository loginRepository;
+    private MutableLiveData<com.example.buddii.ui.login.loginFormState> loginFormState = new MutableLiveData<>();
+    private MutableLiveData<com.example.buddii.ui.login.loginResult> loginResult = new MutableLiveData<>();
+    private com.example.buddii.data.loginRepository loginRepository;
 
-    LoginViewModel(LoginRepository loginRepository) {
+    loginViewModel(com.example.buddii.data.loginRepository loginRepository) {
         this.loginRepository = loginRepository;
     }
 
-    LiveData<LoginFormState> getLoginFormState() {
+    LiveData<com.example.buddii.ui.login.loginFormState> getLoginFormState() {
         return loginFormState;
     }
 
-    LiveData<LoginResult> getLoginResult() {
+    LiveData<com.example.buddii.ui.login.loginResult> getLoginResult() {
         return loginResult;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void login(String username, String password) {
         // can be launched in a separate asynchronous job
-        Result<LoggedInUser> result = loginRepository.login(username, password);
+        result<loggedInUser> result = loginRepository.login(username, password);
 
-        if (result instanceof Result.Success) {
-            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
+        if (result instanceof com.example.buddii.data.result.Success) {
+            loggedInUser data = ((com.example.buddii.data.result.Success<loggedInUser>) result).getData();
+            loginResult.setValue(new loginResult(new loggedInUserView(data.getDisplayName())));
         } else {
-            loginResult.setValue(new LoginResult(R.string.login_failed));
+            loginResult.setValue(new loginResult(R.string.login_failed));
         }
     }
 
     public void loginDataChanged(String username, String password) {
         if (!isUserNameValid(username)) {
-            loginFormState.setValue(new LoginFormState(R.string.invalid_username, null));
+            loginFormState.setValue(new loginFormState(R.string.invalid_username, null));
         } else if (!isPasswordValid(password)) {
-            loginFormState.setValue(new LoginFormState(null, R.string.invalid_password));
+            loginFormState.setValue(new loginFormState(null, R.string.invalid_password));
         } else {
-            loginFormState.setValue(new LoginFormState(true));
+            loginFormState.setValue(new loginFormState(true));
         }
     }
 

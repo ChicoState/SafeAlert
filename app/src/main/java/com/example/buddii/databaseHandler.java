@@ -26,7 +26,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -34,13 +33,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
 // SQLITE set up to handle DATABASE
-public class DatabaseHandler extends SQLiteOpenHelper {
+public class databaseHandler extends SQLiteOpenHelper {
     //DATABASE SET UP
     // Version required
     private static final int DATABASE_VERSION = 1;
@@ -58,7 +56,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String USER_EMAIL = "user_email";
     private static final String USER_PASSWORD = "user_pass";
     private static final String USER_SALT = "user_salt";
-    private static final String USER_UID = "Uid";
     private static final String USER_RATINGS = "user_ratings";
     private static final String USER_FLAG = "user_flag";
 
@@ -80,10 +77,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public static JSONObject usersObj ;
     public static JSONArray arr1 = new JSONArray();
-    public static String loggedInUserUniqueID = " ";
     public static String passwordStoredToCheck = "";
     public static byte[] salt5 = null;
-    public static double tempcount = 0;
     public static JSONObject jobjForGPS ;
     public static JSONArray arrForGPS = new JSONArray();
     public static JSONObject jobjForFlag ;
@@ -117,22 +112,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
     // Need a Databse HANDLER required
-    public DatabaseHandler(Context context) {
+    public databaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
     }
 
     @Override
     public void onCreate(SQLiteDatabase My_Database) {
-         String[] tempArr = new String[3];
-        tempArr=loadGPS("0");
 
         //execute prepared commands
         My_Database.execSQL(CREATE_TABLE);
         My_Database.execSQL(CREATE_GPS_TABLE);
         My_Database.execSQL(CREATE_FRIENDS_TABLE);
         My_Database.execSQL(CREATE_ACTIVE_BUDDII_TABLE);
-       // My_Database.execSQL(CREATE_FLAG_TABLE);
+
 
         // testing of dynamic colums
         My_Database.execSQL(INSERT_DYNAMIC_TABLE);
@@ -145,7 +138,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         onCreate(My_Database);
     }
 
-    // Values passed on from MainActivity,JAVA
+    // Values passed on from mainActivity,JAVA
     //values here will be placed into the USERS TABLE
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -162,17 +155,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // set flag condition here so wont taoast so much
         if(c.getCount()>0 )
         {
-           // Toast.makeText(context, "USER ALREADY EXITS", Toast.LENGTH_LONG).show();
             return;
         }
-        else
-        {   // on initial SYNC THIS KEEPS showinf UP
-          //  Toast.makeText(context, "WELCOME", Toast.LENGTH_LONG).show();
-        }
 
-        values.put(DatabaseHandler.USER_PHONE, userphone);
-        values.put(DatabaseHandler.USER_NAME, name);
-        values.put(DatabaseHandler.USER_EMAIL, email);
+        values.put(databaseHandler.USER_PHONE, userphone);
+        values.put(databaseHandler.USER_NAME, name);
+        values.put(databaseHandler.USER_EMAIL, email);
         //password will be sent to function and hashed
 
 
@@ -181,14 +169,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
          shaPwordToCompare = shaPword.substring(0,128);
 
 
-        values.put(DatabaseHandler.USER_PASSWORD, shaPword);
+        values.put(databaseHandler.USER_PASSWORD, shaPword);
 
         // in order to compare users password, we need to store the original SALT which was used to
         //hash the password. Otherwise a new SALT would be generated and would result in a differnt hash.
 
         String byteSaltToString = Base64.getEncoder().encodeToString(salt);
-        values.put(DatabaseHandler.USER_SALT, byteSaltToString);
-        values.put(DatabaseHandler.USER_FLAG, flagForUser);
+        values.put(databaseHandler.USER_SALT, byteSaltToString);
+        values.put(databaseHandler.USER_FLAG, flagForUser);
 
 
         long status = My_Database.insert(NAME_OF_USERS_TABLE, null, values);
@@ -196,31 +184,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
         if (status <= 0) {
-
            Toast.makeText(context, "Insertion Unsuccessful", Toast.LENGTH_SHORT).show();
-        } else {
-            //         TOAST INSERTION KEEP POPING UP ON INITIAL DB SYNC
-          //  Toast.makeText(context, "Insertion Successful", Toast.LENGTH_LONG).show();
         }
-
-
-
-       // My_Database.close();
-      //  c.close();
 
         // this flag will indicated that the function is being called from the register page
         // and not from the initial sync from log in ( removes repetative inserts)
         if (flag == false) {
             setLocalDBToJSON();
             String Jsonxx = mytempJSONreturnFunc();
-            //Log.d("xxx",Jsonxx);
             // sending to ONLINE firebase DB
             FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
             Map<String, Object> jsonMap = new Gson().fromJson(Jsonxx, new TypeToken<HashMap<String, Object>>() {
             }.getType());
-            Task<Void> myRef = database.getReference().child("usersdb").child("users").updateChildren(jsonMap);
         }
     }
 
@@ -239,15 +216,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                    String key = dataSnapshot.getKey();
-                    //Log.d("xxxxkeyRTTTN",key);
                     String uID = dataSnapshot.child("uID").getValue(String.class);
-                    //uID = key;
-                    // Log.d("xxxUIDis",uID);
+
 
                     String email = dataSnapshot.child("user_email").getValue(String.class);
                     if (email == null) {
-                        //     Log.d("xxxxEMAIL","EMAILretuning");
+
                         return;
                     }
                     ;
@@ -289,20 +263,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                /*
-                try {
-                    usersObj.put("user_ratings",);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                */
 
                     try {
                         usersObj.put("user_salt", salt1);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    //Log.d("xxxUSEROBJ",usersObj.toString());
                     arr1.put(usersObj);
 
                 } //end of loop
@@ -341,7 +307,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
             dbSYNC(jsonToSend);
-         //   Log.d("xxNNNNNN",jsonToSend);
+
             return jsonToSend;
 
 
@@ -351,12 +317,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void dbSYNC(String jsonString)  {
-      //  Log.d("xxxBBBBBB",jsonString);
 
         try {
             JSONObject jsnobject = new JSONObject(jsonString);
             JSONArray jsonArray = jsnobject.getJSONArray("data");
-            String id ="";
             String phone0 ="";
             String name0 ="";
             String email0 ="";
@@ -364,54 +328,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             String salt0 ="";
             for (int i = 0; i < jsonArray.length(); ++i) {
                 JSONObject rec = jsonArray.getJSONObject(i);
-                 id = rec.getString("uID");
                  phone0 = rec.getString("user_phone");
                  name0 = rec.getString("user_name");
                  email0 = rec.getString("user_email");
                  pass0 = rec.getString("user_pass");
                  salt0 = rec.getString("user_salt");
 
-    /*
-                Log.d("xxarrListID",id);
-                Log.d("xxarrLione",phone0);
-                Log.d("xxarrListda",name0);
-                Log.d("xxarrLisasd",email0);
-                Log.d("xxarrLssD",pass0);
-                Log.d("xxarrsaase",salt0);
-
-     */
                 // need to set UID correct and check to see if UID is already In DB, no DUplicates
                 addToDb(phone0,name0,email0,pass0,salt0,true);
 
-            } // for
-    /*
-            // if unique id is in DB then return
-            if(chechIfUniqueIdInSqlDB(id) == true){
-                return;
             }
-            //otherwise send to SQLite DB
-            else {
-
-                addToDb(phone0,name0,email0,pass0,salt0,true);
-            }
-*/
-
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
     }
-
-    public boolean chechIfUniqueIdInSqlDB(String uID){
-    //sql query to search for UID
-        return false;
-
-    }
-
-
-
-
 
     // DELETE A USER BY PASSING THE USERS ID
     public void deleteUser(String id) {
@@ -597,7 +529,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         double latitude = 11.12345;
         double longitude = 999.7900000;
 
-        DatabaseHandler handler=new DatabaseHandler(MapsActivity.this);
+        databaseHandler handler=new databaseHandler(MapsActivity.this);
         handler.addGPS(latitude,longitude);
 
      */
@@ -612,8 +544,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             SQLiteDatabase My_Database = this.getReadableDatabase();
             String selectQuery = "Select * from "+NAME_OF_USERS_TABLE;
             Cursor cursor = My_Database.rawQuery(selectQuery, null);
-         //   cursor.close();
-         //   My_Database.close();
             return cursor;
         }
         if (fromThisDB == "friendsTable")
@@ -622,7 +552,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             SQLiteDatabase My_Database = this.getReadableDatabase();
             Cursor cursor = My_Database.rawQuery(selectQuery, null);
             cursor.close();
-         //   My_Database.close();
             return cursor;
         }
         else {
@@ -696,66 +625,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         jsonString2 = jobj.toString();
 
-    };
-    // for JSON testing , this will get called from DBActivity and display on app
+    }
+    // for JSON testing , this will get called from dbActivity and display on app
     public String mytempJSONreturnFunc(){
         String newst = jsonString2 ;
         return newst;
-    };
-
-
-
-
-    // function to populate ACTIVE BUDDI TABLE by adding the Logged in users UID
-    //will be called when be a buddii button is pressed
-    public  String addToActiveBuddiTable(){
-        SQLiteDatabase My_Database = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        String curActiveBuddiLoggedIn = "10";
-        values.put(DatabaseHandler.USER_UID, curActiveBuddiLoggedIn);
-        My_Database.insert(NAME_OF_ACTIVE_BUDDI_TABLE, null, values);
-       return "stuff";
-    };
-
-    public void removeFromActiveBuddiTable() {
-        String id = "10";
-
-        SQLiteDatabase My_Database = this.getWritableDatabase();
-        // delete user record by phone
-         My_Database.delete(NAME_OF_ACTIVE_BUDDI_TABLE, USER_UID + " = ?",
-                new String[]{String.valueOf(id)});
-          My_Database.close();
     }
-
-
-    // will need Uid and rating as parameter
-    public  String addRating(Double rating){
-
-        SQLiteDatabase My_Database = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        // do all the average calculations here
-        String t_Rating =String.valueOf(rating);
-       Integer Uid = 2;
-        values.put("user_ratings",t_Rating);
-        My_Database.update(NAME_OF_USERS_TABLE,values,"Uid ="+Uid, null);
-        return "stuff";
-    };
-
-
-    public boolean chechIfAlreadyMemeber(String username)
-    {
-        /*
-        SQLiteDatabase My_Database = this.getWritableDatabase();
-
-        // delete user record by phone
-        My_Database.(NAME_OF_ACTIVE_BUDDI_TABLE, USER_UID + " = ?",
-                new String[]{String.valueOf(username)});
-        My_Database.close();
-        */
-      return false;
-    };
-
-
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public String getPword(String pwordFromLogIn, final String userNameFromLogIn) {
@@ -773,14 +648,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-
-                String key = dataSnapshot.getKey();
-
                 String uID = dataSnapshot.child("uID").getValue(String.class);
-                String email = dataSnapshot.child("user_email").getValue(String.class);
                 String namex = dataSnapshot.child("user_name").getValue(String.class);
                 String pass = dataSnapshot.child("user_pass").getValue(String.class);
-                String phone = dataSnapshot.child("user_phone").getValue(String.class);
                 String salt0 = dataSnapshot.child("user_salt").getValue(String.class);
 
                 Log.d("xxxN----", uID);
@@ -796,7 +666,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     passwordStoredToCheck = pass;
                     Log.d("xxx-SLATFROMFIRE",salt0);
                      salt5 = Base64.getDecoder().decode(salt0);
-               //  salt5 = salt0.getBytes();
                     String byteSaltToString = Base64.getEncoder().encodeToString(salt5);
                     Log.d("xxxpSALT2CHECKd",byteSaltToString);
 
@@ -832,26 +701,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Log.d("xxxfffff","IN AfetrPWORD");
 
 
-
-        String passwordStoredToCheck0 = shaPwordToCompare;
-
         //                                 INPUT PWORD        PWORDFROMFIREBASE  SLATFROMFIREBASE
         String checkCred = checkCredentials(pwordFromLogIn, passwordStoredToCheck,  salt5);
 
         return checkCred;
     }
 
-    public void setLoggedInUser(String usernameFromLogIn){
-        /*
-        SQLiteDatabase My_Database = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        Cursor c = My_Database.rawQuery("SELECT Uid FROM USERS_TABLE where user_name = " + " '" + usernameFromLogIn + "'", null);
-        String Uid0 = c.getString(0);
-        Log.d("xxxUCURSORUID",Uid0);
-            */
-
-    }
     @RequiresApi(api = Build.VERSION_CODES.O)
     public String checkCredentials(String checkThisPassword, String pwordInDB, byte[] salt6){
         if(salt6 == null){
@@ -902,8 +757,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         Map<String, Object> jsonMap = new Gson().fromJson(stringGPSToSend, new TypeToken<HashMap<String, Object>>() {
         }.getType());
-        Task<Void> myRef = database.getReference().child("dbgps").updateChildren(jsonMap);
-
     }
 
     public static  String[] posZeroLatPosOneLong = new String[3];
@@ -920,8 +773,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-
-                String key = dataSnapshot.getKey();
                 Integer uID = dataSnapshot.child("uID").getValue(Integer.class);
                 Double d1 = (Double) dataSnapshot.child("latitude").getValue();
                 Double d2 = (Double) dataSnapshot.child("longitude").getValue();
@@ -932,11 +783,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 String converted_UID = String.valueOf(uID);
                 Log.d("xx---LATB4",converted_Lat);
                 Log.d("xx---LONGB4",converted_Long);
-                // Log.d("xxx-----",key);
                 Log.d("xx:::::::::" ,  passedUID);
                 Log.d("xx:::" ,  converted_UID);
                 if(passedUID.equals(converted_UID)){
-                    //  Log.d("xx:::IN" , "WE IN");
                     Log.d("xx---LATINN",converted_Lat);
                     Log.d("xx---LONINN",converted_Long);
                     posZeroLatPosOneLong[0]= converted_Lat;
@@ -1003,8 +852,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-
-                String key = dataSnapshot.getKey();
                 String uID = dataSnapshot.child("UID").getValue(String.class);
                 String flag_ = dataSnapshot.child("Flag").getValue(String.class);
 

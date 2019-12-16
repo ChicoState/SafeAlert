@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class select_bud extends Activity
+public class selectBud extends Activity
 {
     Button buddiiist, friendList;
     private ArrayList<String> mbuddiiNames = new ArrayList<>();
@@ -28,7 +28,7 @@ public class select_bud extends Activity
     private void addUsers(){
 
 
-        DatabaseHandler dbHandler = new DatabaseHandler(this);
+        databaseHandler dbHandler = new databaseHandler(this);
         int numOfBuddies = dbHandler.getNumOfUsers();
         //If database is empty return , othewise will crash app
         if (numOfBuddies == 0){
@@ -50,7 +50,7 @@ public class select_bud extends Activity
     }
     private void initRecyclerView(){
         RecyclerView recyclerView = findViewById(R.id.findBudsList);
-        buddiisAdapter adapter = new buddiisAdapter(this, mbuddiiImages, mbuddiiNames);
+        buddiiAdapter adapter = new buddiiAdapter(this, mbuddiiImages, mbuddiiNames);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }

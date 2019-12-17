@@ -6,4 +6,28 @@
     android:layout_height="match_parent"
     tools:context=".beABuddy">
 
+    <TextView
+        android:id="@+id/find_buds_header"
+        android:layout_width="match_parent"
+        android:layout_height="89dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:text="@string/be_a_buddii_text"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="#03A9F4"
+        android:textSize="60sp"
+        android:textStyle="bold"
+        android:typeface="sans"
+        app:fontFamily="sans-serif-black"
+        tools:ignore="MissingConstraints" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/BeBudList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="90dp"
+        android:scrollbars="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

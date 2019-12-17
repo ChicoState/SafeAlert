@@ -14,11 +14,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.buddii.Map.UserView.ScrollMapUser;
+import com.example.buddii.Map.BuddiiView.ScrollMapBuddii;
 
 import java.util.ArrayList;
 
-public class buddiisAdapter extends RecyclerView.Adapter<buddiisAdapter.ViewHolder>{
+public class beBuddiiAdapter extends RecyclerView.Adapter<beBuddiiAdapter.ViewHolder> {
 
     private static final String TAG = "buddiisAdapter";
 
@@ -27,17 +27,16 @@ public class buddiisAdapter extends RecyclerView.Adapter<buddiisAdapter.ViewHold
     private Context mContext;
 
 
-    public buddiisAdapter(Context context, ArrayList<String> buddiiImages, ArrayList<String> buddiiNames) {
+    beBuddiiAdapter(Context context, ArrayList<String> buddiiImages, ArrayList<String> buddiiNames) {
 
         mbuddiiImages = buddiiImages;
         mbuddiiNames = buddiiNames;
         mContext = context;
     }
 
-    @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_buddis, parent, false);
-        ViewHolder holder = new ViewHolder(view);
+        beBuddiiAdapter.ViewHolder holder = new beBuddiiAdapter.ViewHolder(view);
         return holder;
     }
 
@@ -51,14 +50,13 @@ public class buddiisAdapter extends RecyclerView.Adapter<buddiisAdapter.ViewHold
             holder.buddiiImage.setImageURI(imageUri);
         }catch(Exception e)
         {
-            //TODO: fix diaper pattern (anti-pattern)
+            e.printStackTrace();
         }
-
 
         holder.parent.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, ScrollMapUser.class);
+                Intent intent = new Intent(mContext, ScrollMapBuddii.class);
                 //  intent.putExtra("buddiiImage",mbuddiiImages.get(position));
                 intent.putExtra("userBuddii",mbuddiiNames.get(position));
                 mContext.startActivity(intent);
@@ -85,5 +83,6 @@ public class buddiisAdapter extends RecyclerView.Adapter<buddiisAdapter.ViewHold
             parent = itemView.findViewById(R.id.parent);
         }
     }
+
 
 }

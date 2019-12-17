@@ -10,23 +10,20 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
+import org.json.JSONException;
 
-
-
-
-public class DBActivity extends AppCompatActivity {
+public class dbActivity extends AppCompatActivity {
     EditText input1,input2,input3,input4;
     String data1,data2,data3,data4, deleteUser;
     Button SubmitBUTTON;
     TextView Tx1,Tx2,Tx3,Tx4, TempTexViewVariable2;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DatabaseHandler dbHandler = new DatabaseHandler(this);
-
+        final databaseHandler dbHandler = new databaseHandler(this);
+        dbHandler.checkFireBaseDBForUsers();
         int numOfBuddies = dbHandler.getNumOfUsers();
         //If database is empty return , othewise will crash app
         if (numOfBuddies == 0){
@@ -50,19 +47,16 @@ public class DBActivity extends AppCompatActivity {
             @Override
             // WHEN CLICKED SUBMIT , PASS THESE VALUES
             public void onClick(View view) {
+                dbHandler.checkFireBaseDBForUsers();
                 //FIRST CONVERT
                 data1=input1.getText().toString();
                 data2=input2.getText().toString();
                 data3=input3.getText().toString();
                 data4=input4.getText().toString();
                 //THEN PASS
-                DatabaseHandler handler=new DatabaseHandler(DBActivity.this);
-                try {
-                    handler.addToDb(data1,data2,data3,data4);
-                } catch (NoSuchAlgorithmException e) {
-                    e.printStackTrace();
-                }
-                // NEED TO CLEAR OUT THE TABLE AFTER SUBMIT WAS PRESSED
+                databaseHandler handler=new databaseHandler(dbActivity.this);
+                 handler.addToDb(data1,data2,data3,data4,"" ,false);
+               //NEED TO CLEAR OUT THE TABLE AFTER SUBMIT WAS PRESSED
                 input1.setText("");
                 input2.setText("");
                 input3.setText("");
@@ -76,16 +70,17 @@ public class DBActivity extends AppCompatActivity {
     {
         // call to get Users' DB to DELETE
         deleteUser=getUserToDelete();
-        DatabaseHandler handler=new DatabaseHandler(this);
+        databaseHandler handler=new databaseHandler(this);
         // CALL LOADEMP .. THEN DELETE
         handler.deleteUser(deleteUser);}
 
     // This function is for testing the DB
-    public void loadUser(View view) throws NoSuchAlgorithmException {   //propriatary DBhandle
-        DatabaseHandler dbHandler = new DatabaseHandler(this);
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void loadUser(View view) throws JSONException {
+        databaseHandler dbHandler = new databaseHandler(this);
         int numOfBuddies = dbHandler.getNumOfUsers();
         //If database is empty return , othewise will crash app
-        if (numOfBuddies == 0){
+        if (numOfBuddies == 0) {
             return;
         }
 
@@ -93,33 +88,56 @@ public class DBActivity extends AppCompatActivity {
         String results = "";
 
         // by default load these attributes
-        ArrayOfBuddies=(dbHandler.loadUsers("Uid,email,name,phoneNumber"));
+        ArrayOfBuddies = (dbHandler.loadUsers("Uid,email,name,phoneNumber"));
 
-        for (int i = 0 ; i < numOfBuddies; i++) {
+        for (int i = 0; i < numOfBuddies; i++) {
 
             results += ArrayOfBuddies[i] + " \n";
-            if (i == (numOfBuddies- 1))
-            {
+            if (i == (numOfBuddies - 1)) {
                 Tx1.setText(results);
             }
         }
 
         // TempTexViewVariable2.setText(dbHandler.loadGPS());
         // send to online and myTempson go together
-        dbHandler.sendtoOnlineDB();
-        TempTexViewVariable2.setText(dbHandler.mytempJSONreturnFunc());
+        // dbHandler.sendtoOnlineDB();
+        // TempTexViewVariable2.setText(dbHandler.mytempJSONreturnFunc());
 
         // temporary call to populate / remove ACTIVE_BUDDII_TABLE
         //dbHandler.addToActiveBuddiTable();
-       //dbHandler.removeFromActiveBuddiTable();
-       dbHandler.addRating(3.0);
+        //dbHandler.removeFromActiveBuddiTable();
+        //dbHandler.addRating(3.0);
         //calling this function will compare hash from user DB to new hash
-      //TempTexViewVariable2.setText(dbHandler.checkCredentials());
+        // String ppppp ="qwerty";
+        // TempTexViewVariable2.setText(dbHandler.checkCredentials(ppppp));
+
+        /* GPS TABLE TESTING
+        Double lat = 9.99;
+        Double longt = 2.22;
+        dbHandler.addGPS(lat,longt);
+               */
+        // tests loading GPS table
+        // String xxxxxx = databaseHandler.LongLat.lat_tt;
+
+
+        //dbHandler.tempGetGPS();
+        /*
+        String[] posZeroLatPosOneLong = dbHandler.loadGPS("0");
+        String lat = posZeroLatPosOneLong[0];
+        String longg = posZeroLatPosOneLong[1]; //for testing
+        String resss = lat + "  " + longg; // for testing
+         TempTexViewVariable2.setText(resss);
+         */
+
+
+      //  dbHandler.sendFlag("1", "a");
+        String flagresults=dbHandler.loadFlag("1");
+        TempTexViewVariable2.setText(flagresults);
     }
     public String getUserToDelete(){
         // will get user to delete
         return input1.getText().toString();
-    };
+    }
 
 
 

@@ -1,3 +1,4 @@
+
 package com.example.buddii;
 
 import android.content.Context;
@@ -18,20 +19,20 @@ import com.example.buddii.Map.UserView.ScrollMapUser;
 
 import java.util.ArrayList;
 
-public class buddiisAdapter extends RecyclerView.Adapter<buddiisAdapter.ViewHolder>{
+public class friendsAdapter extends RecyclerView.Adapter<friendsAdapter.ViewHolder>{
 
-    private static final String TAG = "buddiisAdapter";
+    private static final String TAG = "friendsAdapter";
 
-    private ArrayList<String> mbuddiiImages = new ArrayList<>();
-    private ArrayList<String> mbuddiiNames = new ArrayList<>();
-    private Context mContext;
+    private ArrayList<String> fbuddiiImages = new ArrayList<>();
+    private ArrayList<String> fbuddiiNames = new ArrayList<>();
+    private Context fContext;
 
 
-    public buddiisAdapter(Context context, ArrayList<String> buddiiImages, ArrayList<String> buddiiNames) {
+    public friendsAdapter(Context friendContext, ArrayList<String> friendImages, ArrayList<String> friendNames) {
 
-        mbuddiiImages = buddiiImages;
-        mbuddiiNames = buddiiNames;
-        mContext = context;
+        fbuddiiImages = friendImages;
+        fbuddiiNames = friendNames;
+        fContext = friendContext;
     }
 
     @Override
@@ -45,44 +46,43 @@ public class buddiisAdapter extends RecyclerView.Adapter<buddiisAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called.");
 
-        holder.userBuddii.setText(mbuddiiNames.get(position));
+        holder.friend.setText(fbuddiiNames.get(position));
         try {
-            Uri imageUri = Uri.parse(mbuddiiImages.get(position));
-            holder.buddiiImage.setImageURI(imageUri);
+            Uri imageUri = Uri.parse(fbuddiiImages.get(position));
+            holder.friendImage.setImageURI(imageUri);
         }catch(Exception e)
         {
             //TODO: fix diaper pattern (anti-pattern)
         }
 
 
-        holder.parent.setOnClickListener(new View.OnClickListener(){
+        holder.parentFriend.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, ScrollMapUser.class);
-                //  intent.putExtra("buddiiImage",mbuddiiImages.get(position));
-                intent.putExtra("userBuddii",mbuddiiNames.get(position));
-                mContext.startActivity(intent);
+                Intent intent = new Intent(fContext, ScrollMapUser.class);
+                intent.putExtra("userBuddii",fbuddiiNames.get(position));
+                fContext.startActivity(intent);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return mbuddiiNames.size();
+        return fbuddiiNames.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        LinearLayout parent;
-        ImageView buddiiImage;
-        TextView userBuddii;
+        LinearLayout parentFriend;
+        ImageView friendImage;
+        TextView friend;
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            buddiiImage = itemView.findViewById(R.id.buddiiImage);
-            userBuddii = itemView.findViewById(R.id.userBuddii);
-            parent = itemView.findViewById(R.id.parent);
+            friendImage = itemView.findViewById(R.id.friendImage);
+            friend = itemView.findViewById(R.id.userFriend);
+            parentFriend = itemView.findViewById(R.id.parentFriend);
         }
     }
 

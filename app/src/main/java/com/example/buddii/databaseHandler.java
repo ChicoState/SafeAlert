@@ -206,7 +206,7 @@ public class databaseHandler extends SQLiteOpenHelper {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public String checkFireBaseDBForUsers(){
            String jsonToSend = "nothing";
-            Log.d("xxxFromRTV", "InFRomCHKFireBase");
+
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef = database.getReference().child("usersdb").child("users").child("data");
 
@@ -230,7 +230,7 @@ public class databaseHandler extends SQLiteOpenHelper {
                     String phone = dataSnapshot.child("user_phone").getValue(String.class);
                     String salt1 = dataSnapshot.child("user_salt").getValue(String.class);
 
-                 
+
                     usersObj = new JSONObject();
                     try {
 
@@ -632,7 +632,7 @@ public class databaseHandler extends SQLiteOpenHelper {
 
 
 
-        Log.d("xxxfffff","IN GETPWORD");
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child("usersdb").child("users").child("data");
 
@@ -648,21 +648,15 @@ public class databaseHandler extends SQLiteOpenHelper {
                 String pass = dataSnapshot.child("user_pass").getValue(String.class);
                 String salt0 = dataSnapshot.child("user_salt").getValue(String.class);
 
-                Log.d("xxxN----", uID);
-                Log.d("xxxP-----",pass);
-                Log.d("xxxN----", namex);
-                Log.d("xxxCHKTHSNAM-", userNameFromLogIn);
+
                 String t_nameFromDB = namex.substring(0);
 
 
                 if (t_nameFromDB.equals(userNameFromLogIn)){
-                    Log.d("xxx-MATCHCC","THESE MATCH");
 
                     passwordStoredToCheck = pass;
-                    Log.d("xxx-SLATFROMFIRE",salt0);
-                     salt5 = Base64.getDecoder().decode(salt0);
-                    String byteSaltToString = Base64.getEncoder().encodeToString(salt5);
-                    Log.d("xxxpSALT2CHECKd",byteSaltToString);
+                    salt5 = Base64.getDecoder().decode(salt0);
+
 
 
               }
@@ -693,8 +687,6 @@ public class databaseHandler extends SQLiteOpenHelper {
             }
 
         });
-        Log.d("xxxfffff","IN AfetrPWORD");
-
 
         //                                 INPUT PWORD        PWORDFROMFIREBASE  SLATFROMFIREBASE
         String checkCred = checkCredentials(pwordFromLogIn, passwordStoredToCheck,  salt5);
@@ -705,8 +697,7 @@ public class databaseHandler extends SQLiteOpenHelper {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public String checkCredentials(String checkThisPassword, String pwordInDB, byte[] salt6){
         if(salt6 == null){
-            Log.d("xxxNULLSALT","saltIsNULL");
-            return "false";
+                return "false";
         }
 
         String pwordToHash = checkThisPassword;
@@ -719,8 +710,7 @@ public class databaseHandler extends SQLiteOpenHelper {
         String t_pwordInDB =pwordInDB.substring(0,128);
         String t_shaPwordToCheck = shaPwordToCheck.substring(0,128);
 
-        Log.d("xxxxCCCCCC",t_pwordInDB);
-        Log.d("xxxxDDDDDD",t_shaPwordToCheck);
+
 
         if (t_pwordInDB.equals(t_shaPwordToCheck))
         {
@@ -776,13 +766,9 @@ public class databaseHandler extends SQLiteOpenHelper {
                 String converted_Long = String.valueOf(d2);
 
                 String converted_UID = String.valueOf(uID);
-                Log.d("xx---LATB4",converted_Lat);
-                Log.d("xx---LONGB4",converted_Long);
-                Log.d("xx:::::::::" ,  passedUID);
-                Log.d("xx:::" ,  converted_UID);
+
                 if(passedUID.equals(converted_UID)){
-                    Log.d("xx---LATINN",converted_Lat);
-                    Log.d("xx---LONINN",converted_Long);
+
                     posZeroLatPosOneLong[0]= converted_Lat;
                     posZeroLatPosOneLong[1]= converted_Long;
 

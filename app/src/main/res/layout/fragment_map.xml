@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <?xml version="1.0" encoding="utf-8"?
+    -->
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".Map.UserView.ScrollMapUser"
+        tools:showIn="@layout/activity_scroll_map_user">
+
+        <LinearLayout
+            style="android:attr=buttonBarButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:alwaysDrawnWithCache="false"
+            android:animateLayoutChanges="false"
+            android:animationCache="false"
+            android:background="@color/primaryColor"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/UserHome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onHomeClick"
+                android:text="Home"
+                android:visibility="gone"
+                app:backgroundTint="@color/primaryColor"
+                tools:ignore="ButtonStyle" />
+
+            <Button
+                android:id="@+id/UserRoute"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onRouteClick"
+                android:text="Route"
+                android:visibility="visible"
+                app:backgroundTint="@color/primaryColor" />
+
+            <Button
+                android:id="@+id/UserInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onInfoClick"
+                android:text="Info"
+                app:backgroundTint="@color/primaryColor" />
+
+            <Button
+                android:id="@+id/UserReport"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onReportClick"
+                android:text="Report"
+                app:backgroundTint="@color/primaryColor"
+                tools:ignore="ButtonStyle" />
+
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:context=".ScrollingActivity"
+            tools:showIn="@layout/activity_scroll_map">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:id="@+id/UserTabInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <include
+                        layout="@layout/user_profile"
+                        android:layout_height="600dp"
+                        tools:ignore="IncludeLayoutParam" />
+
+                    <Button
+                        android:id="@+id/userDropButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:onClick="onDropBuddiiClick"
+                        android:text="Drop Buddii" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/UserTabHome"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/directionsRecycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                    <Button
+                        android:id="@+id/dropRoute"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:onClick="onDropRoute"
+                        android:text="Drop Route" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/UserTabReport"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <EditText
+                        android:id="@+id/reportTextUser"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_weight="0"
+                        android:autofillHints="true"
+                        android:background="@color/common_google_signin_btn_text_dark_default"
+                        android:hint="Report Coordinates" />
+
+                    <Button
+                        android:id="@+id/UserReportButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="90dp"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:hapticFeedbackEnabled="true"
+                        android:onClick="onReport"
+                        android:text="Report" />
+
+                    <Button
+                        android:id="@+id/UserReportCurrLocButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="90dp"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:hapticFeedbackEnabled="true"
+                        android:onClick="onCurrLocReport"
+                        android:text="Report Current Location" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/UserTabRoute"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <EditText
+                        android:id="@+id/RouteManual"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:layout_weight="1"
+                        android:hint="@string/enter_destination" />
+
+                    <Button
+                        android:id="@+id/searchButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="90dp"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:layout_weight="1"
+                        android:onClick="onMapSearch"
+                        android:text="Enter" />
+
+                    <Button
+                        android:id="@+id/acceptRoute"
+                        android:layout_width="match_parent"
+                        android:layout_height="90dp"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:layout_weight="1"
+                        android:onClick="onAcceptRouteClick"
+                        android:text="Accept Route"
+                        android:visibility="visible" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+
+<!--/androidx.constraintlayout.widget.ConstraintLayout-->

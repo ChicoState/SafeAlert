@@ -65,7 +65,7 @@ public class databaseHandler extends SQLiteOpenHelper {
     private static final String GPS_TABLE = "GPS_TABLE";
     /* GPS DB */
 
-    // temp plz delete
+
     String jsonString2 ="";
     private final Context context;
     // for hashing
@@ -230,12 +230,7 @@ public class databaseHandler extends SQLiteOpenHelper {
                     String phone = dataSnapshot.child("user_phone").getValue(String.class);
                     String salt1 = dataSnapshot.child("user_salt").getValue(String.class);
 
-                    Log.d("xxxtEmail", email);
-                    //  Log.d("xxxPASSis",pass);
-                    Log.d("xxxNAMEis", namex);
-                    Log.d("xxxPHONEis", phone);
-                    Log.d("xxxSALTis", salt1);
-
+                 
                     usersObj = new JSONObject();
                     try {
 

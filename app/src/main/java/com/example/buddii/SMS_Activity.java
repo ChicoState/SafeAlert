@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -50,7 +51,7 @@ public class SMS_Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_profile);
+        setContentView(R.layout.user_profile);
         // Check to see if SMS is enabled.
         checkForSmsPermission();
 
@@ -60,7 +61,7 @@ public class SMS_Activity extends AppCompatActivity {
      */
     private void checkForSmsPermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, getString(R.string.permission_not_granted));
+            //Log.d(TAG, getString(R.string.permission_not_granted));
             // Permission not yet granted. Use requestPermissions().
             // MY_PERMISSIONS_REQUEST_SEND_SMS is an app-defined int constant. The callback method gets the result of the request.
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, MY_PERMISSIONS_REQUEST_SEND_SMS);
@@ -86,8 +87,8 @@ public class SMS_Activity extends AppCompatActivity {
                     // Send confirmation
                 } else {
                     // Permission denied.
-                    Log.d(TAG, getString(R.string.failure_permission));
-                    //Toast.makeText(MainActivity.this, getString(R.string.failure_permission), Toast.LENGTH_SHORT).show();
+                    //Log.d(TAG, getString(R.string.failure_permission));
+                    //Toast.makeText(mainActivity.this, getString(R.string.failure_permission), Toast.LENGTH_SHORT).show();
                     // Disable the message button.
                     //disableSMSButton();
                 }

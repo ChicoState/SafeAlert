@@ -2,6 +2,7 @@ package com.example.buddii.ui.login;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,27 +16,33 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.buddii.DBActivity;
-import com.example.buddii.DatabaseHandler;
-import com.example.buddii.MainActivity;
+import com.example.buddii.dbActivity;
+import com.example.buddii.databaseHandler;
+import com.example.buddii.mainActivity;
 import com.example.buddii.R;
 
-public class LoginActivity extends AppCompatActivity {
+public class loginActivity extends AppCompatActivity {
 
-    private LoginViewModel loginViewModel;
+    private com.example.buddii.ui.login.loginViewModel loginViewModel;
 
-
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        databaseHandler handler=new databaseHandler(loginActivity.this);
+        //initialize , first pass always returns NULL
+        //initialize
         setContentView(R.layout.activity_login_buddii);
-        loginViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
-                .get(LoginViewModel.class);
+
+        loginViewModel = ViewModelProviders.of(this, new loginViewModelFactory())
+                .get(com.example.buddii.ui.login.loginViewModel.class);
 
         final EditText usernameEditText = findViewById(R.id.username);
         final EditText passwordEditText = findViewById(R.id.password);
@@ -43,9 +50,9 @@ public class LoginActivity extends AppCompatActivity {
         final Button registerButton = findViewById(R.id.registerButton);
         final ProgressBar loadingProgressBar = findViewById(R.id.loading);
 
-        loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
+        loginViewModel.getLoginFormState().observe(this, new Observer<loginFormState>() {
             @Override
-            public void onChanged(@Nullable LoginFormState loginFormState) {
+            public void onChanged(@Nullable loginFormState loginFormState) {
                 if (loginFormState == null) {
                     return;
                 }
@@ -59,28 +66,26 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
+        loginViewModel.getLoginResult().observe(this, new Observer<loginResult>() {
             @Override
-            public void onChanged(@Nullable LoginResult loginResult) {
+            public void onChanged(@Nullable loginResult loginResult) {
+
                 if (loginResult == null) {
                     return;
                 }
                 loadingProgressBar.setVisibility(View.GONE);
                 if (loginResult.getError() != null) {
                     showLoginFailed(loginResult.getError());
-                    //setResult(Activity.RESULT_OK);
                 }
                 if (loginResult.getSuccess() != null) {
                     updateUiWithUser(loginResult.getSuccess());
-                   Intent intent = new Intent (LoginActivity.this, MainActivity.class);
-                   startActivity(intent);
+                    Intent intent = new Intent (loginActivity.this, mainActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
                 setResult(Activity.RESULT_OK);
 
-
-
                 //Complete and destroy login activity once successful
-                //finish();
 
             }
         });
@@ -119,6 +124,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 loginViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
@@ -129,20 +135,16 @@ public class LoginActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent (LoginActivity.this, DBActivity.class);
+                Intent intent = new Intent (loginActivity.this, dbActivity.class);
                 startActivity(intent);
             }
         });
     }
-
-    private void updateUiWithUser(LoggedInUserView model)
+    private void updateUiWithUser(loggedInUserView model)
     {
         String welcome = getString(R.string.welcome) + model.getDisplayName();
         // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-
-
-
 
     }
 
@@ -150,6 +152,10 @@ public class LoginActivity extends AppCompatActivity {
     {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
 
+    }
 
+    public void moveToHome(View view) {
+        Intent intent = new Intent (loginActivity.this, mainActivity.class);
+        startActivity(intent);
     }
 }

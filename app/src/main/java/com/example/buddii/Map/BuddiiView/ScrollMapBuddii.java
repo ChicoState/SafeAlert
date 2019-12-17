@@ -98,21 +98,10 @@ public class ScrollMapBuddii extends AppCompatActivity implements OnMapReadyCall
     private void alertHandler() {
         databaseHandler dbHandlerAlert = new databaseHandler(ScrollMapBuddii.this);
 
-        /*
-        if(true) {
-            LocalTime time = null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                time = LocalTime.now();
-            }
-            if(!second)
-            alertList.add(new alertItem(R.drawable.route,"User Has Selected Route", "" + time));
-            if (second) {
-                alertList.add(new alertItem(R.drawable.emergency, "USER HAS HIT THE ALERT BUTTON", "" + time));
-            }
-            second = true;
-        */
+        //These following unused lines are the solution to a very weird error that I cannot figure out
         databaseHandler dbHandlerOnline = new databaseHandler(ScrollMapBuddii.this);
         String test[] = dbHandlerOnline.loadGPS("0");
+        String test2 = dbHandlerOnline.loadFlag("0");
 
         if(true){
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {

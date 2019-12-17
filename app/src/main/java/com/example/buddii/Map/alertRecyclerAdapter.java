@@ -29,6 +29,9 @@ public class alertRecyclerAdapter extends RecyclerView.Adapter<alertRecyclerAdap
     public void onBindViewHolder(@NonNull AlertViewHolder holder, int position) { //
         alertItem currentItem = mAlertList.get(position);
 
+        View view = null;
+        holder = new AlertViewHolder(view);
+
         holder.mImageView.setImageResource(currentItem.getImageResource());
         holder.mTextView1.setText(currentItem.getText1());
         holder.mTextView2.setText(currentItem.getmText2());

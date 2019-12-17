@@ -1,43 +1,51 @@
 package com.example.buddii.data;
 
-import com.example.buddii.DatabaseHandler;
-import com.example.buddii.data.model.LoggedInUser;
-import com.example.buddii.ui.login.LoginActivity;
-
-import java.io.IOException;
-import java.lang.Exception;
+import android.os.Build;
 import android.util.Log;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.buddii.databaseHandler;
+import com.example.buddii.data.model.loggedInUser;
+
+import java.io.IOException;
 
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.
+ *
  */
-public class LoginDataSource extends AppCompatActivity {
+@RequiresApi(api = Build.VERSION_CODES.O)
+public class loginDataSource extends AppCompatActivity {
+
+    databaseHandler handler=new databaseHandler(loginDataSource.this);
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public result<loggedInUser> login(String username, String password){
 
 
-    public Result<LoggedInUser> login(String username, String password){
+        // real function call
+        String checkCred = handler.getPword(password,username);
+
         try {
 
-            DatabaseHandler handler=new DatabaseHandler(LoginDataSource.this);
             // TODO: handle loggedInUser authentication
-            Log.d("xxxPwordFromLogIn",password);
-            //handler.checkCredentials(password)
-            String checkCred = handler.checkCredentials(password);
-            if( checkCred == password) {
-                Log.d("xxxafterChkCdrntls",password);
-                LoggedInUser fakeUser =
-                        new LoggedInUser(
+
+
+            if( checkCred.equals("true")) {
+               //will sey UID for logged in user
+                 loggedInUser fakeUser =
+                        new loggedInUser(
                                 java.util.UUID.randomUUID().toString(),
                                 "Jane Doe");
                 Log.w(null, "success");
-                return new Result.Success<>(fakeUser);
+                return new result.Success<>(fakeUser);
 
             }
         }catch(Exception e) {
-            return new Result.Error(new IOException("Error logging in", e));
+            return new result.Error(new IOException("Error logging in", e));
         }
-        return new Result.Error(new IOException("error with attempt", null));
+        return new result.Error(new IOException("error with attempt", null));
     }
 
     public void logout() {

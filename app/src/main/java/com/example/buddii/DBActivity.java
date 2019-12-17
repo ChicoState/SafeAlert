@@ -99,39 +99,6 @@ public class DBActivity extends AppCompatActivity {
             }
         }
 
-        // TempTexViewVariable2.setText(dbHandler.loadGPS());
-        // send to online and myTempson go together
-        // dbHandler.sendtoOnlineDB();
-        // TempTexViewVariable2.setText(dbHandler.mytempJSONreturnFunc());
-
-        // temporary call to populate / remove ACTIVE_BUDDII_TABLE
-        //dbHandler.addToActiveBuddiTable();
-        //dbHandler.removeFromActiveBuddiTable();
-        //dbHandler.addRating(3.0);
-        //calling this function will compare hash from user DB to new hash
-        // String ppppp ="qwerty";
-        // TempTexViewVariable2.setText(dbHandler.checkCredentials(ppppp));
-
-        /* GPS TABLE TESTING
-        Double lat = 9.99;
-        Double longt = 2.22;
-        dbHandler.addGPS(lat,longt);
-               */
-        // tests loading GPS table
-        // String xxxxxx = DatabaseHandler.LongLat.lat_tt;
-
-
-        //dbHandler.tempGetGPS();
-        /*
-        String[] posZeroLatPosOneLong = dbHandler.loadGPS("0");
-        String lat = posZeroLatPosOneLong[0];
-        String longg = posZeroLatPosOneLong[1]; //for testing
-        String resss = lat + "  " + longg; // for testing
-         TempTexViewVariable2.setText(resss);
-         */
-
-
-      //  dbHandler.sendFlag("1", "a");
         String flagresults=dbHandler.loadFlag("1");
         TempTexViewVariable2.setText(flagresults);
     }

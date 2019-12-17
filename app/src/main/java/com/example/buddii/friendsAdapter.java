@@ -19,6 +19,9 @@ import com.example.buddii.Map.UserView.ScrollMapUser;
 
 import java.util.ArrayList;
 
+
+//allows the list of friends to be adapted on to the xml with the
+// recycler view
 public class friendsAdapter extends RecyclerView.Adapter<friendsAdapter.ViewHolder>{
 
     private static final String TAG = "friendsAdapter";
@@ -27,7 +30,7 @@ public class friendsAdapter extends RecyclerView.Adapter<friendsAdapter.ViewHold
     private ArrayList<String> fbuddiiNames = new ArrayList<>();
     private Context fContext;
 
-
+//sets member variables
     public friendsAdapter(Context friendContext, ArrayList<String> friendImages, ArrayList<String> friendNames) {
 
         fbuddiiImages = friendImages;
@@ -35,6 +38,7 @@ public class friendsAdapter extends RecyclerView.Adapter<friendsAdapter.ViewHold
         fContext = friendContext;
     }
 
+    //holds the recycler view and inflates the layout
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_buddis, parent, false);
@@ -42,6 +46,7 @@ public class friendsAdapter extends RecyclerView.Adapter<friendsAdapter.ViewHold
         return holder;
     }
 
+    //binds the view
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called.");
@@ -54,23 +59,25 @@ public class friendsAdapter extends RecyclerView.Adapter<friendsAdapter.ViewHold
         {
             //TODO: fix diaper pattern (anti-pattern)
         }
-
-
+        //this allows the user to click on a friend and then
+        //gets sent to the next activity
         holder.parentFriend.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(fContext, ScrollMapUser.class);
-                intent.putExtra("userBuddii",fbuddiiNames.get(position));
+                intent.putExtra("friend",fbuddiiNames.get(position));
                 fContext.startActivity(intent);
             }
         });
     }
 
+    //gets how many items or in this case friends are in the
+    //list and returns the size
     @Override
     public int getItemCount() {
         return fbuddiiNames.size();
     }
-
+    //puts things into the recyclerview
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         LinearLayout parentFriend;
@@ -78,6 +85,7 @@ public class friendsAdapter extends RecyclerView.Adapter<friendsAdapter.ViewHold
         TextView friend;
 
 
+        //holds the items or in this case friends within the recyclerview
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             friendImage = itemView.findViewById(R.id.friendImage);

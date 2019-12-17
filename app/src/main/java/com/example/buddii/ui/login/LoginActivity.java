@@ -26,13 +26,17 @@ import androidx.lifecycle.ViewModelProviders;
 import com.example.buddii.DBActivity;
 import com.example.buddii.DatabaseHandler;
 import com.example.buddii.MainActivity;
+import com.example.buddii.Map.BuddiiView.ScrollMapBuddii;
 import com.example.buddii.R;
 
+//takes care of logging in for the user as well as registering
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
+
+    //creates the view for the activity
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -73,6 +77,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        //this is where if the login works i.e. user put in the
+        //right username and password it will move them to the next activity
+        //which is the home page, from there it will destroy the login page
         loginViewModel.getLoginResult().observe(this, new Observer<LoginResult>() {
             @Override
             public void onChanged(@Nullable LoginResult loginResult) {
@@ -91,9 +98,6 @@ public class LoginActivity extends AppCompatActivity {
                     finish();
                 }
                 setResult(Activity.RESULT_OK);
-
-                //Complete and destroy login activity once successful
-                //finish();
 
             }
         });
@@ -140,11 +144,11 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        //this is the register button which will take the user to the register page
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent (LoginActivity.this, DBActivity.class);
-                //   intialDBSYNC();
                 startActivity(intent);
             }
         });
@@ -183,7 +187,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void moveToHome(View view) {
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        Intent intent = new Intent(LoginActivity.this, ScrollMapBuddii.class);
         startActivity(intent);
     }
 }

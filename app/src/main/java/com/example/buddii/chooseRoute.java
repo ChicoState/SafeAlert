@@ -7,14 +7,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.marshallers.ByteBufferToBinaryMarshaller;
-import com.example.buddii.Map.BuddiiView.ScrollMapBuddii;
 import com.example.buddii.Map.UserView.ScrollMapUser;
 
+//basically just a fork in the road (3 routes) - do you
+//need a buddii, a friend, or do you want to go alone and
+//just find the safest route. you choose either with the buttons
 public class chooseRoute extends AppCompatActivity {
     private Button btnBuddiis;
     private Button btnFriends;
     private Button btnNo;
+
+    //ceates the layout of the activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,15 +53,20 @@ public class chooseRoute extends AppCompatActivity {
             }
         });
     }
+
+    //function that allows us to move to the finding a safe route activity (ScrollMapUser)
     private void moveToRoute() {
         Intent intent = new Intent(chooseRoute.this, ScrollMapUser.class);
         startActivity(intent);
     }
+    //function that allows us to move to the finding a buddii activity (select_bud)
     private void moveToSelectBuddii() {
         Intent intent = new Intent(chooseRoute.this, select_bud.class);
         startActivity(intent);
     }
 
+
+    //function that allows us to move to the finding a friend activity (select_friends)
     private void moveToSelectFriend(){
         Intent intent = new Intent(chooseRoute.this, select_friends.class);
         startActivity(intent);

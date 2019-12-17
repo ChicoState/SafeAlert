@@ -11,15 +11,21 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.json.JSONException;
 
+//allows users to add specific friends to their profile
+//so they can chooose them to be their buddii instead
+//of a random person, friend is added via their phone number
+//and thats how the database finds the said friend is through
+// their phone number
 public class addFriend extends AppCompatActivity {
     EditText input1,input2;
     String data1,data2;
     Button SubmitBUTTON;
-    TextView Tx1,Tx2,Tx3,Tx4, TempTexViewVariable2;
+    TextView Tx1, TempTexViewVariable2;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
+
+    //creates the layout
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,10 +45,13 @@ public class addFriend extends AppCompatActivity {
         SubmitBUTTON=(Button)findViewById(R.id.addBuddiiFriend);
         SubmitBUTTON.setOnClickListener(new View.OnClickListener() { // In other words , do this after click
             @RequiresApi(api = Build.VERSION_CODES.O)
+
+            //adds friend to the users list of friends when
+            //all fields (phone number and user name
+            // are filled out and submitted
             @Override
             // WHEN CLICKED SUBMIT , PASS THESE VALUES
             public void onClick(View view) {
-                //dbHandler.checkFireBaseDBForUsers();
                 //FIRST CONVERT
                 data1=input1.getText().toString();
                 data2=input2.getText().toString();

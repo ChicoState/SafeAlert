@@ -29,18 +29,11 @@ public class LoginDataSource extends AppCompatActivity {
 
         // real function call
         String checkCred = handler.getPword(password,username);
-       // byte []salt = handler.getPword(password,username);
-
-      //Log.d("xxxLogINpwordRTN", checkCred);
 
         try {
-
-            // TODO: handle loggedInUser authentication
-
-
             if( checkCred.equals("true")) {
                //will sey UID for logged in user
-                // handler.setLoggedInUser(username);
+
                  LoggedInUser fakeUser =
                         new LoggedInUser(
                                 java.util.UUID.randomUUID().toString(),

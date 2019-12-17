@@ -42,7 +42,7 @@
             android:label="@string/title_activity_scroll_map_user"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Map.BuddiiView.scrollMapBuddii"
+            android:name=".Map.BuddiiView.ScrollMapBuddii"
             android:label="@string/title_activity_scroll_map"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Map.findingSafestRouteActivity" />

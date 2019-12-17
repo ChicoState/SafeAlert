@@ -19,7 +19,7 @@ public class beBuddiiActivity extends AppCompatActivity {
 
         VideoView mVideoView2 = (VideoView)findViewById(R.id.tutorialVideo);
 
-        String uriPath2 = "android.resource://"+getPackageName()+"/"+R.raw.movie;
+        String uriPath2 = "android.resource://"+getPackageName()+"/"+R.raw.showcase;
         Uri uri2 = Uri.parse(uriPath2);
         mVideoView2.setVideoURI(uri2);
         mVideoView2.requestFocus();

@@ -1,15 +1,15 @@
 package com.example.buddii;
 
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
-//import android.support.v7.app.AppCompatActivity;
-import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import android.os.Bundle;
+//import android.support.v7.app.AppCompatActivity;
 
 public class aboutUsActivity extends AppCompatActivity {
 
@@ -17,8 +17,6 @@ public class aboutUsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about_us);
-        final TextView output = findViewById(R.id.AboutUsText);
-        output.setText(readFile());
     }
 
     private String readFile() {

@@ -26,17 +26,6 @@ public class directionsAdapter {
 
     private static final String TAG = "com.example.buddii.Map.directionsAdapter";
 
-    public static void drawRoute(LatLng mOrigin, LatLng mDestination) {
-
-        // Getting URL to the Google Directions API
-        String url = directionsAdapter.getDirectionsUrl(mOrigin, mDestination);
-
-        directionsAdapter.DownloadTask downloadTask = new directionsAdapter.DownloadTask();
-
-        // Start downloading json data from Google Directions API
-        downloadTask.execute(url);
-    }
-
     public static String getDirectionsUrl(LatLng origin, LatLng dest) { //Creates the URL to be searched for the directions
 
         String google_maps_key = "AIzaSyB-lVKAaaAgSpzcPmCLUgmbkiIiFzCjpoU";
@@ -191,6 +180,7 @@ public class directionsAdapter {
                     mPolyline.remove();
                 }
                 GoogleMap mMap = ScrollMapUser.getMap();
+                mPolyline = mMap.addPolyline(lineOptions);
 
             }
         }

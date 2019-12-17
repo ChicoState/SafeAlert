@@ -14,7 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.buddii.Map.BuddiiView.scrollMapBuddii;
+import com.example.buddii.Map.BuddiiView.ScrollMapBuddii;
 
 import java.util.ArrayList;
 
@@ -58,7 +58,7 @@ public class beBuddiiAdapter extends RecyclerView.Adapter<beBuddiiAdapter.ViewHo
         holder.parent.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, scrollMapBuddii.class);
+                Intent intent = new Intent(mContext, ScrollMapBuddii.class);
                 intent.putExtra("userBuddii",mbuddiiNames.get(position));
                 mContext.startActivity(intent);
             }

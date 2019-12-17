@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.hardware.GeomagneticField;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 import android.location.Address;
@@ -22,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,7 +44,6 @@ import com.example.buddii.selectBud;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -90,6 +89,7 @@ public class ScrollMapUser extends AppCompatActivity
     private RecyclerView.LayoutManager mLayoutManager;
     private Circle currLocMovingCircle;
     databaseHandler dbHandler;
+    boolean initial = false;
 
 
     private static final List<PatternItem> PATTERN_POLYLINE_DOTTED = null;
@@ -99,6 +99,7 @@ public class ScrollMapUser extends AppCompatActivity
     private static Polyline mPolyline;
     ArrayList<LatLng> mMarkerPoints;
     Location currentLocation;
+    ArrayList<LatLng> reports;
 
 
     @Override
@@ -273,7 +274,6 @@ public class ScrollMapUser extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scroll_map_user);
         Toolbar toolbarUser = findViewById(R.id.toolbarUser);
-        GeofencingClient mGeofencingClient = new GeofencingClient(ScrollMapUser.this);
         setSupportActionBar(toolbarUser);
         createGoogleApi();
         requestPermissions();
@@ -316,14 +316,23 @@ public class ScrollMapUser extends AppCompatActivity
             currentLocation = location;
             double latitude = location.getLatitude();
             double longitude = location.getLongitude();
-            String msg = "New Latitude: " + latitude + "New Longitude: " + longitude;
-            Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
-            GeomagneticField field = new GeomagneticField(
-                    (float) location.getLatitude(),
-                    (float) location.getLongitude(),
-                    (float) location.getAltitude(),
-                    System.currentTimeMillis()
-            );
+            String msg = "Location Services Enabled";
+
+            if(!initial) {
+                Toast.makeText(mContext, msg, Toast.LENGTH_LONG).show();
+                initial = true;
+                TextView locationText = findViewById(R.id.locationText);
+                String curloc = "Lon: " + currentLocation.getLongitude() + "Lat: " + currentLocation.getLatitude();
+                locationText.setText(curloc);
+            }
+
+            if(mDestination != null){
+                geofencingEndRoute();
+            }
+
+            if(reports != null) {
+                geofencingWorkaround();
+            }
 
             LatLng currLocMoving = new LatLng(location.getLatitude(), location.getLongitude());
             CircleOptions circleOptions = new CircleOptions()
@@ -373,6 +382,40 @@ public class ScrollMapUser extends AppCompatActivity
 
         }
     };
+
+    //Manual geofencing because i'm too dumb to get google geofencing to work but not too dumb to make it myself
+    private void geofencingWorkaround() {
+        for(int i = 0; i < reports.size(); i++){
+            if(currentLocation.getLongitude() < reports.get(i).longitude + .00025 && currentLocation.getLongitude() > reports.get(i).longitude - .00025){
+                if(currentLocation.getLatitude() < reports.get(i).latitude + .00025 && currentLocation.getLatitude() > reports.get(i).latitude - .00025){
+                    dbHandler = new databaseHandler(ScrollMapUser.this);
+                    try {
+                        dbHandler.sendFlag("0", "U");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Toast.makeText(this, "You have entered an unsafe area", Toast.LENGTH_LONG).show();
+                    return;
+                }
+            }
+        }
+
+    }
+
+    private void geofencingEndRoute(){
+        if(currentLocation.getLongitude() < mDestination.longitude + .00025 && currentLocation.getLongitude() > mDestination.longitude - .00025){
+            if(currentLocation.getLatitude() < mDestination.latitude + .00025 && currentLocation.getLatitude() > mDestination.latitude - .00025){
+                dbHandler = new databaseHandler(ScrollMapUser.this);
+                try {
+                    dbHandler.sendFlag("0", "F");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Toast.makeText(this, "You have arrived", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+    }
 
 
     //Checks if location is able to be used by the User
@@ -445,22 +488,22 @@ public class ScrollMapUser extends AppCompatActivity
                 if (mMarkerPoints.size() == 2) {
                     mOrigin = mMarkerPoints.get(0);
                     mDestination = mMarkerPoints.get(1);
-                    directionsAdapter.drawRoute(mOrigin, mDestination);
+                    drawRoute(mOrigin, mDestination);
                 }
                 if (mMarkerPoints.size() == 3) {
                     mOrigin = mMarkerPoints.get(1);
                     mDestination = mMarkerPoints.get(2);
-                    directionsAdapter.drawRoute(mOrigin, mDestination);
+                    drawRoute(mOrigin, mDestination);
                 }
                 if (mMarkerPoints.size() == 4) {
                     mOrigin = mMarkerPoints.get(2);
                     mDestination = mMarkerPoints.get(3);
-                    directionsAdapter.drawRoute(mOrigin, mDestination);
+                    drawRoute(mOrigin, mDestination);
                 }
                 if (mMarkerPoints.size() >= 4) {
                     mOrigin = mMarkerPoints.get(3);
                     mDestination = mMarkerPoints.get(4);
-                    directionsAdapter.drawRoute(mOrigin, mDestination);
+                    drawRoute(mOrigin, mDestination);
                 }
 
             }
@@ -496,7 +539,7 @@ public class ScrollMapUser extends AppCompatActivity
 
             mOrigin = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
             mDestination = latLng;
-            directionsAdapter.drawRoute(mOrigin, mDestination);
+            drawRoute(mOrigin, mDestination);
         }
     }
 
@@ -517,9 +560,16 @@ public class ScrollMapUser extends AppCompatActivity
             assert addressList != null;
             Address address = addressList.get(0);
             LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+            mMap.addCircle(new CircleOptions().center(new LatLng(address.getLatitude(), address.getLongitude()))
+                    .radius(35)
+                    .strokePattern(PATTERN_POLYLINE_DOTTED)
+                    .strokeColor(Color.RED)
+                    .fillColor(Color.TRANSPARENT));
             mMap.addMarker(new MarkerOptions().position(latLng).title("Marker"));
             mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
 
+            reports = new ArrayList<LatLng>();
+            reports.add(new LatLng(address.getLatitude(), address.getLongitude()));
             mDestination = latLng;
 
             try {
@@ -662,6 +712,18 @@ public class ScrollMapUser extends AppCompatActivity
         }
     }
 
+    public void drawRoute(LatLng mOrigin, LatLng mDestination) {
+
+        Toast.makeText(ScrollMapUser.this, "IN DRAWROUTE", Toast.LENGTH_SHORT).show();
+        // Getting URL to the Google Directions API
+        String url = directionsAdapter.getDirectionsUrl(mOrigin, mDestination);
+
+        directionsAdapter.DownloadTask downloadTask = new directionsAdapter.DownloadTask();
+
+        // Start downloading json data from Google Directions API
+        downloadTask.execute(url);
+    }
+
     //allows use of mPolyline to directionsAdapter
     public static Polyline getPolyline(){
         return mPolyline;
@@ -672,4 +734,19 @@ public class ScrollMapUser extends AppCompatActivity
         return mMap;
     }
 
+    public void onCurrLocationReport(View view) {
+        mMap.addCircle(new CircleOptions().center(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
+                .radius(35)
+                .strokePattern(PATTERN_POLYLINE_DOTTED)
+                .strokeColor(Color.RED)
+                .fillColor(Color.TRANSPARENT));
+        reports = new ArrayList<LatLng>();
+        reports.add(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
+        dbHandler = new databaseHandler(ScrollMapUser.this);
+        try {
+            dbHandler.sendFlag("0", "L");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -38,8 +38,13 @@ public class loginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         databaseHandler handler=new databaseHandler(loginActivity.this);
         //initialize , first pass always returns NULL
+        String[] posZeroLatPosOneLong = handler.loadGPS("0");
+        String intiFlagCall = handler.loadFlag("1");
+
         //initialize
+        String checkCred = handler.getPword("<>","<>");
         setContentView(R.layout.activity_login_buddii);
+       // intialDBSYNC();
 
         loginViewModel = ViewModelProviders.of(this, new loginViewModelFactory())
                 .get(com.example.buddii.ui.login.loginViewModel.class);

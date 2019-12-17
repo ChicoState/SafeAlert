@@ -235,31 +235,15 @@ public class databaseHandler extends SQLiteOpenHelper {
                     try {
 
                         usersObj.put("uID", uID);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        usersObj.put("user_phone", phone);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        usersObj.put("user_name", namex);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        usersObj.put("user_email", email);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        usersObj.put("user_pass", pass);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
 
-                    try {
+                        usersObj.put("user_phone", phone);
+
+                        usersObj.put("user_name", namex);
+
+                        usersObj.put("user_email", email);
+
+                        usersObj.put("user_pass", pass);
+
                         usersObj.put("user_salt", salt1);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -570,40 +554,19 @@ public class databaseHandler extends SQLiteOpenHelper {
             jobj  = new JSONObject();
             try {
                 jobj.put("uID",cursor.getString(0));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            try {
+
                 jobj.put("user_phone",cursor.getString(1));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            try {
+
                 jobj.put("user_name",cursor.getString(2));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            try {
+
                 jobj.put("user_email",cursor.getString(3));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            try {
+
                 jobj.put("user_pass",cursor.getString(4));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            try {
+
                 jobj.put("user_ratings",cursor.getString(5));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            try {
+
                 jobj.put("user_salt",cursor.getString(6));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            try {
+
                 jobj.put("user_flag",cursor.getString(7));
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -630,9 +593,6 @@ public class databaseHandler extends SQLiteOpenHelper {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public String getPword(String pwordFromLogIn, final String userNameFromLogIn) {
 
-
-
-
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference().child("usersdb").child("users").child("data");
 
@@ -658,10 +618,7 @@ public class databaseHandler extends SQLiteOpenHelper {
                     salt5 = Base64.getDecoder().decode(salt0);
 
 
-
               }
-
-
 
 
             } //end of loop

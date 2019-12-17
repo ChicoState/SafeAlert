@@ -1,5 +1,8 @@
 package com.example.buddii.ui.login;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.annotation.NonNull;
@@ -13,6 +16,7 @@ import com.example.buddii.data.loginRepository;
  */
 public class loginViewModelFactory implements ViewModelProvider.Factory {
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
     @Override
     @SuppressWarnings("unchecked")

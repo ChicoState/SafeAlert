@@ -37,7 +37,7 @@ public class loginDataSource extends AppCompatActivity {
                  loggedInUser fakeUser =
                         new loggedInUser(
                                 java.util.UUID.randomUUID().toString(),
-                                "Jane Doe");
+                                "");
                 Log.w(null, "success");
                 return new result.Success<>(fakeUser);
 

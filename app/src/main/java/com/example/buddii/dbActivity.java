@@ -93,9 +93,9 @@ public class dbActivity extends AppCompatActivity {
                 Tx1.setText(results);
             }
         }
+    // initializer
+        String flagresults=dbHandler.loadFlag("0");
 
-        String flagresults=dbHandler.loadFlag("1");
-        TempTexViewVariable2.setText(flagresults);
     }
     public String getUserToDelete(){
         // will get user to delete

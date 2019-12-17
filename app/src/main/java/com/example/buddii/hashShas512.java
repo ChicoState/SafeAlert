@@ -28,13 +28,18 @@ class hashSha512 {
         return hashedPword;
     }
     //unique salt is created whenever a user is created and requires one
-    static byte[] getSalt() throws NoSuchAlgorithmException
+    static byte[] getSalt()
 
     {
 
         //SHA1PRNG is a pure Java implementation which is not as strong as the algorithms used
         // by approved DRBG mechanisms in NIST SP800-90.
-        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
+        SecureRandom sr = null;
+        try {
+            sr = SecureRandom.getInstance("SHA1PRNG");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
         byte[] salt = new byte[16];
         sr.nextBytes(salt);
         return salt;
